@@ -18,29 +18,11 @@ namespace TrackChanges
         #region Geometrical Comparison
         const double _eps = 1.0e-9;
 
-        public static double Eps
-        {
-            get
-            {
-                return _eps;
-            }
-        }
+        public static double Eps => _eps;
 
-        public static double MinLineLength
-        {
-            get
-            {
-                return _eps;
-            }
-        }
+        public static double MinLineLength => _eps;
 
-        public static double TolPointOnPlane
-        {
-            get
-            {
-                return _eps;
-            }
-        }
+        public static double TolPointOnPlane => _eps;
 
         public static bool IsZero(
           double a,
@@ -68,15 +50,11 @@ namespace TrackChanges
         {
             int d = Compare(p.X, q.X);
 
-            if (0 == d)
-            {
-                d = Compare(p.Y, q.Y);
+            if (0 != d) return d;
+            d = Compare(p.Y, q.Y);
 
-                if (0 == d)
-                {
-                    d = Compare(p.Z, q.Z);
-                }
-            }
+            if (0 != d) return d;
+            d = Compare(p.Z, q.Z);
             return d;
         }
         #endregion // Geometrical Comparison
@@ -87,11 +65,8 @@ namespace TrackChanges
         /// </summary>
         static byte[] GetBytes(string str)
         {
-            byte[] bytes = new byte[str.Length
-              * sizeof(char)];
-
-            System.Buffer.BlockCopy(str.ToCharArray(),
-              0, bytes, 0, bytes.Length);
+            byte[] bytes = new byte[str.Length * sizeof(char)]; //howManyByte
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
 
             return bytes;
         }
@@ -106,14 +81,11 @@ namespace TrackChanges
         {
             SHA256 hasher = SHA256Managed.Create();
 
-            string key = System.Environment.MachineName
-              + ":" + doc.PathName;
+            string key = System.Environment.MachineName + ":" + doc.PathName;
 
-            byte[] hashValue = hasher.ComputeHash(GetBytes(
-              key));
+            byte[] hashValue = hasher.ComputeHash(GetBytes(key));
 
-            string hashb64 = Convert.ToBase64String(
-              hashValue);
+            string hashb64 = Convert.ToBase64String(hashValue);
 
             return hashb64.Replace('/', '_');
         }
