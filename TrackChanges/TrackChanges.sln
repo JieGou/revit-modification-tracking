@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackChanges", "TrackChanges\TrackChanges.csproj", "{43D647C4-4AE7-440C-885B-1AB67211BF6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiViet", "..\..\apiviet\ApiViet\ApiViet\ApiViet.csproj", "{EC89DB41-B2C5-4A8A-9221-1B4DC17DFC5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43D647C4-4AE7-440C-885B-1AB67211BF6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D647C4-4AE7-440C-885B-1AB67211BF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D647C4-4AE7-440C-885B-1AB67211BF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D647C4-4AE7-440C-885B-1AB67211BF6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC89DB41-B2C5-4A8A-9221-1B4DC17DFC5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC89DB41-B2C5-4A8A-9221-1B4DC17DFC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC89DB41-B2C5-4A8A-9221-1B4DC17DFC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC89DB41-B2C5-4A8A-9221-1B4DC17DFC5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {220DE097-B594-4FDC-9563-6BE40959B11F}
+	EndGlobalSection
+EndGlobal

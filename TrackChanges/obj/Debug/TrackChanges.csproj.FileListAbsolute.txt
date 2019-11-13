@@ -1,6 +1,0 @@
-D:\01-GITHUB\TrackChanges\TrackChanges\obj\Debug\TrackChanges.csprojAssemblyReference.cache
-D:\01-GITHUB\TrackChanges\TrackChanges\obj\Debug\TrackChanges.csproj.CoreCompileInputs.cache
-D:\01-GITHUB\TrackChanges\TrackChanges\bin\Debug\TrackChanges.dll
-D:\01-GITHUB\TrackChanges\TrackChanges\bin\Debug\TrackChanges.pdb
-D:\01-GITHUB\TrackChanges\TrackChanges\obj\Debug\TrackChanges.dll
-D:\01-GITHUB\TrackChanges\TrackChanges\obj\Debug\TrackChanges.pdb

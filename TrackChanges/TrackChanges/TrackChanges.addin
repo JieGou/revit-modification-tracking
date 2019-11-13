@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Application TrackChanges</Name>
+    <Assembly>TrackChanges.dll</Assembly>
+    <FullClassName>TrackChanges.AppStartProject</FullClassName>
+    <ClientId>a5cfaec2-fb88-4546-a958-0b31a39e0169</ClientId>
+    <VendorId>Tien Duy NGUYEN</VendorId>
+    <VendorDescription>tienduy.nguyen.it@gmail.com</VendorDescription>
+  </AddIn>
+
+</RevitAddIns>
