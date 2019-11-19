@@ -20,7 +20,7 @@ namespace TrackChanges
         internal static App Instance { get; }
             
 
-        #region Startup
+        #region Result Startup
         public Result OnStartup(UIControlledApplication a)
         {
             CreateRibbonItem(a);
@@ -37,7 +37,7 @@ namespace TrackChanges
         }
         #endregion
 
-        #region Shutdown
+        #region Result Shutdown
         public Result OnShutdown(UIControlledApplication a)
         {
             a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(app_DocumentOpened);
@@ -55,14 +55,12 @@ namespace TrackChanges
             // Create splitbutton track change
             var btnDataTrackChange = new PushButtonData("btnTrackChange", "Off Track", assemblyPath, typeof(CmdTrackChange).FullName);
             btnDataTrackChange.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
-            btnTrackChange.ToolTip = "Track the modification of model";
-            var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Settings", assemblyPath, "");
+            //btnTrackChange.ToolTip = "Track the modification of model";
+            var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Settings", assemblyPath, typeof(RefTrackChanges).FullName);
             btnDataTrackSetting.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
-
-
-            // Make a pulldown button now 
-            SplitButtonData splDataTrackChange = new SplitButtonData("splTrackChange", "splDataTrackChange");
+            SplitButtonData splDataTrackChange = new SplitButtonData("splTrackChange", "TrackChange");
             SplitButton splTrackChange = panelWokflow.AddItem(splDataTrackChange) as SplitButton;
+
             btnTrackChange = splTrackChange.AddPushButton(btnDataTrackChange);
             splTrackChange.AddPushButton(btnDataTrackSetting);
 
@@ -76,16 +74,19 @@ namespace TrackChanges
         {
             // get document from event args.
             Document doc = args.Document;
-
-            using (Transaction transaction = new Transaction(doc, "Track changes Start"))
-            {
-                if (transaction.Start() == TransactionStatus.Started)
+            try {
+                using (Transaction transaction = new Transaction(doc, "Track changes Start"))
                 {
-                    CmdTrackChange trackChange = new CmdTrackChange();
-                    trackChange.TrackChangesCommand(doc);
-                    transaction.Commit();
+                    if (transaction.Start() == TransactionStatus.Started)
+                    {
+                        CmdTrackChange trackChange = new CmdTrackChange();
+                        trackChange.TrackChangesCommand(doc);
+                        transaction.Commit();
+                    }
                 }
             }
+            catch { }
+            
         }
         #endregion //Events
 

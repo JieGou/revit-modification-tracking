@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RevitWpfTempalte2019")]
-[assembly: AssemblyDescription("Template Revit WPF 2019")]
+[assembly: AssemblyTitle("TrackChanges")]
+[assembly: AssemblyDescription("Track the modifications of BIM Model")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TDuy")]
-[assembly: AssemblyProduct("RevitWpfTempalte2019")]
+[assembly: AssemblyProduct("Revit Addin")]
 [assembly: AssemblyCopyright("Copyright © Tien Duy NGUYEN 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
