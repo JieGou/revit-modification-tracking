@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Electrical;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.DB.Structure;
 
 namespace TrackChanges
@@ -13,14 +16,12 @@ namespace TrackChanges
         /// <summary>
         /// Get only structural elements
         /// </summary>
-        FilteredElementCollector GetStructuralElements(
-                Document doc)
-            {
-                // what categories of family instances
-                // are we interested in?
+        public  FilteredElementCollector GetStructuralElements(Document doc)
+        {
 
-                BuiltInCategory[] bics = new BuiltInCategory[] {
-                    
+            // what categories of family instances
+            // are we interested in?
+            BuiltInCategory[] bics = new BuiltInCategory[] {
                     //Element Architecture
                     BuiltInCategory.OST_Ceilings,
                     BuiltInCategory.OST_Columns,
@@ -69,63 +70,44 @@ namespace TrackChanges
                     BuiltInCategory.OST_PlumbingFixtures,
                     BuiltInCategory.OST_SpecialityEquipment,
                     BuiltInCategory.OST_Sprinklers,
-                    //BuiltInCategory.OST_Wire,
+                //BuiltInCategory.OST_Wire,
+            };
 
+            IList<ElementFilter> a = new List<ElementFilter>(bics.Count());
 
-                };
-
-                IList<ElementFilter> a = new List<ElementFilter>(bics.Count());
-
-                foreach (BuiltInCategory bic in bics)
-                {
-                    a.Add(new ElementCategoryFilter(bic));
-                }
-
-                LogicalOrFilter categoryFilter = new LogicalOrFilter(a);
-
-                LogicalAndFilter familyInstanceFilter
-                    = new LogicalAndFilter(categoryFilter,new ElementClassFilter(typeof(FamilyInstance)));
-
-                IList<ElementFilter> b = new List<ElementFilter>(6);
-
-                b.Add(new ElementClassFilter(typeof(Wall)));
-                b.Add(new ElementClassFilter(typeof(Floor)));
-                b.Add(new ElementClassFilter(typeof(PointLoad)));
-                b.Add(new ElementClassFilter(typeof(LineLoad)));
-                b.Add(new ElementClassFilter(typeof(AreaLoad)));
-                b.Add(familyInstanceFilter);
-
-                LogicalOrFilter classFilter = new LogicalOrFilter(b);
-
-                FilteredElementCollector collector = new FilteredElementCollector(doc);
-
-                collector.WherePasses(classFilter);
-
-                return collector;
+            foreach (BuiltInCategory bic in bics)
+            {
+                a.Add(new ElementCategoryFilter(bic));
             }
-            //Categories cats = doc.Settings.Categories;
 
-            //List<ElementFilter> a = new List<ElementFilter>();
+            LogicalOrFilter categoryFilter = new LogicalOrFilter(a);
 
-            //foreach (Category c in cats)
-            //{
-            //    if (CategoryType.Model == c.CategoryType)
-            //    {
-            //        a.Add(new ElementCategoryFilter(c.Id));
-            //    }
-            //}
+            LogicalAndFilter familyInstanceFilter
+                = new LogicalAndFilter(categoryFilter, new ElementClassFilter(typeof(FamilyInstance)));
 
-            //ElementFilter isModelCategory = new LogicalOrFilter(a);
+            IList<ElementFilter> b = new List<ElementFilter>(10);
+            b.Add(new ElementClassFilter(typeof(Wall)));
+            b.Add(new ElementClassFilter(typeof(Floor)));
 
-            //Options opt = new Options();
+            b.Add(new ElementClassFilter(typeof(PointLoad)));
+            b.Add(new ElementClassFilter(typeof(LineLoad)));
+            b.Add(new ElementClassFilter(typeof(AreaLoad)));
+            b.Add(new ElementClassFilter(typeof(CableTray)));
+            b.Add(new ElementClassFilter(typeof(Conduit)));
+            b.Add(new ElementClassFilter(typeof(Duct)));
+            b.Add(new ElementClassFilter(typeof(Pipe)));
 
-            //return new FilteredElementCollector(doc)
-            //    .WhereElementIsNotElementType()
-            //    .WhereElementIsViewIndependent()
-            //    .WherePasses(isModelCategory)
-            //    .Where<Element>(e =>
-            //        (null != e.get_BoundingBox(null))
-            //        && (null != e.get_Geometry(opt)));
-        
+            b.Add(familyInstanceFilter);
+
+            LogicalOrFilter classFilter = new LogicalOrFilter(b);
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+
+            collector.WherePasses(classFilter)
+                    .WhereElementIsNotElementType();
+
+
+            return collector;
+        }
+
     }
 }

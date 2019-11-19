@@ -109,7 +109,7 @@ namespace TrackChanges
         /// instance transform to map it to the actual
         /// instance project location.
         /// </summary>
-        static Solid GetSolid2(Element e, Options opt)
+        public static Solid GetSolid2(Element e, Options opt)
         {
             GeometryElement geo = e.get_Geometry(opt);
 

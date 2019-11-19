@@ -15,7 +15,7 @@ namespace TrackChanges
         /// It is up to you to decide which elements
         /// are of interest to you.
         /// </summary>
-        static IEnumerable<Element> GetTrackedElements(
+        public static IEnumerable<Element> GetTrackedElements(
             Document doc)
         {
             Categories cats = doc.Settings.Categories;

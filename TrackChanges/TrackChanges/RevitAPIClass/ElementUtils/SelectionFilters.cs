@@ -9,7 +9,7 @@ using Autodesk.Revit.UI.Selection;
 namespace TrackChanges
 {
 
-    class SelectionFilter : ISelectionFilter
+    public class SelectionFilter : ISelectionFilter
 
     {
         public Type FilteredType { get; set; }

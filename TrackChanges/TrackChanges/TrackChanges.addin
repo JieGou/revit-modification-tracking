@@ -3,10 +3,9 @@
   <AddIn Type="Application">
     <Name>Application TrackChanges</Name>
     <Assembly>TrackChanges.dll</Assembly>
-    <FullClassName>TrackChanges.AppStartProject</FullClassName>
-    <ClientId>a5cfaec2-fb88-4546-a958-0b31a39e0169</ClientId>
+    <FullClassName>TrackChanges.App</FullClassName>
+    <ClientId>1FD73F30-B725-4375-8B5F-6CEFF23CE1CA</ClientId>
     <VendorId>Tien Duy NGUYEN</VendorId>
-    <VendorDescription>tienduy.nguyen.it@gmail.com</VendorDescription>
+    <VendorDescription>tienduy.nguyen</VendorDescription>
   </AddIn>
-
 </RevitAddIns>

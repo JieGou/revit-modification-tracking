@@ -14,7 +14,7 @@ namespace TrackChanges
         /// <summary>
         /// Convert a string to a byte array.
         /// </summary>
-        static byte[] GetBytes(string str)
+        public static byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)]; //howManyByte
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);

@@ -587,6 +587,10 @@ namespace TrackChanges
             int nModified = 0;
             int nIdentical = 0;
             List<string> report = new List<string>();
+            string pCreatedDate = "CreatedDate";
+            string pModifiedDate = "ModifiedDate";
+            string pDesctiption = "DescriptionChange";
+            DateTime date = DateTime.Now;
 
             foreach (int id in keys)
             {
@@ -595,6 +599,24 @@ namespace TrackChanges
                     ++nAdded;
                     report.Add(id.ToString() + " added "
                       + ElementDescription(doc, id));
+                    try
+                    {
+                        ElementId elemId = new ElementId(id);
+                        Element ele = doc.GetElement(elemId);
+
+                        IList<Parameter> param = ele.GetParameters(nameof(pCreatedDate));
+                        Parameter param1 = ele.LookupParameter(nameof(pCreatedDate));
+                        Parameter param2 = ele.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
+                        int countParam = param.Count;
+                        Debug.Assert(1 >= countParam, "expected maximum one shared parameters " + "named " + nameof(pCreatedDate));
+                        if (countParam > 0)
+                            param[0].Set(date.ToString());
+                        param2.Set(date.ToString());
+
+                    }
+                    catch
+                    {
+                    }
                 }
                 else if (!end_state.ContainsKey(id))
                 {
@@ -606,6 +628,23 @@ namespace TrackChanges
                     ++nModified;
                     report.Add(id.ToString() + " modified "
                       + ElementDescription(doc, id));
+                    try
+                    {
+                        ElementId elemId = new ElementId(id);
+                        Element ele = doc.GetElement(elemId);
+
+                        IList<Parameter> param = ele.GetParameters(nameof(pModifiedDate));
+                        int countParam = param.Count;
+                        Debug.Assert(1 >= countParam, "expected maximum one shared parameters " + "named " + nameof(pCreatedDate));
+                        if (countParam > 0)
+                            param[0].Set(date.ToString());
+                        Parameter param2 = ele.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
+                        param2.Set(date.Date.ToString());
+
+                    }
+                    catch
+                    {
+                    }
                 }
                 else
                 {
