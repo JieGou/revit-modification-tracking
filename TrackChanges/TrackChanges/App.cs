@@ -9,6 +9,7 @@ using Autodesk.Revit.UI;
 using TrackChanges.Properties;
 using System.Reflection;
 
+
 #endregion
 
 namespace TrackChanges
@@ -16,9 +17,12 @@ namespace TrackChanges
     class App : IExternalApplication
     {
         internal static string assemblyPath = typeof(App).Assembly.Location;
-        internal static RibbonItem btnTrackChange { get; set; }
         internal static App Instance { get; }
-            
+
+        //Get button to change their properties in class command
+        internal static PushButtonData btnDataTrackChange { get; set; }
+        internal static RibbonItem btnTrackChange { get; set; }
+
 
         #region Result Startup
         public Result OnStartup(UIControlledApplication a)
@@ -27,7 +31,7 @@ namespace TrackChanges
             try
             {
                 // Register event. 
-                a.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(app_DocumentOpened);
+                a.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
             }
             catch
             {
@@ -40,7 +44,7 @@ namespace TrackChanges
         #region Result Shutdown
         public Result OnShutdown(UIControlledApplication a)
         {
-            a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(app_DocumentOpened);
+            a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
             return Result.Succeeded;
         }
         #endregion
@@ -53,16 +57,16 @@ namespace TrackChanges
             var panelWokflow = CreatePanel(uiApp, "TD", "Workflow");
 
             // Create splitbutton track change
-            var btnDataTrackChange = new PushButtonData("btnTrackChange", "Off Track", assemblyPath, typeof(CmdTrackChange).FullName);
-            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
+            btnDataTrackChange = new PushButtonData("btnTrackChange", "Off DMU", assemblyPath, typeof(DMU.CmdFamilyUpdater).FullName);
+            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(Resources.ToggleOfLarge);
             //btnTrackChange.ToolTip = "Track the modification of model";
-            var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Settings", assemblyPath, typeof(RefTrackChanges).FullName);
-            btnDataTrackSetting.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
+            //var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Off DMU", assemblyPath, typeof(DMU.StopFamilyUpdater).FullName);
+            //btnDataTrackSetting.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
             SplitButtonData splDataTrackChange = new SplitButtonData("splTrackChange", "TrackChange");
             SplitButton splTrackChange = panelWokflow.AddItem(splDataTrackChange) as SplitButton;
 
             btnTrackChange = splTrackChange.AddPushButton(btnDataTrackChange);
-            splTrackChange.AddPushButton(btnDataTrackSetting);
+            //splTrackChange.AddPushButton(btnDataTrackSetting);
 
         }
 
@@ -74,23 +78,50 @@ namespace TrackChanges
         {
             // get document from event args.
             Document doc = args.Document;
-            try {
-                using (Transaction transaction = new Transaction(doc, "Track changes Start"))
-                {
-                    if (transaction.Start() == TransactionStatus.Started)
-                    {
-                        CmdTrackChange trackChange = new CmdTrackChange();
-                        trackChange.TrackChangesCommand(doc);
-                        transaction.Commit();
-                    }
-                }
+            try
+            {
+                //using (Transaction transaction = new Transaction(doc, "Track changes Start"))
+                //{
+                //    if (transaction.Start() == TransactionStatus.Started)
+                //    {
+                //        CmdTrackChange trackChange = new CmdTrackChange();
+                //        trackChange.TrackChangesCommand(doc);
+                //        transaction.Commit();
+                //    }
+                //}
             }
             catch { }
-            
+
         }
         #endregion //Events
 
-      
+        #region Events of IUpdater
+        //To run automatically when document opended
+        public void IUpdaterInitialized(object sender, DocumentOpenedEventArgs args)
+        {
+            Application app = sender as Application;
+            Document doc = args.Document;
+
+            //try
+            //{
+            //    using (Transaction transaction = new Transaction(doc, "DMU Start"))
+            //    {
+            //        if (transaction.Start() == TransactionStatus.Started)
+            //        {
+            //            DMU.CmdFamilyUpdater fUpdater = new DMU.CmdFamilyUpdater();
+            //            fUpdater.UpdaterCommand(app,doc);
+            //            transaction.Commit();
+            //        }
+            //    }
+            //}
+            //catch
+            //{
+            //    throw;
+            //}
+        }
+
+        #endregion //Event of Iupdater
+
 
         #region Helper pour create panel    
         public RibbonPanel CreatePanel(UIControlledApplication a, string tabName, string panelName)

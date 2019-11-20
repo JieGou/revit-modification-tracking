@@ -132,7 +132,7 @@ namespace TrackChanges
             string pCreatedDate = "CreatedDate";
             string pModifiedDate = "ModifiedDate";
             string pDesctiption = "DescriptionChange";
-            string date = DateTime.Now.Date.ToString("d");
+            string date = DateTime.Now.ToShortDateString();
             
             //keys are the new elements in end state
             foreach (int id in keys)

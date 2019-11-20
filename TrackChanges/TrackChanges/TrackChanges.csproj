@@ -57,19 +57,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\ElementData.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\ElementStrutural.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\ElementUtils.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\GeometricalUtils.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\ParameterUtils.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\SelectionFilters.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\SolidUtils.cs" />
-    <Compile Include="RevitAPIClass\ElementUtils\StringUtils.cs" />
+    <Compile Include="DMU\Application.cs" />
+    <Compile Include="DMU\FamilyUpdater.cs" />
+    <Compile Include="DMU\CmdFamilyUpdater.cs" />
+    <Compile Include="DMU\SectionUpdater.cs" />
+    <Compile Include="DMU\WallUpdater.cs" />
+    <Compile Include="DMU\WallUpdaterApplication.cs" />
+    <Compile Include="Helpers\ErrorMessageException.cs" />
+    <Compile Include="Helpers\Tools.cs" />
+    <Compile Include="RevitUtility\CatchErrorSampleRevit.cs" />
+    <Compile Include="RevitUtility\CategoryUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\ElementData.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\ElementStrutural.cs" />
+    <Compile Include="RevitUtility\ElementUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\GeometricalUtils.cs" />
+    <Compile Include="RevitUtility\ParameterUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\SelectionFilters.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\SolidUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\StringUtils.cs" />
     <Compile Include="Helpers\ImageUtils.cs" />
     <Compile Include="Helpers\XyzEqualityComparer.cs" />
-    <Compile Include="RevitAPIClass\RefTrackChanges.cs" />
-    <Compile Include="RevitAPIClass\TrackChanges\CmdTrackChange.cs" />
-    <Compile Include="RevitAPIClass\TrackChanges\ReportChanges.cs" />
+    <Compile Include="TrackChangeSolution\RefTrackChanges.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\CmdTrackChange.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\ReportChanges.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -101,6 +111,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOfLarge.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOnLarge.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOnSmall.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOffSmall.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
