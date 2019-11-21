@@ -55,39 +55,48 @@ namespace TrackChanges.DMU
         }
         public void UpdaterCommand(Application app, Document doc)
         {
-            
-            if (_updater is null)
+            try
             {
-                //Rename button --> On when start and off when stop
-                App.btnTrackChange.ItemText = "On DMU";
-                App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOnLarge);
-                TaskDialog.Show("Dynamic Model Update","Start check the modification of model now...");
-
-
-                _updater = new FamilyUpdater(app.ActiveAddInId);
-                UpdaterRegistry.RegisterUpdater(_updater);
-
-                //Create a filter for elements interest
-                CategorySet categories = CategoryUtils.CreateCategoryList(doc, app);
-                IList<ElementFilter> categoryFilters = new List<ElementFilter>();
-
-                foreach (Category category in categories)
+                if (_updater is null)
                 {
-                    categoryFilters.Add(new ElementCategoryFilter(category.Id));
-                }
-                ElementFilter filter = new LogicalOrFilter(categoryFilters);
+                    //Rename button --> On when start and off when stop
+                    App.btnTrackChange.ItemText = "On DMU";
+                    //App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOnLarge);
+                    TaskDialog.Show("Dynamic Model Update", "Start check the modification of model now...");
 
-                //Registry the update
-                UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeAny());
+
+                    _updater = new FamilyUpdater(app.ActiveAddInId);
+                    UpdaterRegistry.RegisterUpdater(_updater);
+
+                    //Create a filter for elements interest
+                    CategorySet categories = CategoryUtils.CreateCategoryList(doc, app);
+                    IList<ElementFilter> categoryFilters = new List<ElementFilter>();
+
+                    foreach (Category category in categories)
+                    {
+                        categoryFilters.Add(new ElementCategoryFilter(category.Id));
+                    }
+                    ElementFilter filter = new LogicalOrFilter(categoryFilters);
+
+                    //Registry the update
+                    UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeGeometry());
+                    UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeElementAddition());
+                }
+                else
+                {
+                    App.btnTrackChange.ItemText = "Off DMU";
+                    //App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOfLarge);// n'as pas marcher
+                    UpdaterRegistry.UnregisterUpdater(_updater.GetUpdaterId());
+                    _updater = null;
+                    TaskDialog.Show("Dynamic Model Update", "Stop track");
+                }
             }
-            else
+            catch (Exception)
             {
-                App.btnTrackChange.ItemText = "Off DMU";
-                App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOfLarge);
-                UpdaterRegistry.UnregisterUpdater(_updater.GetUpdaterId());
-                _updater = null;
-                TaskDialog.Show("Dynamic Model Update", "Stop track");
-            }
+
+                throw;
+            }        
+            
         }
        
     }

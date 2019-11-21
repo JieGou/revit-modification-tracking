@@ -1,4 +1,6 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Events;
+using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace TrackChanges.DMU
         {
             m_appId = id;
             m_updaterId = new UpdaterId(m_appId, new Guid("646209C2-7AB4-4C27-9B8B-7F5E679653E8")); //Guid of addin
+
         }
         public void Execute(UpdaterData data)
         {
@@ -27,25 +30,27 @@ namespace TrackChanges.DMU
 
             foreach (ElementId elemId in data.GetAddedElementIds())
             {
-                Element e = doc.GetElement(elemId);
-                if (e != null)
-                    using (Transaction trans = new Transaction(doc))
-                    {
-                        trans.Start();
-                        WriteOnParam(e, pCreatedDate, date, true);
-                        trans.Commit();
-                    }
+                //Element e = doc.GetElement(elemId);
+                //if (e != null)
+                //    using (Transaction trans = new Transaction(doc))
+                //    {
+                //        trans.Start();
+                //        WriteOnParam(e, pCreatedDate, date, true);
+                //        trans.Commit();
+                //    }
+                TaskDialog.Show("DMU", "Add element");
             }
             foreach (ElementId elemId in data.GetModifiedElementIds())
             {
-                Element e = doc.GetElement(elemId);
-                if(e != null )
-                    using (Transaction trans = new Transaction(doc))
-                    {
-                        trans.Start();
-                        WriteOnParam(e, pModifiedDate, date, true);
-                        trans.Commit();
-                    }
+                //Element e = doc.GetElement(elemId);
+                //if(e != null )
+                //    using (Transaction trans = new Transaction(doc))
+                //    {
+                //        trans.Start();
+                //        WriteOnParam(e, pModifiedDate, date, true);
+                //        trans.Commit();
+                //    }
+                TaskDialog.Show("DMU", "Modify element");
             }
 
         }
@@ -69,6 +74,17 @@ namespace TrackChanges.DMU
         {
             return "Family updater";
         }
+
+        //private void uiapp_Application_FailuresProcessing(object sender, FailuresProcessingEventArgs e)
+        //{
+        //    string transactionName = e.GetFailuresAccessor().GetTransactionName();
+        //    isReloading = transactionName.Equals("Reload Latest");
+        //    if (transactionName.Equals("Synchronize with Central")) isSynchronizing = true;
+        //    if (transactionName.Equals("Stop sharing")) isSynchronizing = false;
+        //}
+
+
+
         private void WriteOnParam(Element e, string paramName, string value, bool overrideValues = true)
         {
             IList<Parameter> parameters = e.GetParameters(paramName);

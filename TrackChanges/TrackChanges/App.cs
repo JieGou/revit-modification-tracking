@@ -58,7 +58,7 @@ namespace TrackChanges
 
             // Create splitbutton track change
             btnDataTrackChange = new PushButtonData("btnTrackChange", "Off DMU", assemblyPath, typeof(DMU.CmdFamilyUpdater).FullName);
-            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(Resources.ToggleOfLarge);
+            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
             //btnTrackChange.ToolTip = "Track the modification of model";
             //var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Off DMU", assemblyPath, typeof(DMU.StopFamilyUpdater).FullName);
             //btnDataTrackSetting.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
