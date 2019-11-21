@@ -107,6 +107,20 @@ namespace TrackChanges
         }
 
 
+        #region GetProjectParameterId
+        public ElementId GetProjectParameterId(Document doc, string name)
+        {
+            ParameterElement pElem= new FilteredElementCollector(doc)
+                        .OfClass(typeof(ParameterElement))
+                        .Cast<ParameterElement>()
+                        .Where(e => e.Name.Equals(name))
+                        .FirstOrDefault();
+
+            return pElem?.Id;
+        }
+        #endregion //Get project parameter Id
+
+
 
     }
 }

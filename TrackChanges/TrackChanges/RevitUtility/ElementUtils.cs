@@ -60,7 +60,9 @@ namespace TrackChanges
 
             ElementFilter filter = new LogicalOrFilter(categoryFilters);
 
-            return collector.WherePasses(filter).WhereElementIsNotElementType().ToElements();
+            return collector.WherePasses(filter)
+                .WhereElementIsViewIndependent()
+                .WhereElementIsNotElementType().ToElements();
 
         }
         #endregion //Get all model elements
@@ -88,12 +90,11 @@ namespace TrackChanges
         #region Get elements pre-selection
 
         #endregion //Get elements pre-selection
-        public static IList<Element> GetElementList(ExternalCommandData commandData)
+        public static IList<Element> GetElementPreSelected(Document doc)
         {
-            UIDocument uidoc = commandData.Application.ActiveUIDocument;
-            Document doc = uidoc.Document;
+            UIDocument uidoc = new UIDocument(doc);
             Selection sel = uidoc.Selection;
-            bool isPreSelected = IsPreSelectedElement(commandData);
+            bool isPreSelected = IsPreSelectedElement(doc);
             if (isPreSelected)
                 return sel.GetElementIds().Select(x => doc.GetElement(x)).ToList();
             return new List<Element>();
@@ -101,11 +102,11 @@ namespace TrackChanges
         #region Check if selection elements is active
 
         
-        public static bool IsPreSelectedElement(ExternalCommandData commandData)
+        public static bool IsPreSelectedElement(Document doc)
         {
             try
             {
-                UIDocument uidoc = commandData.Application.ActiveUIDocument;
+                UIDocument uidoc = new UIDocument(doc);
                 Selection sel = uidoc.Selection;
                 ICollection<ElementId> selectedIds = uidoc.Selection.GetElementIds();
                 if (selectedIds.Count > 0) return true;

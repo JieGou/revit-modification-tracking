@@ -8,4 +8,12 @@
     <VendorId>Tien Duy NGUYEN</VendorId>
     <VendorDescription>tienduy.nguyen</VendorDescription>
   </AddIn>
+  <AddIn Type="Application">
+    <Name>Application TrackChanges</Name>
+    <Assembly>TrackChanges.dll</Assembly>
+    <FullClassName>TrackChanges.AppTestWpf</FullClassName>
+    <ClientId>75EF7392-00EF-4A4A-9937-A0F140A598F6</ClientId>
+    <VendorId>Tien Duy NGUYEN</VendorId>
+    <VendorDescription>tienduy.nguyen</VendorDescription>
+  </AddIn>
 </RevitAddIns>

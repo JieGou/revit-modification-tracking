@@ -20,7 +20,7 @@ namespace TrackChanges
         internal static App Instance { get; }
 
         //Get button to change their properties in class command
-        internal static PushButtonData btnDataTrackChange { get; set; }
+        internal static RibbonItem btnDMU { get; set; }
         internal static RibbonItem btnTrackChange { get; set; }
 
 
@@ -28,15 +28,15 @@ namespace TrackChanges
         public Result OnStartup(UIControlledApplication a)
         {
             CreateRibbonItem(a);
-            try
-            {
-                // Register event. 
-                a.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
-            }
-            catch
-            {
-                return Result.Failed;
-            }
+            //try
+            //{
+            //    // Register event. 
+            //    //a.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
+            //}
+            //catch
+            //{
+            //    return Result.Failed;
+            //}
             return Result.Succeeded;
         }
         #endregion
@@ -44,7 +44,7 @@ namespace TrackChanges
         #region Result Shutdown
         public Result OnShutdown(UIControlledApplication a)
         {
-            a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
+            //a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
             return Result.Succeeded;
         }
         #endregion
@@ -56,18 +56,19 @@ namespace TrackChanges
             //Create panel workflow
             var panelWokflow = CreatePanel(uiApp, "TD", "Workflow");
 
+            #region button TrackChange
             // Create splitbutton track change
-            btnDataTrackChange = new PushButtonData("btnTrackChange", "Off DMU", assemblyPath, typeof(DMU.CmdFamilyUpdater).FullName);
-            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
-            //btnTrackChange.ToolTip = "Track the modification of model";
-            //var btnDataTrackSetting = new PushButtonData("btnTrackSetting", "Off DMU", assemblyPath, typeof(DMU.StopFamilyUpdater).FullName);
-            //btnDataTrackSetting.LargeImage = ImageUtils.ConvertFromIcon(Resources.icon);
+            var btnDataDMU = new PushButtonData("btnDMU", "Off DMU", assemblyPath, typeof(DMU.CmdFamilyUpdater).FullName);
+            btnDataDMU.LargeImage = ImageUtils.ConvertFromBitmap(Resources.ToggleOfLarge);
+
+            var btnDataTrackChange = new PushButtonData("btnTrackChange", "Off TrackChange", assemblyPath, typeof(CmdTrackChange).FullName);
+            btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(Resources.icon);
             SplitButtonData splDataTrackChange = new SplitButtonData("splTrackChange", "TrackChange");
             SplitButton splTrackChange = panelWokflow.AddItem(splDataTrackChange) as SplitButton;
 
+            btnDMU = splTrackChange.AddPushButton(btnDataDMU);
             btnTrackChange = splTrackChange.AddPushButton(btnDataTrackChange);
-            //splTrackChange.AddPushButton(btnDataTrackSetting);
-
+            #endregion
         }
 
         #endregion //Create all ribbon item: tab, panel, button
@@ -151,6 +152,6 @@ namespace TrackChanges
         }
         #endregion //Helper pour create panel
 
-
+       
     }
 }

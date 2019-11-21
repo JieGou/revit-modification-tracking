@@ -1,0 +1,84 @@
+﻿<Window x:Class="TrackChanges.WindowTest"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrackChanges"
+        mc:Ignorable="d"
+        Title="WindowTest" Height="550" Width="500"
+        ResizeMode="CanResizeWithGrip">
+    <Window.DataContext>
+        <!-- Declaratively create an instance of our SongViewModel -->
+        <local:MainViewModel />
+    </Window.DataContext>
+    
+    <Grid Margin="10 30 10 10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <!--Condition woth radiobutton-->
+        <Grid Grid.Row="0">
+            <GroupBox Header="Selection" Width="auto" HorizontalAlignment="Left">
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         SelectedValuePath="Tag" 
+                     SelectedValue="{Binding Path=SelectedButton}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <RadioButton Content="{TemplateBinding Content}"
+                                     IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"></WrapPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem Tag="Rvt" Margin="0 0 10 0">Rvt</ListBoxItem>
+                    <ListBoxItem Tag="ActiveView" Margin="0 0 10 0">Active View</ListBoxItem>
+                    <ListBoxItem Tag="PreSelected" Margin="0 0 10 0">Pre-Selected</ListBoxItem>
+                </ListBox>
+            </GroupBox>
+        
+           
+        </Grid>
+        
+        <!--List view -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="List of element" Grid.Row="0"></TextBlock>
+            <TreeView x:Name="treeElement" Margin="5" Grid.Row="1">
+             
+            </TreeView>
+            
+        </Grid>
+       
+        <Grid Grid.Row="2" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="0 2 5 0"></Setter>
+                        <Setter Property="Width" Value="80"></Setter>
+                    </Style>
+                </StackPanel.Resources>
+                <Button x:Name="btnColor" Height="auto" 
+                        Content="Color"
+                        Command="{Binding ColorElementCommand}"></Button>
+                <Button x:Name="btnSelect" Height="auto" 
+                        Content="Select" 
+                        Command="{Binding SelectElementCommand}"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

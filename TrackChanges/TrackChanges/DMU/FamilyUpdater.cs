@@ -11,14 +11,18 @@ namespace TrackChanges.DMU
 {
     public class FamilyUpdater : IUpdater
     {
-        static AddInId m_appId;
-        static UpdaterId m_updaterId;
+        static AddInId _appId;
+        static UpdaterId _updaterId;
+        public static bool _isActived = false;
+        
+
         Element _element = null;
         // constructor takes the AddInId for the add-in associated with this updater
         public FamilyUpdater(AddInId id)
         {
-            m_appId = id;
-            m_updaterId = new UpdaterId(m_appId, new Guid("646209C2-7AB4-4C27-9B8B-7F5E679653E8")); //Guid of addin
+            _appId = id;
+            _updaterId = new UpdaterId(_appId, new Guid("646209C2-7AB4-4C27-9B8B-7F5E679653E8")); //Guid of addin
+            _isActived = true;
 
         }
         public void Execute(UpdaterData data)
@@ -27,6 +31,9 @@ namespace TrackChanges.DMU
             string pCreatedDate = "CreatedDate";
             string pModifiedDate = "ModifiedDate";
             string date = DateTime.Now.ToShortDateString();
+
+
+
 
             foreach (ElementId elemId in data.GetAddedElementIds())
             {
@@ -67,7 +74,7 @@ namespace TrackChanges.DMU
 
         public UpdaterId GetUpdaterId()
         {
-            return m_updaterId;
+            return _updaterId;
         }
 
         public string GetUpdaterName()
