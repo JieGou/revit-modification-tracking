@@ -101,7 +101,7 @@ namespace TrackChanges
         }
         #endregion //Helper pour create panel
 
-        #region Show form modeless dialog wpf
+        #region Show form modeless dialog wpf with all the external events
         public void ShowForm(UIApplication uiapp)
         {
             //If we do not have a dialog yet, create and show it
@@ -110,15 +110,21 @@ namespace TrackChanges
 
             if (_wpfForm is null)
             {
+                #region Initialize all the external event for wpf form
                 // A new handler to handle request posting by the dialog
-                HighlightElementEvent handler = new HighlightElementEvent();
+                HighlightElementExEvent highlight = new HighlightElementExEvent();
+                GetListElementsExEvent getListElement = new GetListElementsExEvent();
+                #endregion //Initialize all the external event for wpf form
 
+                #region Decla
+
+                #endregion
                 // External Event for the dialog to use (to post requests)
-                ExternalEvent exEvent = ExternalEvent.Create(handler); //--> using for rasing event
+                ExternalEvent exEvent = ExternalEvent.Create(highlight); //--> using for rasing event
 
                 // We give the objects to the new dialog;
                 // The dialog becomes the owner responsible for disposing them, eventually.
-                _wpfForm = new WindowTest(exEvent, handler);
+                _wpfForm = new WindowTest(exEvent, highlight);
                 _wpfForm.Show();
 
             }

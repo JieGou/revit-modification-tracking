@@ -8,7 +8,7 @@
         Title="WindowTest" Height="550" Width="500"
         ResizeMode="CanResizeWithGrip">
     <Window.DataContext>
-        <!-- Declaratively create an instance of our SongViewModel -->
+        <!-- Declaratively create an instance of our ViewModel -->
         <local:MainViewModel />
     </Window.DataContext>
     
@@ -42,9 +42,9 @@
                             <WrapPanel IsItemsHost="True"></WrapPanel>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
-                    <ListBoxItem Tag="Rvt" Margin="0 0 10 0">Rvt</ListBoxItem>
-                    <ListBoxItem Tag="ActiveView" Margin="0 0 10 0">Active View</ListBoxItem>
-                    <ListBoxItem Tag="PreSelected" Margin="0 0 10 0">Pre-Selected</ListBoxItem>
+                    <ListBoxItem Tag="IsAllElement" Margin="0 0 10 0">Rvt</ListBoxItem>
+                    <ListBoxItem Tag="IsActiveView" Margin="0 0 10 0">Active View</ListBoxItem>
+                    <ListBoxItem Tag="IsPreSelected" Margin="0 0 10 0">Pre-Selected</ListBoxItem>
                 </ListBox>
             </GroupBox>
         
@@ -59,7 +59,12 @@
             </Grid.RowDefinitions>
             <TextBlock Text="List of element" Grid.Row="0"></TextBlock>
             <TreeView x:Name="treeElement" Margin="5" Grid.Row="1">
-             
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type local:MainViewModel}"
+                                              ItemsSource="{Binding ElementList}">
+                        <CheckBox Content="{Binding }"></CheckBox>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
             </TreeView>
             
         </Grid>

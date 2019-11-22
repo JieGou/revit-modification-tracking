@@ -1,6 +1,7 @@
 using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,33 +19,15 @@ namespace TrackChanges
         public bool radRvtIsChecked { get; set; }
         public bool radActiveViewIsChecked { get; set; }
         public bool radPreSelectedIsChecked { get; set; }
-        public GetElementIn ElementInView { get; set; }
-
         public bool IsLoaded = false;
-        public MainViewModel()
-        {
-            //LoadedWindowCommand = new RelayCommand<object>(
-            //    (p) => true,
-            //    (p) =>
-            //    {
-            //        IsLoaded = true;
-            //        LoginWindow loginWindow = new LoginWindow();
-            //        loginWindow.ShowDialog();
-            //    });
+        //public GetElementIn ElementInView { get; set; } //Enum
+        public ObservableCollection<Element> ElementList;
 
-            SelectElementCommand = new RelayCommand<object>(
-                (p) => true,
-                (p) =>
-                {
-                    WindowTest._ExtEvent.Raise();
-                });
-        }
+        private bool _radRvtIsChecked;
+        private bool _radActiveViewIsChecked;
+        private bool _radPreSelectedIsChecked;
 
-
-        #region check radio button : element in view
-
-        #endregion
-        bool _radRvtIsChecked;
+        #region Properties
         public bool IsAllElement
         {
             get => _radRvtIsChecked;
@@ -54,8 +37,6 @@ namespace TrackChanges
                 OnPropertyChanged("Rvt");
             }
         }
-
-        bool _radActiveViewIsChecked;
         public bool IsElementInActiveView
         {
             get => _radActiveViewIsChecked;
@@ -65,8 +46,6 @@ namespace TrackChanges
                 OnPropertyChanged("ActiveView");
             }
         }
-
-        bool _radPreSelectedIsChecked;
         public bool IsElementPreSelected
         {
             get => _radPreSelectedIsChecked;
@@ -76,6 +55,47 @@ namespace TrackChanges
                 OnPropertyChanged("PreSelected");
             }
         }
+        #endregion //Properties
+
+        //Provide datacontext and commands for the form
+        public MainViewModel()
+        {
+
+
+            #region Get Data
+            ElementRevit root = new ElementRevit { IdName = "Element List" };
+            ElementRevit elements = new ElementRevit();  //Give a list element here
+
+            #endregion
+
+            #region Command
+            //LoadedWindowCommand = new RelayCommand<object>(
+            //    (p) => true,
+            //    (p) =>
+            //    {
+            //        IsLoaded = true;
+            //        LoginWindow loginWindow = new LoginWindow();
+            //        loginWindow.ShowDialog();
+            //    });
+
+            //Command (with external event) to select elements in revit
+            SelectElementCommand = new RelayCommand<object>(
+               (p) => true,
+               (p) =>
+               {
+                   WindowTest._ExtEvent.Raise();
+               });
+
+            //Command select the radio button and get the list element
+            #endregion
+
+        }
+
+
+        #region check radio button : element in view
+
+        #endregion
+       
 
         #region GetElement in project
         public IList<Element> GetElements(Document doc, Autodesk.Revit.ApplicationServices.Application app)

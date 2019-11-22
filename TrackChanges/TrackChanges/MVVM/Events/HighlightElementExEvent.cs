@@ -11,10 +11,10 @@ using Autodesk.Revit.UI;
 
 namespace TrackChanges
 {
-    public class HighlightElementEvent : IExternalEventHandler
+    public class HighlightElementExEvent : IExternalEventHandler
     {
         private ExternalEvent exEvent;
-        private HighlightElementEvent handler;
+        private HighlightElementExEvent handler;
         private bool _isChecked;
 
       
