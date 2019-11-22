@@ -91,40 +91,5 @@ namespace TrackChanges
 
         }
 
-
-        #region check radio button : element in view
-
-        #endregion
-       
-
-        #region GetElement in project
-        public IList<Element> GetElements(Document doc, Autodesk.Revit.ApplicationServices.Application app)
-        {
-            CategorySet categories = new CategorySet();
-            categories = CategoryUtils.CreateCategoryList(doc, app);
-
-            IList<Element> eList = new List<Element>();
-
-            switch (true)
-            {
-                case true when IsAllElement:
-                    eList = ElementUtils.GetElementList(doc, categories);
-                    break;
-                case true when IsElementInActiveView:
-                    eList = ElementUtils.GetElementList(doc, categories, doc.ActiveView);
-                    break;
-                case true when IsElementPreSelected:
-                    eList = ElementUtils.GetElementPreSelected(doc);
-                    break;
-                default:
-                    break;
-            }
-            return eList;
-        }
-        #endregion
-
-
-      
-
     }
 }

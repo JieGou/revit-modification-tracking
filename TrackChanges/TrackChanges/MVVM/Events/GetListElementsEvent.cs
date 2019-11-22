@@ -12,15 +12,49 @@ namespace TrackChanges
 {
     public class GetListElementsExEvent : IExternalEventHandler
     {
-        public ExternalEvent 
-        public void Execute(UIApplication app)
+        private ExternalEvent exEvent;
+        private GetListElementsExEvent handler;
+        private bool _isAllElement;
+        private bool _isActiveView;
+        private bool _isPreSelected;
+
+        
+        public void Execute(UIApplication uiapp)
         {
-            throw new NotImplementedException();
+            MainViewModel vmodel = new MainViewModel();
+            _isAllElement = vmodel.IsAllElement;
+            _isAllElement = vmodel.IsElementInActiveView;
+            _isPreSelected = vmodel.IsElementPreSelected;
+
+            Application app = uiapp.Application;
+            Document doc = uiapp.ActiveUIDocument.Document;
+            CategorySet categories = new CategorySet();
+            categories = CategoryUtils.CreateCategoryList(doc, app);
+
+            IList<Element> eList = new List<Element>();
+
+            switch (true)
+            {
+                case true when _isAllElement:
+                    eList = ElementUtils.GetElementList(doc, categories);
+                    break;
+                case true when _isAllElement:
+                    eList = ElementUtils.GetElementList(doc, categories, doc.ActiveView);
+                    break;
+                case true when _isPreSelected:
+                    eList = ElementUtils.GetElementPreSelected(doc);
+                    break;
+                default:
+                    break;
+            }
+
+
         }
 
         public string GetName()
         {
             return "Get List Element";
         }
+
     }
 }
