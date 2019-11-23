@@ -23,7 +23,10 @@ namespace TrackChanges
         public string IdName
         {
             get => $"{Id.ToString()} - {Name}";
-            set => IdName = value;
+            set
+            {
+                IdName = value;
+            }
         }
     }
 }

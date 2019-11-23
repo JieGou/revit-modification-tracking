@@ -82,7 +82,7 @@ namespace TrackChanges.DMU
             UpdaterRegistry.RegisterUpdater(_updater);
 
             //Create a filter for elements interest
-            CategorySet categories = CategoryUtils.CreateCategoryList(doc, app);
+            CategorySet categories = CategoryUtils.GetCategoriesHasElements(doc, app);
             IList<ElementFilter> categoryFilters = new List<ElementFilter>();
 
             foreach (Category category in categories)

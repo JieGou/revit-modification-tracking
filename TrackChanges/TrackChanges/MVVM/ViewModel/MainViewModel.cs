@@ -1,4 +1,6 @@
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,25 +18,39 @@ namespace TrackChanges
     {
         public ICommand LoadedWindowCommand { get; set; }
         public ICommand SelectElementCommand { get; set; }
+        public ICommand ColorElementCommand { get; set; }
+
         public bool radRvtIsChecked { get; set; }
         public bool radActiveViewIsChecked { get; set; }
         public bool radPreSelectedIsChecked { get; set; }
         public bool IsLoaded = false;
+        public ObservableCollection<string> ListView { get; set; }
+        //public static ObservableCollection<string> ElementListTest { get; set; }
+
         //public GetElementIn ElementInView { get; set; } //Enum
-        public ObservableCollection<Element> ElementList;
+        private ObservableCollection<ElementId> _elementIdList;
 
         private bool _radRvtIsChecked;
         private bool _radActiveViewIsChecked;
         private bool _radPreSelectedIsChecked;
+        private UIApplication _uiapp = null;
 
         #region Properties
+        public ObservableCollection<ElementId> ElementIdList
+        { get => _elementIdList;
+            set
+            {
+                _elementIdList = value;
+                OnPropertyChanged();
+            }
+        }
         public bool IsAllElement
         {
             get => _radRvtIsChecked;
             set
             {
                 _radRvtIsChecked = value;
-                OnPropertyChanged("Rvt");
+                OnPropertyChanged("Rvt");//Using [CallMemberName], if no it likes: OnPropertyChanged(this, "Rvt")
             }
         }
         public bool IsElementInActiveView
@@ -60,23 +76,13 @@ namespace TrackChanges
         //Provide datacontext and commands for the form
         public MainViewModel()
         {
-
-
+            _uiapp = CmdShowFormWPF.UIAPP;
             #region Get Data
-            ElementRevit root = new ElementRevit { IdName = "Element List" };
-            ElementRevit elements = new ElementRevit();  //Give a list element here
-
+            //ElementRevit root = new ElementRevit();
+            //ElementRevit elements = new ElementRevit();  //Give a list element here
             #endregion
 
             #region Command
-            //LoadedWindowCommand = new RelayCommand<object>(
-            //    (p) => true,
-            //    (p) =>
-            //    {
-            //        IsLoaded = true;
-            //        LoginWindow loginWindow = new LoginWindow();
-            //        loginWindow.ShowDialog();
-            //    });
 
             //Command (with external event) to select elements in revit
             SelectElementCommand = new RelayCommand<object>(
@@ -86,10 +92,16 @@ namespace TrackChanges
                    WindowTest._ExtEvent.Raise();
                });
 
+            //ColorElementCommand = new RelayCommand<object>(
+            //  (p) => true,
+            //  (p) =>
+            //  {
+            //      ColorElement();
+            //  });
             //Command select the radio button and get the list element
             #endregion
 
         }
-
+        
     }
 }

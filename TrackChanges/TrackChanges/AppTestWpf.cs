@@ -22,7 +22,9 @@ namespace TrackChanges
         public static RibbonItem btnTestWpf { get; set; }
 
         //Declare the Wpf form
-        private WindowTest _wpfForm;
+
+        public static WindowTest _wpfForm { get; set; }
+        
 
 
 

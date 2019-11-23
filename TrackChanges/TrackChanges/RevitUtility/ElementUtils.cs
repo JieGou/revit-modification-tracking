@@ -65,6 +65,28 @@ namespace TrackChanges
                 .WhereElementIsNotElementType().ToElements();
 
         }
+        public static IList<Element> GetElementInProject(Document doc, bool isActiveView = false)
+        {
+            IList<Element> elements = new List<Element>();
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            if (isActiveView)
+                collector = new FilteredElementCollector(doc, doc.ActiveView.Id);
+             collector
+                     .WhereElementIsNotElementType()
+                     .WhereElementIsViewIndependent()
+                     .ToElements();
+            foreach (Element element in collector)
+            {
+                if (null != element.Category
+                  && 0 < element.Parameters.Size
+                  && (element.Category.HasMaterialQuantities))
+                {
+                    elements.Add(element);
+                }
+            }
+            return elements;
+
+        }
         #endregion //Get all model elements
 
         #region Get all model elemennts in view actives
@@ -101,7 +123,7 @@ namespace TrackChanges
         }
         #region Check if selection elements is active
 
-        
+
         public static bool IsPreSelectedElement(Document doc)
         {
             try

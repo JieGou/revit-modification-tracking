@@ -70,9 +70,11 @@
     <Compile Include="MVVM\CmdShowFormWPF.cs" />
     <Compile Include="MVVM\EnumBooleanConverter.cs" />
     <Compile Include="MVVM\Enum\GetElementIn.cs" />
+    <Compile Include="MVVM\Events\ColorElementInViewEvent.cs" />
     <Compile Include="MVVM\Events\GetListElementsEvent.cs" />
     <Compile Include="MVVM\Events\HighlightElementExEvent.cs" />
     <Compile Include="MVVM\Model\ElementRevit.cs" />
+    <Compile Include="MVVM\Model\WPFModel.cs" />
     <Compile Include="RevitUtility\CatchErrorSampleRevit.cs" />
     <Compile Include="RevitUtility\CategoryUtils.cs" />
     <Compile Include="TrackChangeSolution\ElementUtils\ElementData.cs" />

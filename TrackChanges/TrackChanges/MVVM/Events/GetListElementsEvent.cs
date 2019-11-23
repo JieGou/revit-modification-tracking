@@ -28,18 +28,15 @@ namespace TrackChanges
 
             Application app = uiapp.Application;
             Document doc = uiapp.ActiveUIDocument.Document;
-            CategorySet categories = new CategorySet();
-            categories = CategoryUtils.CreateCategoryList(doc, app);
-
             IList<Element> eList = new List<Element>();
 
             switch (true)
             {
                 case true when _isAllElement:
-                    eList = ElementUtils.GetElementList(doc, categories);
+                    eList = ElementUtils.GetElementInProject(doc,false);
                     break;
                 case true when _isAllElement:
-                    eList = ElementUtils.GetElementList(doc, categories, doc.ActiveView);
+                    eList = ElementUtils.GetElementInProject(doc, true);
                     break;
                 case true when _isPreSelected:
                     eList = ElementUtils.GetElementPreSelected(doc);

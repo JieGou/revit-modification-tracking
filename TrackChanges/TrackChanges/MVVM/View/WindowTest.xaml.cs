@@ -23,8 +23,13 @@ namespace TrackChanges
         public static ExternalEvent _ExtEvent { get; private set; } //public to invoke it when binding with the external event command
         private HighlightElementExEvent _hEvent;
         private GetListElementsExEvent _getListElementEvent;
+        private ColorElementInViewEvent _colorElementInViewEvent;
 
         #region Declare all the external event for the wpf window
+        public WindowTest()
+        {
+            InitializeComponent();
+        }
         public WindowTest(ExternalEvent eEvent, HighlightElementExEvent handlerEvent)
         {
             InitializeComponent();
@@ -36,6 +41,12 @@ namespace TrackChanges
             InitializeComponent();
             _ExtEvent = eEvent;
             _getListElementEvent = handlerEvent;
+        }
+        public WindowTest(ExternalEvent eEvent, ColorElementInViewEvent handlerEvent)
+        {
+            InitializeComponent();
+            _ExtEvent = eEvent;
+            _colorElementInViewEvent = handlerEvent;
         }
         #endregion
 

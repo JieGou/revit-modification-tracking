@@ -20,8 +20,8 @@ namespace TrackChanges
         internal static App Instance { get; }
 
         //Get button to change their properties in class command
-        internal static RibbonItem btnDMU { get; set; }
-        internal static RibbonItem btnTrackChange { get; set; }
+        internal static PushButton btnDMU { get; set; }
+        internal static PushButton btnTrackChange { get; set; }
 
 
         #region Result Startup

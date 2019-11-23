@@ -58,15 +58,28 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Text="List of element" Grid.Row="0"></TextBlock>
-            <TreeView x:Name="treeElement" Margin="5" Grid.Row="1">
+            <!--<TreeView x:Name="treeElement" Margin="5" Grid.Row="1">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type local:MainViewModel}"
-                                              ItemsSource="{Binding ElementList}">
-                        <CheckBox Content="{Binding }"></CheckBox>
+                                              ItemsSource="{Binding ElementIdList}">
+                        <CheckBox Content="{Binding}"></CheckBox>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </TreeView>
-            
+            </TreeView>-->
+            <StackPanel>
+                <ScrollViewer>
+                    <ListBox x:Name="lbx" MaxHeight="300"
+                             ItemsSource="{Binding ListView}"></ListBox>
+
+                </ScrollViewer>
+                <ScrollViewer>
+                    <ListBox x:Name="lbx2" MaxHeight="200"
+                             ItemsSource="{Binding ElementIdList}"></ListBox>
+
+                </ScrollViewer>
+            </StackPanel>
+           
+
         </Grid>
        
         <Grid Grid.Row="2" VerticalAlignment="Bottom">

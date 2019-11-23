@@ -12,7 +12,7 @@ namespace TrackChanges
 {
     public class CategoryUtils
     {
-        public static CategorySet CreateCategoryList(Autodesk.Revit.DB.Document doc, Autodesk.Revit.ApplicationServices.Application app)
+        public static CategorySet GetCategoriesList(Autodesk.Revit.DB.Document doc, Autodesk.Revit.ApplicationServices.Application app)
         {
             CategorySet myCategorySet = app.Create.NewCategorySet();
             Categories categories = doc.Settings.Categories;
@@ -26,6 +26,27 @@ namespace TrackChanges
                 }
             }
 
+            return myCategorySet;
+        }
+        public static CategorySet GetCategoriesHasElements(Autodesk.Revit.DB.Document doc, Autodesk.Revit.ApplicationServices.Application app)
+        {
+            CategorySet myCategorySet = app.Create.NewCategorySet();
+            FilteredElementCollector collector= new FilteredElementCollector(doc);
+
+            collector
+              .WhereElementIsNotElementType()
+              .WhereElementIsViewIndependent()
+              .ToElements();
+            foreach (Element element in collector)
+            {
+                if (element.Category != null
+                  && 0 < element.Parameters.Size
+                  && (element.Category.HasMaterialQuantities))
+                {
+                   
+                     myCategorySet.Insert(element.Category);
+                }
+            }
             return myCategorySet;
         }
     }
