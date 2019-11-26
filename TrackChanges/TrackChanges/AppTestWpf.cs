@@ -17,7 +17,7 @@ namespace TrackChanges
     class AppTestWpf : IExternalApplication
     {
         internal static string assemblyPath = typeof(App).Assembly.Location;
-        public static AppTestWpf Instance { get; private set; } = null;
+        public static AppTestWpf GetInstance { get; private set; } = null;
 
         public static RibbonItem btnTestWpf { get; set; }
 
@@ -32,7 +32,7 @@ namespace TrackChanges
         public Result OnStartup(UIControlledApplication a)
         {
             _wpfForm = null;   // no dialog needed yet; the command will bring it
-            Instance = this;  // static access to this application instance
+            GetInstance = this;  // static access to this application instance
 
             //Create the ribbon item
             CreateRibbonItem(a);

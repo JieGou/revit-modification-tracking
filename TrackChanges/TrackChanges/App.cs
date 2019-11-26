@@ -17,7 +17,7 @@ namespace TrackChanges
     class App : IExternalApplication
     {
         internal static string assemblyPath = typeof(App).Assembly.Location;
-        internal static App Instance { get; }
+        internal static App GetInstance { get; }
 
         //Get button to change their properties in class command
         internal static PushButton btnDMU { get; set; }

@@ -15,7 +15,7 @@ namespace TrackChanges.DMU
     public class CmdFamilyUpdater : IExternalCommand
     {
         private FamilyUpdater _updater = null;
-        private static bool _isActived;
+        public static bool IsActived;
         
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -23,42 +23,21 @@ namespace TrackChanges.DMU
             UIDocument uidoc = commandData.Application.ActiveUIDocument;
             Application app = commandData.Application.Application;
             Document doc = uidoc.Document;
-            using (Transaction tx = new Transaction(doc))
-            {
                 try
                 {
                     UpdaterCommand(app, doc);
-
-                }
-                catch (ErrorMessageException errorEx)
-                {
-                    // checked exception need to show in error messagebox
-                    message = errorEx.Message;
-                    if (tx.HasStarted() == true)
-                    {
-                        tx.RollBack();
-                    }
-                    return Autodesk.Revit.UI.Result.Failed;
-                }
-                catch (Exception ex)
-                {
-                    // unchecked exception cause command failed
-                    message = ex.Message;
-                    //Trace.WriteLine(ex.ToString());
-                    if (tx.HasStarted() == true)
-                    {
-                        tx.RollBack();
-                    }
-                    return Autodesk.Revit.UI.Result.Failed;
-                }
-            }
-                           
-            return Result.Succeeded;
+                    return Result.Succeeded;
             
+                }
+                catch (Exception e)
+                {
+                    message = e.Message;
+                    return Autodesk.Revit.UI.Result.Failed;
+                }
         }
         public void UpdaterCommand(Application app, Document doc)
         {
-                if (!_isActived)
+                if (!IsActived)
                 {
                     EnableUpdater(app,doc);
                 }
@@ -71,30 +50,28 @@ namespace TrackChanges.DMU
         private void EnableUpdater(Application app, Document doc)
         {
             //Rename button --> On when start and off when stop
-            _isActived = true;
+            IsActived = true;
             App.btnDMU.ItemText = "On DMU";
-            (App.btnDMU as PushButton).LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOnLarge);
-            //App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOnLarge);
-            TaskDialog.Show("Dynamic Model Update", "Start check the modification of model now...");
+            App.btnDMU.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOnLarge);
+            TaskDialog.Show("Dynamic Model Update", "Start track now...");
 
 
             _updater = new FamilyUpdater(app.ActiveAddInId);
             UpdaterRegistry.RegisterUpdater(_updater);
 
             //Create a filter for elements interest
+            IList<ElementId> eleIds = new FilteredElementCollector(doc).WhereElementIsNotElementType().WhereElementIsViewIndependent().ToElementIds().ToList();
             CategorySet categories = CategoryUtils.GetCategoriesHasElements(doc, app);
-            IList<ElementFilter> categoryFilters = new List<ElementFilter>();
+            IList<ElementFilter> catFilter = new List<ElementFilter>();
 
-            foreach (Category category in categories)
+            foreach (Category cat in categories)
             {
-                categoryFilters.Add(new ElementCategoryFilter(category.Id));
+                catFilter.Add(new ElementCategoryFilter(cat.Id));
             }
-
-
+            
             //Filter for all elements of all categories in model
-            ElementClassFilter fiFilter= new ElementClassFilter(typeof(FamilyInstance));
-            LogicalOrFilter catFilter = new LogicalOrFilter(categoryFilters);
-            LogicalAndFilter filter = new LogicalAndFilter(fiFilter, catFilter);
+            LogicalOrFilter filter = new LogicalOrFilter(catFilter);
+
 
             //Registry the update
             UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeGeometry());
@@ -105,12 +82,11 @@ namespace TrackChanges.DMU
         }
        private void DisableUpdater(Application app, Document doc)
         {
+            IsActived = false;
             App.btnDMU.ItemText = "Off DMU";
-            (App.btnDMU as PushButton).LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOfLarge);
-            //App.btnDataTrackChange.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOfLarge);// n'as pas marcher
-            UpdaterRegistry.UnregisterUpdater(_updater.GetUpdaterId());
+            App.btnDMU.LargeImage = ImageUtils.ConvertFromBitmap(TrackChanges.Properties.Resources.ToggleOfLarge);
+            UpdaterRegistry.UnregisterUpdater(new FamilyUpdater(app.ActiveAddInId).GetUpdaterId());
             _updater = null;
-            _isActived = false;
             TaskDialog.Show("Dynamic Model Update", "Stop track");
         }
     }

@@ -25,10 +25,10 @@ namespace TrackChanges
         public bool radPreSelectedIsChecked { get; set; }
         public bool IsLoaded = false;
         public ObservableCollection<string> ListView { get; set; }
-        //public static ObservableCollection<string> ElementListTest { get; set; }
 
         //public GetElementIn ElementInView { get; set; } //Enum
         private ObservableCollection<ElementId> _elementIdList;
+        public ObservableCollection<string> ViewItems { get; set; }
 
         private bool _radRvtIsChecked;
         private bool _radActiveViewIsChecked;

@@ -38,16 +38,22 @@ namespace Revit.SDK.Samples.DynamicModelUpdate.CS
 
 
                 // creating and registering the updater for the document.
-                if (m_sectionUpdater == null)
+                if (m_sectionUpdater is null)
                 {
                     using (Transaction tran = new Transaction(m_document, "Register Section Updater"))
                     {
                         tran.Start();
-
-                        m_sectionUpdater = new SectionUpdater(m_thisAppId);
-                        m_sectionUpdater.Register(m_document);
-
-                        tran.Commit();
+                        try
+                        {
+                            m_sectionUpdater = new SectionUpdater(m_thisAppId);
+                            m_sectionUpdater.Register(m_document);
+                            tran.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            tran.RollBack();
+                        }
+                       
                     }
                 }
 

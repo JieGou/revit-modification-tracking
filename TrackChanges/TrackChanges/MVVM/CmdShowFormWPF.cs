@@ -23,7 +23,7 @@ namespace TrackChanges
             {
                 UIAPP = commandData.Application;
                 
-                AppTestWpf.Instance.ShowForm(commandData.Application);
+                AppTestWpf.GetInstance.ShowForm(commandData.Application);
                 var wpf = AppTestWpf._wpfForm;
                 MainViewModel vm = new MainViewModel();
                 vm.ListView = GetAllView(UIAPP);
