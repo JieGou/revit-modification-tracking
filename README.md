@@ -2,7 +2,7 @@
 ---
 
 ## Addin Revit to track the database modification change. 
-`The original solution is of Jeremy Tamik. You can see its by following the link` 
+`The original solution is of Jeremy Tamik
 [Track Change](https://github.com/jeremytammik/TrackChanges)
 
 This solution is created to adapt the demand of my company.
