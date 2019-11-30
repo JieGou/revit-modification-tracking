@@ -38,7 +38,7 @@ namespace TrackChanges.DMU
                 try
                 {
                     //Get list element instace (not element type in project)
-                    IList<ElementId> allElemIds = ElementUtils.GetElementInProject(doc, true).Select(e => e.Id).ToList();
+                    IList<ElementId> allElemIds = ElementUtils.GetElementInProject(doc, false).Select(e => e.Id).ToList();
                     Dictionary<ElementId, ElementId> dicEleIds = allElemIds.ToDictionary<ElementId, ElementId>(id => id);
 
 

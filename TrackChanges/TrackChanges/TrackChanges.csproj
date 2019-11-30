@@ -82,12 +82,14 @@
     <Compile Include="RevitUtility\ElementUtils.cs" />
     <Compile Include="TrackChangeSolution\ElementUtils\GeometricalUtils.cs" />
     <Compile Include="RevitUtility\ParameterUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\InterestElements.cs" />
     <Compile Include="TrackChangeSolution\ElementUtils\SelectionFilters.cs" />
     <Compile Include="TrackChangeSolution\ElementUtils\SolidUtils.cs" />
     <Compile Include="TrackChangeSolution\ElementUtils\StringUtils.cs" />
     <Compile Include="Helpers\ImageUtils.cs" />
     <Compile Include="Helpers\XyzEqualityComparer.cs" />
     <Compile Include="TrackChangeSolution\RefTrackChanges.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\CmdAddParameter.cs" />
     <Compile Include="TrackChangeSolution\TrackChanges\CmdTrackChange.cs" />
     <Compile Include="TrackChangeSolution\TrackChanges\ReportChanges.cs" />
     <Compile Include="MVVM\View\WindowTest.xaml.cs">

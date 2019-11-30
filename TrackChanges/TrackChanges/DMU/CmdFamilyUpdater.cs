@@ -77,7 +77,7 @@ namespace TrackChanges.DMU
             UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeGeometry());
             UpdaterRegistry.AddTrigger(_updater.GetUpdaterId(), filter, Element.GetChangeTypeElementAddition());
 
-            //For type parameter: we must liste all parameter interest to add trigger
+            //For type parameter: we must liste all parameter interest to add trigger -->todo
 
         }
        private void DisableUpdater(Application app, Document doc)

@@ -12,12 +12,12 @@ using Autodesk.Revit.DB.Structure;
 
 namespace TrackChanges
 {
-    public class ElementStrutural
+    public class InterestElement
     {
         /// <summary>
         /// Retrieve only structural elements
         /// </summary>
-        public  FilteredElementCollector GetStructuralElements(Document doc, Application app)
+        public FilteredElementCollector GetStructuralElements(Document doc, Application app)
         {
 
             // what categories of family instances
@@ -77,13 +77,20 @@ namespace TrackChanges
             };
             #endregion
 
+            Categories categories = doc.Settings.Categories; //All category in project
 
-            IList<ElementFilter> a= new List<ElementFilter>(bics.Count());
-
-            foreach (BuiltInCategory bic in bics)
+            //Get only builtIn category in list input
+            IList<Category> cats = new List<Category>();
+            foreach(var bic in bics)
+            {
+                cats.Add(categories.get_Item(bic));
+            }
+            IList<ElementFilter> a = new List<ElementFilter>(bics.Count());
+            foreach (var bic in bics)
             {
                 a.Add(new ElementCategoryFilter(bic));
             }
+
             LogicalOrFilter categoryFilter = new LogicalOrFilter(a);
 
             LogicalAndFilter familyInstanceFilter
@@ -106,8 +113,8 @@ namespace TrackChanges
             LogicalOrFilter classFilter = new LogicalOrFilter(b);
             FilteredElementCollector collector = new FilteredElementCollector(doc);
 
-            collector.WherePasses(classFilter)
-                    .WhereElementIsNotElementType();
+            //collector.WherePasses(classFilter)
+            //        .WhereElementIsNotElementType();
 
 
             return collector;

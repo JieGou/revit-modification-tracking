@@ -18,14 +18,14 @@ namespace TrackChanges
 
             //Extract shared param to a txt file
             string tempPath = System.IO.Path.GetTempPath();
-            string SPPath = Path.Combine(tempPath, "FileProperties.txt");
+            string SPPath = Path.Combine(tempPath, "VCF_COLAB_FileProperties.txt");
 
             if (!File.Exists(SPPath))
             {
                 //extract the familly
                 List<string> files = new List<string>();
-                files.Add("FileProperties.txt");
-                Tools.ExtractEmbeddedResource(tempPath, "TimeStamp.Resources", files);
+                files.Add("VCF_COLAB_FileProperties.txt");
+                Tools.ExtractEmbeddedResource(tempPath, "TrackChanges.Resources", files);
             }
 
             //set the shared param file
@@ -58,7 +58,7 @@ namespace TrackChanges
                 }
             }
             //SetAllowVaryBetweenGroups for these parameters
-            string[] parameterNames = { "BIM42_Date", "BIM42_Version", "BIM42_File", "BIM42_Discipline" };
+            string[] parameterNames = { "VCF_COLAB_DateCree", "VCF_COLAB_DateModifiee", "VCF_COLAB_Description", "VCF_COLAB_Utilisateur" };
 
             DefinitionBindingMapIterator definitionBindingMapIterator = doc.ParameterBindings.ForwardIterator();
 
