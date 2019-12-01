@@ -1,19 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43D647C4-4AE7-440C-885B-1AB67211BF6C}</ProjectGuid>
+    <ProjectGuid>{E7CAC943-4A3D-454E-B3FD-95DC36411544}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TrackChanges</RootNamespace>
     <AssemblyName>TrackChanges</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,141 +24,134 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(ProgramW6432)\Autodesk\Revit 2019\Revit.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(ProgramW6432)\Autodesk\Revit 2019\Revit.exe</StartProgram>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MaterialDesignColors, Version=1.2.0.325, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.1.2.0\lib\net45\MaterialDesignColors.dll</HintPath>
-    </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.325, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.2.6.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
-      <HintPath>$(ProgramW6432)\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>$(ProgramW6432)\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\Singleton.cs" />
-    <Compile Include="Helper\Util.cs" />
-    <Compile Include="MVVM\ViewModel\BaseViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\ViewModelSample.cs" />
-    <Compile Include="MVVM\View\AddInTest.xaml.cs">
-      <DependentUpon>AddInTest.xaml</DependentUpon>
+    <Compile Include="App.cs" />
+    <Compile Include="AppTestWpf.cs" />
+    <Compile Include="DMU\Application.cs" />
+    <Compile Include="DMU\FamilyUpdater.cs" />
+    <Compile Include="DMU\CmdFamilyUpdater.cs" />
+    <Compile Include="DMU\SectionUpdater.cs" />
+    <Compile Include="DMU\WallUpdater.cs" />
+    <Compile Include="DMU\WallUpdaterApplication.cs" />
+    <Compile Include="Helpers\ErrorMessageException.cs" />
+    <Compile Include="Helpers\Tools.cs" />
+    <Compile Include="MVVM\CmdShowFormWPF.cs" />
+    <Compile Include="MVVM\EnumBooleanConverter.cs" />
+    <Compile Include="MVVM\Enum\GetElementIn.cs" />
+    <Compile Include="MVVM\Events\ColorElementInViewEvent.cs" />
+    <Compile Include="MVVM\Events\GetListElementsEvent.cs" />
+    <Compile Include="MVVM\Events\HighlightElementExEvent.cs" />
+    <Compile Include="MVVM\Model\ElementRevit.cs" />
+    <Compile Include="MVVM\Model\WPFModel.cs" />
+    <Compile Include="RevitUtility\CatchErrorSampleRevit.cs" />
+    <Compile Include="RevitUtility\CategoryUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\ElementData.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\ElementStrutural.cs" />
+    <Compile Include="RevitUtility\ElementUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\GeometricalUtils.cs" />
+    <Compile Include="RevitUtility\ParameterUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\InterestElements.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\SelectionFilters.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\SolidUtils.cs" />
+    <Compile Include="TrackChangeSolution\ElementUtils\StringUtils.cs" />
+    <Compile Include="Helpers\ImageUtils.cs" />
+    <Compile Include="Helpers\XyzEqualityComparer.cs" />
+    <Compile Include="TrackChangeSolution\RefTrackChanges.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\CmdAddParameter.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\CmdTrackChange.cs" />
+    <Compile Include="TrackChangeSolution\TrackChanges\ReportChanges.cs" />
+    <Compile Include="MVVM\View\WindowTest.xaml.cs">
+      <DependentUpon>WindowTest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\View\TrackChangesUserControl.xaml.cs">
-      <DependentUpon>TrackChangesUserControl.xaml</DependentUpon>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ResourcesXAML\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RevitAPI\APIClasses\App.cs" />
-    <Compile Include="RevitAPI\APIClasses\App\AppStartProject.cs" />
-    <Compile Include="RevitAPI\APIClasses\Command.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\ElementData.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\ElementMEP.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\ElementStrutural.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\ElementUtils.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\GeometricalUtils.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\SelectionFilters.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\SolidUtils.cs" />
-    <Compile Include="RevitAPI\APIClasses\ElementUtils\StringUtils.cs" />
-    <Compile Include="RevitAPI\APIClasses\Helpers\XyzEqualityComparer.cs" />
-    <Compile Include="RevitAPI\APIClasses\RefTrackChanges.cs" />
-    <Compile Include="RevitAPI\APIClasses\RevitHandler.cs" />
-    <Compile Include="RevitAPI\APIClasses\TrackChanges\ElementState.cs" />
-    <Compile Include="RevitAPI\RevitViewController\WpfWindowController.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MVVM\View\AddInTest.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MVVM\View\TrackChangesUserControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ResourcesXAML\App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MVVM\Model\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TrackChanges.addin">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\apiviet\ApiViet\ApiViet\ApiViet.csproj">
-      <Project>{ec89db41-b2c5-4a8a-9221-1b4dc17dfc5f}</Project>
-      <Name>ApiViet</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TrackChanges.addin" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Ribbon\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOfLarge.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOnLarge.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOnSmall.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ToggleOffSmall.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MVVM\View\WindowTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MVVM\ViewModel\BaseViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)*.addin" "$(AppData)\Autodesk\REVIT\Addins\2019"
 if exist "$(AppData)\Autodesk\REVIT\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(AppData)\Autodesk\REVIT\Addins\2019"</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Target Name="AfterClean">
-    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2019\TrackChanges.addin" />
-    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2019\TrackChanges.dll" />
-  </Target>
 </Project>
