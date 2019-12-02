@@ -18,26 +18,23 @@ namespace TrackChanges
     {
         internal static string assemblyPath = typeof(App).Assembly.Location;
         public static AppTestWpf GetInstance { get; private set; } = null;
+        public static PushButton btnTestWpf { get; set; }
+        public static WindowTestRequestHandler Handler { get; set; }
+        public static ExternalEvent ExEvent { get; set; }
 
-        public static RibbonItem btnTestWpf { get; set; }
-
-        //Declare the Wpf form
-
-        public static WindowTest _wpfForm { get; set; }
-        
 
 
 
         #region Result Startup
         public Result OnStartup(UIControlledApplication a)
         {
-            _wpfForm = null;   // no dialog needed yet; the command will bring it
+            
             GetInstance = this;  // static access to this application instance
-
             //Create the ribbon item
             CreateRibbonItem(a);
+            Handler = new WindowTestRequestHandler();
+            ExEvent = ExternalEvent.Create(Handler);
 
-          
             return Result.Succeeded;
         }
         #endregion
@@ -46,10 +43,6 @@ namespace TrackChanges
         public Result OnShutdown(UIControlledApplication a)
         {
             //a.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(IUpdaterInitialized);
-
-            //dispose window wpf after using
-            if (_wpfForm != null && _wpfForm.IsVisible)
-                _wpfForm.Close();
 
             return Result.Succeeded;
         }
@@ -64,10 +57,10 @@ namespace TrackChanges
 
             #region button TrackChange
             // Create splitbutton track change
-            var btnData = new PushButtonData("btnTestWpf", "Show WPF", assemblyPath, typeof(CmdShowFormWPF).FullName);
+            var btnData = new PushButtonData("btnTestWpf", "Show WPF", assemblyPath, typeof(CmdShowWindowTest).FullName);
             btnData.LargeImage = ImageUtils.ConvertFromBitmap(Resources.icon);
             btnData.ToolTip = "Show form WPF to test with external event";
-            btnTestWpf = panelWpf.AddItem(btnData);
+            btnTestWpf = panelWpf.AddItem(btnData) as PushButton;
 
             #endregion
         }
@@ -103,34 +96,6 @@ namespace TrackChanges
         }
         #endregion //Helper pour create panel
 
-        #region Show form modeless dialog wpf with all the external events
-        public void ShowForm(UIApplication uiapp)
-        {
-            //If we do not have a dialog yet, create and show it
-            //We do not have the garbage collection in wpf
-            //https://stackoverflow.com/questions/39334444/equivalent-to-isdisposed-using-c-sharp-wpf
-
-            if (_wpfForm is null)
-            {
-                #region Initialize all the external event for wpf form
-                // A new handler to handle request posting by the dialog
-                HighlightElementExEvent highlight = new HighlightElementExEvent();
-                GetListElementsExEvent getListElement = new GetListElementsExEvent();
-                #endregion //Initialize all the external event for wpf form
-
-                #region Decla
-
-                #endregion
-                // External Event for the dialog to use (to post requests)
-                ExternalEvent exEvent = ExternalEvent.Create(highlight); //--> using for rasing event
-
-                // We give the objects to the new dialog;
-                // The dialog becomes the owner responsible for disposing them, eventually.
-                _wpfForm = new WindowTest(exEvent, highlight);
-                _wpfForm.Show();
-
-            }
-        }
-        #endregion
+       
     }
 }

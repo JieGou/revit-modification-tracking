@@ -7,10 +7,7 @@
         mc:Ignorable="d"
         Title="WindowTest" Height="550" Width="500"
         ResizeMode="CanResizeWithGrip">
-    <Window.DataContext>
-        <!-- Declaratively create an instance of our ViewModel -->
-        <local:MainViewModel />
-    </Window.DataContext>
+
     
     <Grid Margin="10 30 10 10">
         <Grid.RowDefinitions>
@@ -47,8 +44,6 @@
                     <ListBoxItem Tag="IsPreSelected" Margin="0 0 10 0">Pre-Selected</ListBoxItem>
                 </ListBox>
             </GroupBox>
-        
-           
         </Grid>
         
         <!--List view -->
@@ -60,7 +55,7 @@
             <TextBlock Text="List of element" Grid.Row="0"></TextBlock>
             <TreeView x:Name="treeElement" Margin="5" Grid.Row="1">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type local:MainViewModel}"
+                    <HierarchicalDataTemplate DataType="{x:Type local:WindowTestViewModel}"
                                               ItemsSource="{Binding ElementIdList}">
                         <CheckBox Content="{Binding}"></CheckBox>
                     </HierarchicalDataTemplate>
@@ -86,6 +81,9 @@
                         <Setter Property="Width" Value="80"></Setter>
                     </Style>
                 </StackPanel.Resources>
+                <Button x:Name="btnUnColor" Height="auto" 
+                        Content="UnColor" 
+                        Command="{Binding UnColorElementCommand}"></Button>
                 <Button x:Name="btnColor" Height="auto" 
                         Content="Color"
                         Command="{Binding ColorElementCommand}"></Button>
