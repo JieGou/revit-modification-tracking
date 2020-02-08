@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Application">
-    <Name>Application TrackChanges</Name>
+    <Name>Application TestWpf</Name>
     <Assembly>TrackChanges.dll</Assembly>
-    <FullClassName>TrackChanges.AppStartProject</FullClassName>
-    <ClientId>a5cfaec2-fb88-4546-a958-0b31a39e0169</ClientId>
+    <FullClassName>TrackChanges.AppTestWpf</FullClassName>
+    <ClientId>75EF7392-00EF-4A4A-9937-A0F140A598F6</ClientId>
     <VendorId>Tien Duy NGUYEN</VendorId>
-    <VendorDescription>tienduy.nguyen.it@gmail.com</VendorDescription>
+    <VendorDescription>tienduy.nguyen</VendorDescription>
   </AddIn>
-
 </RevitAddIns>
