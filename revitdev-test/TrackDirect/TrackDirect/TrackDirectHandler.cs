@@ -77,13 +77,6 @@ namespace TrackDirect.UI
             Document activeDoc = _uiapp.ActiveUIDocument.Document;
             if (_startState is null)
             {
-                //Change Icon and text of button
-                AppCommand.btnTrack.ItemText = "Stop\nTrack";
-                AppCommand.btnTrack.ToolTip = "Add-in is running. Clic here to stop it.";
-                AppCommand.btnTrack.LongDescription = $"Project is runninng: {activeDoc.Title}";
-                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_on_32);
-                AppCommand.btnTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_on_16);
-
                 //If command not running we will run it
                 _docRun = activeDoc;
                 _docId = _docRun.ProjectInformation.UniqueId;
@@ -96,10 +89,6 @@ namespace TrackDirect.UI
             }
             else
             {
-                AppCommand.btnTrack.ItemText = "Run\nTrack";
-                AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
-                AppCommand.btnTrack.LongDescription = "Nothing";
-                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
                 string docId2 = activeDoc.ProjectInformation.UniqueId;
                 if (_docId != docId2)
                 {

@@ -41,8 +41,25 @@ namespace TrackDirect
             //Start addin comparison
             try
             {
-                //AppCommand.TrackHandler.Execute(uiapp);
-                AppCommand.ExEvent.Raise();
+                if (TrackDirectHandler._startState is null)
+                {
+                    //Change Icon and text of button
+                    AppCommand.btnTrack.ItemText = "Stop\nTrack";
+                    AppCommand.btnTrack.ToolTip = "Add-in is running. Clic here to stop it.";
+                    AppCommand.btnTrack.LongDescription = $"Project is runninng: {uiapp.ActiveUIDocument.Document.Title}";
+                    AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_on_32);
+                    AppCommand.btnTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_on_16);
+                    AppCommand.TrackExEvent.Raise();
+                }
+                else
+                {
+                    AppCommand.btnTrack.ItemText = "Run\nTrack";
+                    AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
+                    AppCommand.btnTrack.LongDescription = "Nothing";
+                    AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
+                    AppCommand.TrackExEvent.Raise();
+                }
+               
                 return Result.Succeeded;
             }
             catch (Exception ex)

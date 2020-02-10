@@ -9,7 +9,7 @@ namespace TrackDirect.UI
         public void GetInstanceItems()
         {
             AppCommand.FooHandler.Request.Make(FooRequestHandler.RequestId.GetElementItems);
-            AppCommand.ExEvent.Raise();
+            AppCommand.TrackExEvent.Raise();
         }
         
     }

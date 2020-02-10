@@ -28,7 +28,7 @@ namespace TrackDirect
 
         public static FooRequestHandler FooHandler { get; set; }
         public static TrackDirectHandler TrackHandler { get; set; }
-        public static ExternalEvent ExEvent { get; set; }
+        public static ExternalEvent TrackExEvent { get; set; }
         private SettingTrackView _trackView = null;
 
      
@@ -95,7 +95,7 @@ namespace TrackDirect
 
                 //External Event
                 TrackHandler = new TrackDirectHandler();
-                ExEvent = ExternalEvent.Create(TrackHandler);
+                TrackExEvent = ExternalEvent.Create(TrackHandler);
 
 
 
