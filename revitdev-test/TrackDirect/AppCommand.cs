@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using static TrackDirect.UI.AutoTrackDataStorageUtil;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 
 #endregion
@@ -28,7 +29,7 @@ namespace TrackDirect
 
         public static FooRequestHandler FooHandler { get; set; }
         public static TrackDirectHandler TrackHandler { get; set; }
-        public static ExternalEvent TrackExEvent { get; set; }
+        public static ExternalEvent ExEvent { get; set; }
         private SettingTrackView _trackView = null;
 
      
@@ -95,7 +96,7 @@ namespace TrackDirect
 
                 //External Event
                 TrackHandler = new TrackDirectHandler();
-                TrackExEvent = ExternalEvent.Create(TrackHandler);
+                ExEvent = ExternalEvent.Create(TrackHandler);
 
 
 
@@ -296,6 +297,7 @@ namespace TrackDirect
             if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
             {
                 runTrack(sender);
+                Thread.Sleep(1000);
                 runTrack(sender);
             }
             
@@ -315,6 +317,7 @@ namespace TrackDirect
             if (isAutoTrackEventSynchronize && canAutoRun  && TrackDirectHandler._startState != null)
             {
                 runTrack(sender);
+                Thread.Sleep(1000);
                 runTrack(sender);
             }
            

@@ -21,7 +21,7 @@ namespace TrackChanges
             {
                 WindowTest windowTest = new WindowTest();
                 windowTest.DataContext = new WindowTestViewModel();
-                windowTest.Show();
+                windowTest.ShowDialog();
                 return Result.Succeeded;
             }
             catch (Exception e)

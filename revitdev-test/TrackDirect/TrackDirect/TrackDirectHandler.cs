@@ -35,8 +35,49 @@ namespace TrackDirect.UI
             _uiapp = uiapp;
             _app = uiapp.Application;
             ActiveDoc = uiapp.ActiveUIDocument.Document;
-            TrackChangesCommand();
+            try
+            {
+                switch (Request.Take())
+                {
+                    case RequestId.None:
+                        {
+                            return;
+                        }
+                    case RequestId.TrackChangesCommand:
+                        {
+                            TrackChangesCommand();
+                            break;
+                        }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
+        public CommunicatorRequest Request { get; set; } = new CommunicatorRequest();
+        public class CommunicatorRequest
+        {
+            private int _request = (int)RequestId.None;
+
+            public RequestId Take()
+            {
+                return (RequestId)Interlocked.Exchange(ref _request, (int)RequestId.None);
+            }
+
+            public void Make(RequestId request)
+            {
+                Interlocked.Exchange(ref _request, (int)request);
+            }
+        }
+        public enum RequestId
+        {
+            None,
+            TrackChangesCommand
+        }
+
+
 
         #region External event
         private void CreateSharedParameter()

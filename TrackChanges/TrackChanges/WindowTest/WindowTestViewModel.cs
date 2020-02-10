@@ -5,7 +5,8 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace TrackChanges
 {
@@ -14,6 +15,13 @@ namespace TrackChanges
         public RelayCommand SelectElementCommand { get; set; }
         public RelayCommand ColorElementCommand { get; set; }
         public RelayCommand UnColorElementCommand { get; set; }
+        //public RelayCommand<WindowTest> GetData { get; set; }
+
+        //public RelayCommand<WindowTest> ModelSelection { get; set; }
+
+        public RelayCommand<WindowTest> GetTreeView { get; set; }
+
+
         public WindowTestModel Model { get; set; }
         public ObservableCollection<string> ListView { get; set; }
         private ObservableCollection<ElementId> _elementIdList;
@@ -63,19 +71,38 @@ namespace TrackChanges
         }
         #endregion //Properties
 
-        //Provide datacontext and commands for the form
+        #region Initialize form
         public WindowTestViewModel()
         {
+            Model = new WindowTestModel();
             #region Command
 
             //Command (with external event) to select elements in revit
-            Model = new WindowTestModel();
+
             SelectElementCommand = new RelayCommand(OnSelectElement);
             ColorElementCommand = new RelayCommand(OnColorElement);
             UnColorElementCommand = new RelayCommand(OnUnColorElement);
+            GetTreeView = new RelayCommand<WindowTest>(OnGetTreeView);
             #endregion
 
         }
+        #endregion //Initialize form
+
+
+
+        #region External command, retrieve form model
+
+        //Provide data when form loaded
+        private async void OnWindowLoaded(Window win)
+        {
+            //Task<User> userTask = Model.GetUser();
+            //Task<List<ProjectManagement.Models.Project>> projects = Model.GetUserProjectsAsync();
+            //Documents = _uiapp.Application.Documents;
+
+            //User = await userTask;
+            //Projects = await projects;
+        }
+        
 
         public void OnSelectElement()
         {
@@ -89,8 +116,14 @@ namespace TrackChanges
         {
             Model.UnColorElement();
         }
+        public async void OnGetTreeView(WindowTest win)
+        {
+            Model.GetTreeView();
+        }
+        #endregion //External command, retrieve form model
 
-        
+
+
 
     }
 }

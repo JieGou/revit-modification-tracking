@@ -49,7 +49,8 @@ namespace TrackDirect
                     AppCommand.btnTrack.LongDescription = $"Project is runninng: {uiapp.ActiveUIDocument.Document.Title}";
                     AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_on_32);
                     AppCommand.btnTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_on_16);
-                    AppCommand.TrackExEvent.Raise();
+                    AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
+                    AppCommand.ExEvent.Raise();
                 }
                 else
                 {
@@ -57,7 +58,8 @@ namespace TrackDirect
                     AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
                     AppCommand.btnTrack.LongDescription = "Nothing";
                     AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
-                    AppCommand.TrackExEvent.Raise();
+                    AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
+                    AppCommand.ExEvent.Raise();
                 }
                
                 return Result.Succeeded;

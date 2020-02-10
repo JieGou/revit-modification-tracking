@@ -5,6 +5,7 @@ namespace TrackChanges
 {
     public class WindowTestModel
     {
+        public WindowTestModel() { }
         public void SelectElement()
         {
             AppTestWpf.Handler.Request.Make(WindowTestRequestHandler.RequestId.SelectElement);

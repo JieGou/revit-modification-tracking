@@ -53,7 +53,7 @@ namespace TrackChanges
         private void CreateRibbonItem(UIControlledApplication uiApp)
         {
             //Create panel workflow
-            var panelWpf= CreatePanel(uiApp, "TD", "WPF");
+            var panelWpf= CreatePanel(uiApp, "DRTO-VCF", "WPF");
 
             #region button TrackChange
             // Create splitbutton track change
@@ -61,7 +61,7 @@ namespace TrackChanges
             btnData.LargeImage = ImageUtils.ConvertFromBitmap(Resources.icon);
             btnData.ToolTip = "Show form WPF to test with external event";
             btnTestWpf = panelWpf.AddItem(btnData) as PushButton;
-
+            
             #endregion
         }
 

@@ -2,17 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Interop;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Events;
-using GalaSoft.MvvmLight.Messaging;
 
 #endregion
 
@@ -170,9 +164,7 @@ namespace TrackChanges
             Document doc = uidoc.Document;
             CategorySet categories = CategoryUtils.GetCategoriesHasElements(doc, app);
             IList<ElementId> eleIds = ElementUtils.GetElementList(doc, categories).Select(x => x.Id).ToList();
-
-
-
+            
             uidoc.Selection.SetElementIds(eleIds);
             try
             {

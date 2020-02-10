@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Application">
-    <Name>Application TestWpf</Name>
+    <Name>Application DRTO DEV</Name>
     <Assembly>TrackChanges.dll</Assembly>
-    <FullClassName>TrackChanges.AppTestWpf</FullClassName>
+    <FullClassName>TrackChanges.App</FullClassName>
     <ClientId>75EF7392-00EF-4A4A-9937-A0F140A598F6</ClientId>
     <VendorId>Tien Duy NGUYEN</VendorId>
     <VendorDescription>tienduy.nguyen</VendorDescription>
