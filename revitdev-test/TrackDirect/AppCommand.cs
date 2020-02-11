@@ -33,7 +33,7 @@ namespace TrackDirect
         private static Thread _thread = null;
         public static ExternalEvent _exEvent = null;
         private static int _nSnapshots = 0;
-        private static int _timeOutMinutes = 0;
+        private static int _timeOutMinutes = 1;
         private static int _timeout = 1000 * 60 * _timeOutMinutes;
 
         public static FooRequestHandler FooHandler { get; set; }
@@ -104,11 +104,11 @@ namespace TrackDirect
                 BuildUI(a);
 
                 //Event
-                a.ControlledApplication.ApplicationInitialized+= OnApplicationInitialized;
+                a.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
                 a.ControlledApplication.DocumentOpened += OnDocumentOpened;
                 a.ControlledApplication.DocumentCreated += OnDocumentCreated;
                 a.ControlledApplication.DocumentSaving += OnDocumentSaving;
-                a.ControlledApplication.DocumentSaved += OnDocumentSaved;
+                //a.ControlledApplication.DocumentSaved += OnDocumentSaved;
                 a.ControlledApplication.DocumentSavingAs += OnDocumentSavingAs;
                 a.ControlledApplication.DocumentSynchronizingWithCentral += OnDocumentSynchronizing;
                 a.ControlledApplication.DocumentSynchronizedWithCentral += OnDocumentSynchronized;
@@ -132,7 +132,7 @@ namespace TrackDirect
         {
             a.ControlledApplication.DocumentOpened -= OnDocumentOpened;
             a.ControlledApplication.DocumentSaving -= OnDocumentSaving;
-            a.ControlledApplication.DocumentSaved -= OnDocumentSaved;
+            //a.ControlledApplication.DocumentSaved -= OnDocumentSaved;
             a.ControlledApplication.DocumentSavingAs -= OnDocumentSavingAs;
             a.ControlledApplication.DocumentSynchronizingWithCentral -= OnDocumentSynchronizing;
             a.ControlledApplication.DocumentSynchronizedWithCentral -= OnDocumentSynchronized;
@@ -142,8 +142,8 @@ namespace TrackDirect
             //{
             //    _trackView.Close();
             //}
-            _thread.Abort();
-            _thread = null;
+            //_thread.Abort();
+            //_thread = null;
             _exEvent.Dispose();
 
 
@@ -308,20 +308,25 @@ namespace TrackDirect
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
             {
-                runTrack(sender);
-                _isRunningSaving = true;
-            }
-            else
-            {
-                _isRunningSaving = false;
-            }
+                var newThread = new Thread(runTrack);
+                _thread.Start();
+                Thread.Sleep(_timeout);
+                while (newThread.IsAlive)
+                {
+                    Thread.Sleep(_timeout/2);
+                }
+                newThread = new Thread(runTrack);
+                _thread.Start();
+                Thread.Sleep(_timeout);
 
+            }
+       
         }
-        private static void OnDocumentSaved(object sender, DocumentSavedEventArgs args)
-        {
-            if (isAutoTrackEventSave && canAutoRun && _isRunningSaving) runTrack(sender);
+        //private static void OnDocumentSaved(object sender, DocumentSavedEventArgs args)
+        //{
+        //    if (isAutoTrackEventSave && canAutoRun && _isRunningSaving) runTrack(sender);
 
-        }
+        //}
         private static void OnDocumentSavingAs(object sender, DocumentSavingAsEventArgs args)
         {
             Document doc = args.Document;
@@ -384,13 +389,19 @@ namespace TrackDirect
         #endregion
 
         //Run plugin track 
+        //private static void runTrack(object sender)
+        //{
+        //    CmdTrackChange cmdTrackChange = new CmdTrackChange();
+        //    if (sender is UIApplication)
+        //        cmdTrackChange.Execute(sender as UIApplication);
+        //    else
+        //        cmdTrackChange.Execute(new UIApplication(sender as Autodesk.Revit.ApplicationServices.Application));
+        //}
         private static void runTrack(object sender)
         {
-            CmdTrackChange cmdTrackChange = new CmdTrackChange();
-            if (sender is UIApplication)
-                cmdTrackChange.Execute(sender as UIApplication);
-            else
-                cmdTrackChange.Execute(new UIApplication(sender as Autodesk.Revit.ApplicationServices.Application));
+            AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
+            _exEvent.Raise();
+            SetFocusToRevit();
         }
 
         #endregion //Events
@@ -478,7 +489,7 @@ namespace TrackDirect
         private static extern bool SetForegroundWindow(
           IntPtr hWnd);
 
-        private static void SetFocusToRevit()
+        public static void SetFocusToRevit()
         {
             IntPtr hRevit = ComponentManager.ApplicationWindow;
             IntPtr hBefore = GetForegroundWindow();
@@ -499,8 +510,8 @@ namespace TrackDirect
             _exEvent = ExternalEvent.Create(TrackHandler);
 
             // Start a thread to raise it regularly.
-            _thread = new Thread(TriggerTrackDirectHandler);
-            _thread.Start();
+            //_thread = new Thread(TriggerTrackDirectHandler);
+            //_thread.Start();
         }
         /// <summary>
         /// Trigger a modification tracker snapshot at 
@@ -513,6 +524,7 @@ namespace TrackDirect
             while (true)
             {
                 ++_nSnapshots;
+                AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
                 _exEvent.Raise();
 
                 // Set focus to Revit for a moment.

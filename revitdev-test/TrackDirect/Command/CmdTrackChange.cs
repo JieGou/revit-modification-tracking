@@ -18,17 +18,10 @@ namespace TrackDirect
     [Transaction(TransactionMode.Manual)]
     public class CmdTrackChange : IExternalCommand
     {
-
-        /// <summary>
-        /// Current snapshot of database state.
-        /// You could also store the entire element state 
-        /// strings here, not just their hash code, to
-        /// report their complete original and modified 
-        /// values.
-        /// </summary>
+        private static int _timeOutMinutes = 1;
+        private static int _timeout = 1000 * 60 * _timeOutMinutes;
         public static string UserRevit { get; set; } = string.Empty;
 
-        #region External Command Mainline Execute Method
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             return Execute(commandData.Application);
@@ -43,7 +36,7 @@ namespace TrackDirect
             {
                 AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
                 AppCommand.ExEvent.Raise();
-
+                AppCommand.SetFocusToRevit();
                 return Result.Succeeded;
             }
             catch (Exception ex)
@@ -53,7 +46,5 @@ namespace TrackDirect
             }
 
         }
-        #endregion // External Command Mainline Execute Method
-
     }
 }
