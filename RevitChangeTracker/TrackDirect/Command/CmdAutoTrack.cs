@@ -57,20 +57,19 @@ namespace TrackDirect
             UserRevit = uiapp.Application.Username;
             _activeDoc = uiapp.ActiveUIDocument.Document;
             _app = uiapp.Application;
-
-            isRunning = !isRunning;
+            
             CollectAutoTrackSetting(_activeDoc);
             bool isNoneCheck = (isAutoTrackEventSave 
                 == isAutoTrackEventDocumentOpen 
                 == isAutoTrackEventSynchronize 
                 == isAutoTrackEventViewActive 
                 == isAutoTrackByTime == false) ? true : false;
-            if ((!canAutoRun || isNoneCheck) && !isRunning)//this uses only when Command AutoTrack is not running
+            if ((!canAutoRun || isNoneCheck) && isRunning ==false)//this uses only when Command AutoTrack is not running
             {
-                MessageBox.Show($"Nothing happened!\n\nYou need check case 'Can AuTo Run' in the settings. This will help you record automatically data changes in your model.","Auto Run Mode",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show($"Nothing happened!\n\nYou need check case 'Can Run' in Auto Run Mode of the settings. This will help you record automatically data changes in your model.","Auto Run Mode",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 return Result.Cancelled;
             }
-            
+            isRunning = !isRunning;
             //Check and create shared parameter if they do not exist
             CreateSharedParameter();
             //Start addin comparison
