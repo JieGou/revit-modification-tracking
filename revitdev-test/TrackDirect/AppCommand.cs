@@ -40,6 +40,8 @@ namespace TrackDirect
 
         private static UIControlledApplication _uiApp;
         private static bool _started = false;
+        private static bool _isRunningSaving = false;
+        private static bool _isRunningSynchronizing = false;
 
 
 
@@ -104,9 +106,11 @@ namespace TrackDirect
                 a.ControlledApplication.DocumentOpened += OnDocumentOpened;
                 a.ControlledApplication.DocumentCreated += OnDocumentCreated;
                 a.ControlledApplication.DocumentSaving += OnDocumentSaving;
+                a.ControlledApplication.DocumentSaved += OnDocumentSaved;
                 a.ControlledApplication.DocumentSavingAs += OnDocumentSavingAs;
                 a.ControlledApplication.DocumentSynchronizingWithCentral += OnDocumentSynchronizing;
-                a.ViewActivated += new EventHandler<ViewActivatedEventArgs>( OnViewActivated);
+                a.ControlledApplication.DocumentSynchronizedWithCentral += OnDocumentSynchronized;
+                a.ViewActivated += new EventHandler<ViewActivatedEventArgs>(OnViewActivated);
 
 
                 return Result.Succeeded;
@@ -126,8 +130,10 @@ namespace TrackDirect
         {
             a.ControlledApplication.DocumentOpened -= OnDocumentOpened;
             a.ControlledApplication.DocumentSaving -= OnDocumentSaving;
+            a.ControlledApplication.DocumentSaved -= OnDocumentSaved;
             a.ControlledApplication.DocumentSavingAs -= OnDocumentSavingAs;
             a.ControlledApplication.DocumentSynchronizingWithCentral -= OnDocumentSynchronizing;
+            a.ControlledApplication.DocumentSynchronizedWithCentral -= OnDocumentSynchronized;
 
             //Close auto modeless form if it is still opening
             if (_trackView != null && _trackView.IsVisible)
@@ -297,12 +303,19 @@ namespace TrackDirect
             if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
             {
                 runTrack(sender);
-                Thread.Sleep(1000);
-                runTrack(sender);
+                _isRunningSaving = true;
             }
-            
+            else
+            {
+                _isRunningSaving = false;
+            }
+
         }
-        
+        private static void OnDocumentSaved(object sender, DocumentSavedEventArgs args)
+        {
+            if (isAutoTrackEventSave && canAutoRun && _isRunningSaving) runTrack(sender);
+
+        }
         private static void OnDocumentSavingAs(object sender, DocumentSavingAsEventArgs args)
         {
             Document doc = args.Document;
@@ -314,15 +327,23 @@ namespace TrackDirect
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSynchronize && canAutoRun  && TrackDirectHandler._startState != null)
+            if (isAutoTrackEventSynchronize && canAutoRun && TrackDirectHandler._startState != null)
             {
                 runTrack(sender);
-                Thread.Sleep(1000);
-                runTrack(sender);
+                _isRunningSynchronizing = true;
             }
-           
+            else
+            {
+                _isRunningSynchronizing = false;
+            }
+
         }
-      
+        private static void OnDocumentSynchronized(object sender, DocumentSynchronizedWithCentralEventArgs args)
+        {
+            if (isAutoTrackEventSynchronize && canAutoRun && _isRunningSynchronizing)
+                runTrack(sender);
+        }
+
         #region Event switch project by change active view
 
         private void OnViewActivated(
