@@ -194,19 +194,100 @@
         <TabControl x:Name="tabControlManager"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Margin="5">
+                    Margin="5"
+                    Background="White">
             <TabItem Header="Manage">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="60"></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="60"></RowDefinition>
                     </Grid.RowDefinitions>
+                    <Expander Grid.Row="0"
+                              Header="Color Element Settings">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="30"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1">
+                                <TextBlock Text="New Element"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Top" />
+                                <Button HorizontalAlignment="Left"
+                                        Margin="150,0,10,0"
+                                        VerticalAlignment="Top"
+                                        Width="16"
+                                        Height="16"
+                                        Style="{StaticResource btnTemplate}">
+
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <TextBlock Text="Family Type"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Top" />
+                                <Button HorizontalAlignment="Left"
+                                        Margin="150,0,10,0"
+                                        VerticalAlignment="Top"
+                                        Width="16"
+                                        Height="16"
+                                        Style="{StaticResource btnTemplate}">
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Row="3">
+                                <TextBlock Text="Geometry Or Location"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Top" />
+                                <Button HorizontalAlignment="Left"
+                                        Margin="150,0,10,0"
+                                        VerticalAlignment="Top"
+                                        Width="16"
+                                        Height="16"
+                                        Style="{StaticResource btnTemplate}">
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Row="4">
+                                <TextBlock Text="Revit Parameters"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Top" />
+                                <Button HorizontalAlignment="Left"
+                                        Margin="150,0,10,0"
+                                        VerticalAlignment="Top"
+                                        Width="16"
+                                        Height="16"
+                                        Style="{StaticResource btnTemplate}">
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Row="5">
+                                <TextBlock Text="Shared Parameter"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Top" />
+                                <Button HorizontalAlignment="Left"
+                                        Margin="150,0,10,0"
+                                        VerticalAlignment="Top"
+                                        Width="16"
+                                        Height="16"
+                                        Style="{StaticResource btnTemplate}">
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Expander>
                     <GroupBox Header="Group Elements"
                               HorizontalAlignment="Stretch"
                               Margin="5"
                               VerticalAlignment="Stretch"
-                              Grid.ColumnSpan="2">
+                              Grid.Row="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -239,7 +320,7 @@
                                          Grid.Column="2" />
                         </Grid>
                     </GroupBox>
-                    <Grid Grid.Row="1"
+                    <Grid Grid.Row="2"
                           Grid.ColumnSpan="2">
                         <DockPanel Margin="5">
                             <TreeView x:Name="tree"
@@ -249,7 +330,7 @@
                         </DockPanel>
                     </Grid>
                     <GroupBox Header="View Options"
-                              Grid.Row="2"
+                              Grid.Row="3"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                               Margin="5,0,5,5"
@@ -286,91 +367,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Color Settings">
-                <GroupBox Header="Color Change Options"
-                          HorizontalAlignment="Stretch"
-                          Margin="7"
-                          VerticalAlignment="Stretch">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="10"></RowDefinition>
-                            <RowDefinition Height="30"></RowDefinition>
-                            <RowDefinition Height="30"></RowDefinition>
-                            <RowDefinition Height="30"></RowDefinition>
-                            <RowDefinition Height="30"></RowDefinition>
-                            <RowDefinition Height="30"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="1"
-                              >
-                            <TextBlock Text="New Element"
-                                       HorizontalAlignment="Left"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Top" />
-                            <Button HorizontalAlignment="Left"
-                                    Margin="150,0,10,0"
-                                    VerticalAlignment="Top"
-                                    Width="16"
-                                    Height="16"
-                                    Style="{StaticResource btnTemplate}">
-                            </Button>
-                        </Grid>
-                        <Grid Grid.Row="2">
-                            <TextBlock Text="Family Type"
-                                       HorizontalAlignment="Left"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Top" />
-                            <Button HorizontalAlignment="Left"
-                                    Margin="150,0,10,0"
-                                    VerticalAlignment="Top"
-                                    Width="16"
-                                    Height="16"
-                                    Style="{StaticResource btnTemplate}">
-                            </Button>
-                        </Grid>
-                        <Grid Grid.Row="3">
-                            <TextBlock Text="Geometry Or Location"
-                                       HorizontalAlignment="Left"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Top" />
-                            <Button HorizontalAlignment="Left"
-                                    Margin="150,0,10,0"
-                                    VerticalAlignment="Top"
-                                    Width="16"
-                                    Height="16"
-                                    Style="{StaticResource btnTemplate}">
-                            </Button>
-                        </Grid>
-                        <Grid Grid.Row="4">
-                            <TextBlock Text="Revit Parameters"
-                                       HorizontalAlignment="Left"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Top" />
-                            <Button HorizontalAlignment="Left"
-                                    Margin="150,0,10,0"
-                                    VerticalAlignment="Top"
-                                    Width="16"
-                                    Height="16"
-                                    Style="{StaticResource btnTemplate}">
-                            </Button>
-                        </Grid>
-                        <Grid Grid.Row="5">
-                            <TextBlock Text="Shared Parameter"
-                                       HorizontalAlignment="Left"
-                                       Margin="10,0,0,0"
-                                       VerticalAlignment="Top" />
-                            <Button HorizontalAlignment="Left"
-                                    Margin="150,0,10,0"
-                                    VerticalAlignment="Top"
-                                    Width="16"
-                                    Height="16"
-                                    Style="{StaticResource btnTemplate}">
-                            </Button>
-                        </Grid>
-                    </Grid>
 
-
-                </GroupBox>
-            </TabItem>
             <TabItem Header="Remove Color">
                 <GroupBox Header="Remove Color Elements In: "
                           HorizontalAlignment="Stretch"

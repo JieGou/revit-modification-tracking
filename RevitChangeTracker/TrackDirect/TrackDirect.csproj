@@ -106,20 +106,20 @@
     <Compile Include="Command\CmdTestTreeView.cs" />
     <Compile Include="Command\CmdCompare.cs" />
     <Compile Include="TrackDirect\TrackDirectHandler.cs" />
-    <Compile Include="UI\BaseViewModel.cs" />
-    <Compile Include="UI\SettingsTrack\CategoryDataStorageUtil.cs" />
-    <Compile Include="UI\TrackManager\ComponentOptionConverter.cs" />
-    <Compile Include="UI\TrackManager\TreeViewModel.cs" />
+    <Compile Include="Windows\BaseViewModel.cs" />
+    <Compile Include="Windows\SettingsTrack\CategoryDataStorageUtil.cs" />
+    <Compile Include="Windows\TrackManager\ComponentOptionConverter.cs" />
+    <Compile Include="Windows\TrackManager\TreeViewModel.cs" />
     <Compile Include="Utilities\IFilenameHint.cs" />
     <Compile Include="TrackDirect\MiniComparision.cs" />
     <Compile Include="TrackDirect\MiniComparisionContainer.cs" />
     <Compile Include="Models\ChangeSummary.cs" />
     <Compile Include="TrackDirect\MiniComparisonController.cs" />
     <Compile Include="TrackDirect\MiniComparisionMaker.cs" />
-    <Compile Include="UI\SettingsTrack\AutoTrackDataStorageUtil.cs" />
-    <Compile Include="UI\SettingsTrack\SettingsTrackViewModel.cs" />
+    <Compile Include="Windows\SettingsTrack\AutoTrackDataStorageUtil.cs" />
+    <Compile Include="Windows\SettingsTrack\SettingsTrackViewModel.cs" />
     <Compile Include="Utilities\Availability.cs" />
-    <Compile Include="UI\SettingsTrack\ComponentCategoryFilter.cs" />
+    <Compile Include="Windows\SettingsTrack\ComponentCategoryFilter.cs" />
     <Compile Include="Utilities\GeometricalUtils.cs" />
     <Compile Include="Utilities\SelectionFilters.cs" />
     <Compile Include="Command\CmdTrackChange.cs" />
@@ -130,34 +130,34 @@
     <Compile Include="Models\Comparision.cs" />
     <Compile Include="Models\RevitElement.cs" />
     <Compile Include="Command\CmdSnapshot.cs" />
-    <Compile Include="UI\CompareUI\CompareResultViewModel.cs" />
-    <Compile Include="UI\CompareUI\CompareResultView.xaml.cs">
+    <Compile Include="Windows\CompareUI\CompareResultViewModel.cs" />
+    <Compile Include="Windows\CompareUI\CompareResultView.xaml.cs">
       <DependentUpon>CompareResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\CompareUI\frmPreCompare.xaml.cs">
+    <Compile Include="Windows\CompareUI\frmPreCompare.xaml.cs">
       <DependentUpon>frmPreCompare.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\RevitTreeItem.cs" />
-    <Compile Include="UI\VirtualToggleButton.cs" />
-    <Compile Include="UI\SettingsDB\SettingsDBApp.xaml.cs">
+    <Compile Include="Windows\VirtualToggleButton.cs" />
+    <Compile Include="Windows\SettingsDB\SettingsDBApp.xaml.cs">
       <DependentUpon>SettingsDBApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SettingsTrack\SettingTrackView.xaml.cs">
+    <Compile Include="Windows\SettingsTrack\SettingTrackView.xaml.cs">
       <DependentUpon>SettingTrackView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SnapshotUI\frmSnapshot.xaml.cs">
+    <Compile Include="Windows\SnapshotUI\frmSnapshot.xaml.cs">
       <DependentUpon>frmSnapshot.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TestTreeView\FooModel.cs" />
-    <Compile Include="UI\TestTreeView\FooViewModel.cs" />
-    <Compile Include="UI\TestTreeView\FooRequestHandler.cs" />
-    <Compile Include="UI\TestTreeView\Window1.xaml.cs">
+    <Compile Include="Windows\TestTreeView\FooModel.cs" />
+    <Compile Include="Windows\TestTreeView\FooViewModel.cs" />
+    <Compile Include="Windows\TestTreeView\FooRequestHandler.cs" />
+    <Compile Include="Windows\TestTreeView\Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\TrackManager\TrackManagerWindow.xaml.cs">
+    <Compile Include="Windows\TrackManager\TrackManagerWindow.xaml.cs">
       <DependentUpon>TrackManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\SettingsTrack\CategoryProperties.cs" />
+    <Compile Include="Windows\SettingsTrack\CategoryProperties.cs" />
     <Compile Include="Utilities\Settings.cs" />
     <Compile Include="Utilities\DataUtility.cs" />
     <Compile Include="Utilities\FileUtils.cs" />
@@ -204,31 +204,31 @@
     <EmbeddedResource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\CompareUI\CompareResultView.xaml">
+    <Page Include="Windows\CompareUI\CompareResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\CompareUI\frmPreCompare.xaml">
+    <Page Include="Windows\CompareUI\frmPreCompare.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SettingsDB\SettingsDBApp.xaml">
+    <Page Include="Windows\SettingsDB\SettingsDBApp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SettingsTrack\SettingTrackView.xaml">
+    <Page Include="Windows\SettingsTrack\SettingTrackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\SnapshotUI\frmSnapshot.xaml">
+    <Page Include="Windows\SnapshotUI\frmSnapshot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TestTreeView\Window1.xaml">
+    <Page Include="Windows\TestTreeView\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TrackManager\TrackManagerWindow.xaml">
+    <Page Include="Windows\TrackManager\TrackManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
