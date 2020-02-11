@@ -224,7 +224,7 @@
                                  HorizontalAlignment="Left"
                                  Margin="2,10,0,0"
                                  VerticalAlignment="Top"
-                                 IsChecked="{Binding CanRunAutoTrack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 IsChecked="{Binding CanRunAutoTrack, Mode=TwoWay}"
                                  Command="{Binding Path=RadioBtnCanRun_Checked}"
                                  CommandParameter="{Binding ElementName=radioBtnCanRun, Path=IsChecked}">
                     </RadioButton>
@@ -234,7 +234,7 @@
                                  HorizontalAlignment="Left"
                                  Margin="2,27,0,0"
                                  VerticalAlignment="Top"
-                                 IsChecked="{Binding DoNotRunAutoTrack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 IsChecked="{Binding DoNotRunAutoTrack, Mode=TwoWay}"
                                  Command="{Binding Path=RadioBtnDoNotRun_Checked}"
                                  CommandParameter="{Binding ElementName=radioBtnDoNotRun, Path=IsChecked}">
                     </RadioButton>
@@ -246,10 +246,8 @@
                       HorizontalAlignment="Stretch"
                       Margin="0,30,0,0"
                       VerticalAlignment="Top"
-                      Height="120"
                       Grid.Row="2">
                 <Grid HorizontalAlignment="Left"
-                      Height="200"
                       VerticalAlignment="Top"
                       Margin="0,0,10,10">
                     <CheckBox x:Name="ckxOnSaveProject"
@@ -292,6 +290,32 @@
                               Command="{Binding Path=SwitchProject_Checked}"
                               CommandParameter="{Binding ElementName=ckxOnSwitchProject, Path=IsChecked}">
                     </CheckBox>
+
+                        <CheckBox x:Name="ckxRunByTime"
+                                  Content="By Time"
+                                  HorizontalAlignment="Left"
+                                  Margin="2,90,0,0"
+                                  VerticalAlignment="Top"
+                                  IsChecked="{Binding IsAutoRunByTime, Mode=TwoWay}"
+                                  IsEnabled="{Binding CanRunAutoTrack, Mode=OneWay}"
+                                  Command="{Binding Path=ByTime_Checked}"
+                                  CommandParameter="{Binding ElementName=ckxRunByTime, Path=IsChecked}">
+
+                        </CheckBox>
+                    <TextBox x:Name="tbxTimeOut"
+                             Text="{Binding TimeOut, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PreviewTextInput="NumberValidationTextBox"
+                             Margin="22,110,0,0"
+                             Width="30"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             HorizontalContentAlignment="Center"
+                             IsEnabled="{Binding CanRunAutoTrack, Mode=OneWay}"></TextBox>
+                    <TextBlock Text="Minutes"
+                               Margin="55,110,0,0"
+                               IsEnabled="{Binding CanRunAutoTrack, Mode=OneWay}"></TextBlock>
+
+                   
 
                 </Grid>
             </GroupBox>

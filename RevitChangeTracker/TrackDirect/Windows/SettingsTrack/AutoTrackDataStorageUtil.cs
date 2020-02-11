@@ -10,16 +10,19 @@ namespace TrackDirect.UI
 {
     public static class AutoTrackDataStorageUtil
     {
-        public static Guid schemaId = new Guid("{C2E2C9E5-55EC-4550-A0AC-C4E3248D022A}");
+        public static Guid schemaId = new Guid("{12D470A3-9AC0-4E17-95FE-4938B180EFAB}");
         public static Schema _schema = Schema.Lookup(schemaId);
+        private static string s_CanAutoRun = "CanAutoRun";
         private static string s_IsAutoTrackEventSave = "IsAutoTrackEventSave";
         private static string s_IsAutoTrackEventDocumentOpen = "IsAutoTrackEventDocumentOpen";
         private static string s_IsAutoTrackEventSynchronize = "AutoTrackEventSynchronize";
         private static string s_IsAutoTrackEventViewActive = "IsAutoTrackEventViewActive";
-        private static string s_CanAutoRun = "CanAutoRun";
+        private static string s_IsAutoTrackByTime= "IsAutoTrackByTime";
+        private static string s_TimeOut = "TimeOut";
 
 
-       
+
+
         #region DataStorage for Checkbox
         public static AutoTrackSettings GetAutoTrackCreatorSettings(Document doc)
         {
@@ -37,11 +40,14 @@ namespace TrackDirect.UI
                     {
                         DataStorage storage = savedStorage.First();
                         Entity entity = storage.GetEntity(_schema);
+                        settings.CanAutoRun = entity.Get<bool>(_schema.GetField(s_CanAutoRun));
                         settings.IsAutoTrackEventSave = entity.Get<bool>(_schema.GetField(s_IsAutoTrackEventSave));
                         settings.IsAutoTrackEventDocumentOpen = entity.Get<bool>(_schema.GetField(s_IsAutoTrackEventDocumentOpen));
                         settings.IsAutoTrackEventSynchronize = entity.Get<bool>(_schema.GetField(s_IsAutoTrackEventSynchronize));
                         settings.IsAutoTrackEventViewActive = entity.Get<bool>(_schema.GetField(s_IsAutoTrackEventViewActive));
-                        settings.CanAutoRun = entity.Get<bool>(_schema.GetField(s_CanAutoRun));
+                        settings.IsAutoTrackByTime = entity.Get<bool>(_schema.GetField(s_IsAutoTrackByTime));
+                        settings.TimeOut = entity.Get<int>(_schema.GetField(s_TimeOut));
+
                     }
                 }
             }
@@ -91,12 +97,13 @@ namespace TrackDirect.UI
                         {
                             DataStorage storage = DataStorage.Create(doc);
                             Entity entity = new Entity(schemaId);
+                            entity.Set<bool>(s_CanAutoRun, settings.CanAutoRun);
                             entity.Set<bool>(s_IsAutoTrackEventSave, settings.IsAutoTrackEventSave);
                             entity.Set<bool>(s_IsAutoTrackEventDocumentOpen, settings.IsAutoTrackEventDocumentOpen);
                             entity.Set<bool>(s_IsAutoTrackEventSynchronize, settings.IsAutoTrackEventSynchronize);
                             entity.Set<bool>(s_IsAutoTrackEventViewActive, settings.IsAutoTrackEventViewActive);
-                            entity.Set<bool>(s_CanAutoRun, settings.CanAutoRun);
-
+                            entity.Set<bool>(s_IsAutoTrackByTime, settings.IsAutoTrackByTime);
+                            entity.Set<int>(s_TimeOut, settings.TimeOut);
 
                             storage.SetEntity(entity);
                             trans.Commit();
@@ -124,12 +131,15 @@ namespace TrackDirect.UI
             try
             {
                 SchemaBuilder schemaBuilder = new SchemaBuilder(schemaId);
-                schemaBuilder.SetSchemaName("AutoTrackCreator1");
+                schemaBuilder.SetSchemaName("AutoTrackCreator2");
+                schemaBuilder.AddSimpleField(s_CanAutoRun, typeof(bool));
                 schemaBuilder.AddSimpleField(s_IsAutoTrackEventSave, typeof(bool));
                 schemaBuilder.AddSimpleField(s_IsAutoTrackEventDocumentOpen, typeof(bool));
                 schemaBuilder.AddSimpleField(s_IsAutoTrackEventSynchronize, typeof(bool));
                 schemaBuilder.AddSimpleField(s_IsAutoTrackEventViewActive, typeof(bool));
-                schemaBuilder.AddSimpleField(s_CanAutoRun, typeof(bool));
+                schemaBuilder.AddSimpleField(s_IsAutoTrackByTime, typeof(bool));
+                schemaBuilder.AddSimpleField(s_TimeOut, typeof(int));
+
 
                 schema = schemaBuilder.Finish();
             }
@@ -144,17 +154,22 @@ namespace TrackDirect.UI
 
         public class AutoTrackSettings
         {
-            private static bool isAutoTrackEventSave = false;
-            private static bool isAutoTrackEventDocumentOpen = false;
-            private static bool isAutoTrackEventSynchronize = false;
-            private static bool isAutoTrackEventViewActive = false;
-            private static bool canAutoRun = true;
+            private  bool canAutoRun = true;
+            private  bool isAutoTrackEventSave = false;
+            private  bool isAutoTrackEventDocumentOpen = false;
+            private  bool isAutoTrackEventSynchronize = false;
+            private  bool isAutoTrackEventViewActive = false;
+            private  bool isAutoTrackByTime = false;
+            private  int timeOut = 10; //10 minute
 
+            public bool CanAutoRun { get { return canAutoRun; } set { canAutoRun = value; } }
             public bool IsAutoTrackEventSave { get { return isAutoTrackEventSave; } set { isAutoTrackEventSave = value; } }
             public bool IsAutoTrackEventDocumentOpen { get { return isAutoTrackEventDocumentOpen; } set { isAutoTrackEventDocumentOpen = value; } }
             public bool IsAutoTrackEventSynchronize { get { return isAutoTrackEventSynchronize; } set { isAutoTrackEventSynchronize = value; } }
             public bool IsAutoTrackEventViewActive { get { return isAutoTrackEventViewActive; } set { isAutoTrackEventViewActive = value; } }
-            public bool CanAutoRun { get { return canAutoRun; } set { canAutoRun = value; } }
+            public bool IsAutoTrackByTime{ get { return isAutoTrackByTime; } set { isAutoTrackByTime = value; } }
+            public int TimeOut { get { return timeOut; } set { timeOut = value; } }
+
 
             public AutoTrackSettings()
             {
@@ -166,6 +181,8 @@ namespace TrackDirect.UI
                 isAutoTrackEventDocumentOpen = settings.IsAutoTrackEventDocumentOpen;
                 isAutoTrackEventSynchronize = settings.IsAutoTrackEventSynchronize;
                 isAutoTrackEventViewActive = settings.IsAutoTrackEventViewActive;
+                isAutoTrackByTime = settings.IsAutoTrackByTime;
+                timeOut = settings.TimeOut;
                 canAutoRun = settings.CanAutoRun;
 
             }

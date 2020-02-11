@@ -24,6 +24,7 @@ namespace TrackDirect.UI
         public RelayCommand RadioBtnCanRun_Checked { get; set; }
         public RelayCommand RadioBtnDoNotRun_Checked { get; set; }
         public RelayCommand ItemListBox_Checked { get; set; }
+        public RelayCommand ByTime_Checked { get; set; }
 
         #endregion //Relay command
 
@@ -33,7 +34,9 @@ namespace TrackDirect.UI
         private bool isAutoRunSynchroProject = false;
         private bool isAutoRunOpenProject = false;
         private bool isAutoRunSwitchProject = false;
-         private int countSelectedCategory = 0;
+        private bool isAutoRunByTime = false;
+        private int timeOut = 10; //Minutes
+        private int countSelectedCategory = 0;
 
         public bool CanRunAutoTrack { get { return canRunAutoTrack; } set { canRunAutoTrack = value; OnPropertyChanged(); } }
         public bool DoNotRunAutoTrack { get { return !canRunAutoTrack; } set { canRunAutoTrack = !value; OnPropertyChanged(); } }
@@ -41,6 +44,8 @@ namespace TrackDirect.UI
         public bool IsAutoRunSynchroProject { get { return isAutoRunSynchroProject; } set { isAutoRunSynchroProject = value; OnPropertyChanged(); } }
         public bool IsAutoRunOpenProject { get { return isAutoRunOpenProject; } set { isAutoRunOpenProject = value; OnPropertyChanged(); } }
         public bool IsAutoRunSwitchProject  { get { return isAutoRunSwitchProject; } set { isAutoRunSwitchProject = value; OnPropertyChanged(); } }
+        public bool IsAutoRunByTime { get { return isAutoRunByTime; } set { isAutoRunByTime= value; OnPropertyChanged(); } }
+        public int TimeOut { get { return timeOut; } set { timeOut = value; OnPropertyChanged(); } }
         public int CountSelectedCategory { get { return countSelectedCategory; } set { countSelectedCategory = value; OnPropertyChanged(); } }
         #endregion //Properties for itemControl in view
 
@@ -69,13 +74,15 @@ namespace TrackDirect.UI
                 CancelCommand = new RelayCommand(param => this.OnCancelCommand(param));
                 BtnSelectAllCommand = new RelayCommand(param => this.OnSelectAllCommand(param));
                 BtnSelectNoneCommand = new RelayCommand(param => this.OnSelectNoneCommand(param));
+                RadioBtnCanRun_Checked = new RelayCommand(param => this.OnRadioBtnCanRun_Checked(param));
+                RadioBtnDoNotRun_Checked = new RelayCommand(param => this.OnRadioBtnDoNotRun_Checked(param));
                 SaveProject_Checked = new RelayCommand(param => this.OnSaveProject_Checked(param));
                 SynchronizeProject_Checked = new RelayCommand(param => this.OnSynchronizeProject_Checked(param));
                 OpenProject_Checked = new RelayCommand(param => this.OnOpenProject_Checked(param));
                 SwitchProject_Checked = new RelayCommand(param => this.OnSwitchProject_Checked(param));
-                RadioBtnCanRun_Checked = new RelayCommand(param => this.OnRadioBtnCanRun_Checked(param));
-                RadioBtnDoNotRun_Checked = new RelayCommand(param => this.OnRadioBtnDoNotRun_Checked(param));
+                ByTime_Checked = new RelayCommand(param => this.OnByTime_Checked(param));
                 ItemListBox_Checked = new RelayCommand(param => this.OnItemListBox_Checked(param));
+               
 
             }
             catch (Exception ex)
@@ -199,7 +206,13 @@ namespace TrackDirect.UI
                 toolSettings.IsAutoTrackEventSave = canRunAutoTrack && isAutoRunSaveProject ? true : false;
             }
         }
-
+        private void OnByTime_Checked(object param)
+        {
+            if (null != toolSettings)
+            {
+                toolSettings.IsAutoTrackByTime = canRunAutoTrack && isAutoRunByTime ? true : false;
+            }
+        }
         private void OnRadioBtnDoNotRun_Checked(object param)
         {
             if (null != toolSettings)
@@ -216,6 +229,11 @@ namespace TrackDirect.UI
                 toolSettings.CanAutoRun = canRunAutoTrack;
             }
             this.CanRunAutoTrack = true;
+            this.IsAutoRunByTime = true;
+            this.IsAutoRunSaveProject = true;
+            this.IsAutoRunSwitchProject = true;
+            this.IsAutoRunSynchroProject = true;
+            this.IsAutoRunOpenProject = true;
         }
         private void OnItemListBox_Checked(object param)
         {
@@ -293,8 +311,9 @@ namespace TrackDirect.UI
                     isAutoRunSynchroProject = toolSettings.IsAutoTrackEventSynchronize;
                     isAutoRunOpenProject = toolSettings.IsAutoTrackEventDocumentOpen;
                     isAutoRunSwitchProject = toolSettings.IsAutoTrackEventViewActive;
-                  
+                    isAutoRunByTime = toolSettings.IsAutoTrackByTime;
                 }
+                timeOut = toolSettings.TimeOut <= 1 ? 10 : toolSettings.TimeOut;//If time out not valid, take defaut 10 minutes
             }
             catch (Exception ex)
             {
@@ -311,11 +330,13 @@ namespace TrackDirect.UI
             bool result = false;
             try
             {
+                toolSettings.CanAutoRun = canRunAutoTrack;
                 toolSettings.IsAutoTrackEventSave = isAutoRunSaveProject;
                 toolSettings.IsAutoTrackEventSynchronize = isAutoRunSynchroProject;
                 toolSettings.IsAutoTrackEventDocumentOpen = isAutoRunOpenProject;
                 toolSettings.IsAutoTrackEventViewActive = isAutoRunSwitchProject;
-                toolSettings.CanAutoRun = canRunAutoTrack;
+                toolSettings.IsAutoTrackByTime = isAutoRunByTime;
+                toolSettings.TimeOut = timeOut >= 1 ? timeOut: 10 ;
                 result = true;
 
             }

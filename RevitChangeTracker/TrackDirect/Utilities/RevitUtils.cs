@@ -335,13 +335,22 @@ namespace TrackDirect.Utilities
             string parameters = "";
             IList<Parameter> paraList = e.GetOrderedParameters();
 
+            //List shared parameter info data tracking
+            var TrackSharedParameters = new[] 
+            { "VCF_CreateAt",
+                "VCF_ModifyAt",
+                "VCF_User",
+                "VCF_ChangeType"
+            };
+            
+
             foreach (Parameter para in e.GetOrderedParameters())
             {
 
                 if (para.IsShared == true)
                 {
                     SharedParameterElement sharedParameter = doc.GetElement(para.Id) as SharedParameterElement;
-                    if (sharedParameter.GetDefinition().Visible == true)
+                    if (sharedParameter.GetDefinition().Visible == true && !TrackSharedParameters.Contains(para.Definition.Name))
                     {
                         parameters += string.Format("{0}:{1}={2}", para.Id, para.Definition.Name, ParameterUtils.ParameterToString(para)) + ";";
                     }

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Autodesk.Windows;
 using System.Threading;
+using static TrackDirect.UI.AutoTrackDataStorageUtil;
 
 namespace TrackDirect
 {
@@ -30,8 +31,17 @@ namespace TrackDirect
         private static bool isRunning = false;
 
         
-        private Document _activeDoc;
-        private Autodesk.Revit.ApplicationServices.Application _app;
+        private static Document _activeDoc = null;
+        private static Autodesk.Revit.ApplicationServices.Application _app = null;
+
+        private static AutoTrackSettings toolSettings = null;
+        private static bool canAutoRun  = false;
+        private static bool isAutoTrackByTime  = false;
+        private static int timeOut  = 10;
+        private static bool isAutoTrackEventSave = false;
+        private static bool isAutoTrackEventDocumentOpen = false;
+        private static bool isAutoTrackEventSynchronize  = false;
+        private static bool isAutoTrackEventViewActive = false;
 
 
         public static bool IsRunning { get { return isRunning; } set { isRunning = value; } }
@@ -49,7 +59,18 @@ namespace TrackDirect
             _app = uiapp.Application;
 
             isRunning = !isRunning;
-
+            CollectAutoTrackSetting(_activeDoc);
+            bool isNoneCheck = (isAutoTrackEventSave 
+                == isAutoTrackEventDocumentOpen 
+                == isAutoTrackEventSynchronize 
+                == isAutoTrackEventViewActive 
+                == isAutoTrackByTime == false) ? true : false;
+            if (!canAutoRun || isNoneCheck)
+            {
+                MessageBox.Show($"Nothing happened!\n\nYou need check case 'Can AuTo Run' in the settings. This will help you record automatically data changes in your model.","Auto Run Mode",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                return Result.Cancelled;
+            }
+            
             //Check and create shared parameter if they do not exist
             CreateSharedParameter();
             //Start addin comparison
@@ -102,13 +123,16 @@ namespace TrackDirect
         /// </summary>
         private static void TriggerTrackDirectHandler()
         {
-            while (isRunning)
+            CollectAutoTrackSetting(_activeDoc);
+            while (isRunning && canAutoRun && isAutoTrackByTime)
             {
+
                 AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
                 AppCommand.ExEvent.Raise();
                 AppCommand.SetFocusToRevit();
                 // Wait and relinquish control 
                 // before next snapshot.
+                _timeout = toolSettings.TimeOut >= 1? toolSettings.TimeOut * 1000 * 60: 600000;
                 Thread.Sleep(_timeout);
             }
         }
@@ -144,6 +168,33 @@ namespace TrackDirect
                     }
                 }
             }
+        }
+        private static void CollectAutoTrackSetting(Document doc)
+        {
+            try
+            {
+                toolSettings = AutoTrackDataStorageUtil.GetAutoTrackCreatorSettings(doc);
+
+                canAutoRun = toolSettings.CanAutoRun;
+                if (canAutoRun)
+                {
+                    isAutoTrackEventSave = toolSettings.IsAutoTrackEventSave;
+                    isAutoTrackEventSynchronize = toolSettings.IsAutoTrackEventSynchronize;
+                    isAutoTrackEventViewActive = toolSettings.IsAutoTrackEventViewActive;
+                    isAutoTrackEventDocumentOpen = toolSettings.IsAutoTrackEventDocumentOpen;
+                    isAutoTrackByTime = toolSettings.IsAutoTrackByTime;
+                    timeOut = toolSettings.TimeOut;
+                }
+                else
+                {
+                    isAutoTrackEventSave = false;
+                    isAutoTrackEventSynchronize = false;
+                    isAutoTrackEventViewActive = false;
+                    isAutoTrackEventDocumentOpen = false;
+                    isAutoTrackByTime = false;
+                }
+            }
+            catch { }
         }
 
     }

@@ -8,8 +8,8 @@ namespace TrackDirect.UI
         public FooModel() { }
         public void GetInstanceItems()
         {
-            AppCommand.FooHandler.Request.Make(FooRequestHandler.RequestId.GetElementItems);
-            AppCommand.ExEvent.Raise();
+            //AppCommand.FooHandler.Request.Make(FooRequestHandler.RequestId.GetElementItems);
+            //AppCommand.ExEvent.Raise();
         }
         
     }

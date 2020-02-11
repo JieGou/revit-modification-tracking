@@ -28,14 +28,9 @@ namespace TrackDirect
     class AppCommand : IExternalApplication
     {
         #region Declare properties
-        private static Thread _thread = null;
         private static ExternalEvent _exEvent = null;
         private static TrackDirectHandler _trackHandler = null;
-        private static int _nSnapshots = 0;
-        private static int _timeOutMinutes = 1;
-        private static int _timeout = 1000 * 60 * _timeOutMinutes;
 
-        public static FooRequestHandler FooHandler { get; set; }
         public static TrackDirectHandler TrackHandler { get { return _trackHandler; } set { _trackHandler = value; } }
         public static ExternalEvent ExEvent { get { return _exEvent; } set { _exEvent = value; } }
 
@@ -64,11 +59,13 @@ namespace TrackDirect
         //Set auto Track element
         private static AutoTrackSettings toolSettings = null;
         private static IList<ElementId> catList = new List<ElementId>();
+        private static bool canAutoRun { get; set; } = false;
         private static bool isAutoTrackEventSave { get; set; } = false;
         private static bool isAutoTrackEventDocumentOpen { get; set; } = false;
         private static bool isAutoTrackEventSynchronize { get; set; } = false;
         private static bool isAutoTrackEventViewActive { get; set; } = false;
-        private static bool canAutoRun { get; set; } = false;
+        private static bool isAutoTrackByTime { get; set; } = false;
+        private static int timeOut { get; set; } = 10;
 
         internal static string assemblyPath = typeof(AppCommand).Assembly.Location;
         #endregion
@@ -133,13 +130,6 @@ namespace TrackDirect
             a.ControlledApplication.DocumentSavingAs -= OnDocumentSavingAs;
             a.ControlledApplication.DocumentSynchronizingWithCentral -= OnDocumentSynchronizing;
 
-            //Close auto modeless form if it is still opening
-            //if (_trackView != null && _trackView.IsVisible)
-            //{
-            //    _trackView.Close();
-            //}
-            //_thread.Abort();
-            //_thread = null;
             _exEvent.Dispose();
 
 
@@ -231,12 +221,12 @@ namespace TrackDirect
 
             //instruction file to open by F1 key
             string instructionFile = @"https://github.com/TienDuyNGUYEN";
-                ContextualHelp contextualHelp = new ContextualHelp(ContextualHelpType.Url, instructionFile);
-                btnTrack.SetContextualHelp(contextualHelp);
-                btnTrackSettings.SetContextualHelp(contextualHelp);
-                btnSnapshot.SetContextualHelp(contextualHelp);
-                btnCompare.SetContextualHelp(contextualHelp);
-                btnSettingsDB.SetContextualHelp(contextualHelp);
+            ContextualHelp contextualHelp = new ContextualHelp(ContextualHelpType.Url, instructionFile);
+            btnTrack.SetContextualHelp(contextualHelp);
+            btnTrackSettings.SetContextualHelp(contextualHelp);
+            btnSnapshot.SetContextualHelp(contextualHelp);
+            btnCompare.SetContextualHelp(contextualHelp);
+            btnSettingsDB.SetContextualHelp(contextualHelp);
         }
 
         #endregion //Create all ribbon item: tab, panel, button
@@ -255,6 +245,8 @@ namespace TrackDirect
                     isAutoTrackEventSynchronize = toolSettings.IsAutoTrackEventSynchronize;
                     isAutoTrackEventViewActive = toolSettings.IsAutoTrackEventViewActive;
                     isAutoTrackEventDocumentOpen = toolSettings.IsAutoTrackEventDocumentOpen;
+                    isAutoTrackByTime = toolSettings.IsAutoTrackByTime;
+                    timeOut = toolSettings.TimeOut;
                 }
                 else
                 {
@@ -262,6 +254,7 @@ namespace TrackDirect
                     isAutoTrackEventSynchronize = false;
                     isAutoTrackEventViewActive = false;
                     isAutoTrackEventDocumentOpen = false;
+                    isAutoTrackByTime = false;
                 }
             }
             catch { }
@@ -281,9 +274,9 @@ namespace TrackDirect
             if (CmdAutoTrack.IsRunning)
             {
                 CmdAutoTrack.IsRunning = false;
-                runTrack(source);
+                runTrackEvent(source);
             }
-               
+
         }
         private static void OnDocumentOpened(object source, DocumentOpenedEventArgs args)
         {
@@ -312,17 +305,17 @@ namespace TrackDirect
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
             {
-                runTrack(sender);
+                runTrackEvent(sender);
             }
-       
+
         }
-       
+
         private static void OnDocumentSavingAs(object sender, DocumentSavingAsEventArgs args)
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
-                runTrack(sender);
+                runTrackEvent(sender);
         }
         private static void OnDocumentSynchronizing(object sender, DocumentSynchronizingWithCentralEventArgs args)
         {
@@ -330,9 +323,9 @@ namespace TrackDirect
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventSynchronize && canAutoRun && CmdAutoTrack.IsRunning)
             {
-                runTrack(sender);
+                runTrackEvent(sender);
             }
-          
+
         }
 
         #region Event switch project by change active view
@@ -359,17 +352,34 @@ namespace TrackDirect
             if (!string.IsNullOrEmpty(idDocPrevious) && !string.IsNullOrEmpty(idDocCurrent) && idDocPrevious != idDocCurrent)
             {
                 CollectAutoTrackSetting(docPrevious);
-                if (isAutoTrackEventViewActive && canAutoRun) runTrack(sender);
+                if (isAutoTrackEventViewActive && canAutoRun) runTrackEvent(sender);
             }
         }
 
         #endregion
 
-        private static void runTrack(object sender)
+        private static void runTrackEvent(object sender)
         {
-            AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
-            _exEvent.Raise();
-            SetFocusToRevit();
+            //If CmdAutoTrack not run, run it, It will show status in button AutoTrack is running
+            if (CmdAutoTrack.IsRunning)
+            {
+                AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
+                _exEvent.Raise();
+                SetFocusToRevit();
+            }
+            else
+            {
+                runTrackCommand(sender);
+            }
+           
+        }
+        private static void runTrackCommand(object sender)
+        {
+            CmdAutoTrack cmdAutoTrack = new CmdAutoTrack();
+            if (sender is UIApplication)
+                cmdAutoTrack.Execute(sender as UIApplication);
+            else
+                cmdAutoTrack.Execute(new UIApplication(sender as Autodesk.Revit.ApplicationServices.Application));
         }
 
         #endregion //Events
@@ -466,7 +476,7 @@ namespace TrackDirect
                 SetForegroundWindow(hBefore);
             }
         }
-       
+
         #endregion
 
     }
