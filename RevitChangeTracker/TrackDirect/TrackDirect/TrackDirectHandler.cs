@@ -20,10 +20,10 @@ namespace TrackDirect.UI
     {
         private static Document _docRun;
         private static string _docId;
-        public Document ActiveDoc { get; set; }
-        private UIApplication _uiapp;
-        private Autodesk.Revit.ApplicationServices.Application _app;
-        public static Dictionary<string, MiniComparisionContainer> _startState { get; private set; } = null;
+        private static Document _activeDoc;
+        private static UIApplication _uiapp;
+        private static Autodesk.Revit.ApplicationServices.Application _app;
+        public static Dictionary<string, MiniDataComparision> _startState { get; private set; } = null;
 
         public string GetName()
         {
@@ -34,7 +34,7 @@ namespace TrackDirect.UI
         {
             _uiapp = uiapp;
             _app = uiapp.Application;
-            ActiveDoc = uiapp.ActiveUIDocument.Document;
+            _activeDoc = uiapp.ActiveUIDocument.Document;
             try
             {
                 switch (Request.Take())
@@ -45,10 +45,10 @@ namespace TrackDirect.UI
                         }
                     case RequestId.TrackChangesCommand:
                         {
-                            TrackChangesCommand();
+                            GetSnapShot();
                             break;
                         }
-                  
+
                 }
             }
             catch (Exception e)
@@ -77,96 +77,84 @@ namespace TrackDirect.UI
             None,
             TrackChangesCommand
         }
-        
-        #region External event
-        private void CreateSharedParameter()
-        {
-            Document doc = ActiveDoc;
-            using (Transaction tx = new Transaction(doc))
-            {
-                //Check and add shared parameter to project
-                try
-                {
-                    tx.Start("Add shared parameter");
-                    //Create a list of category
-                    CategorySet categories = CategoryUtils.GetModelCategories(doc, _app);
-                    List<string> catList = new List<string>();
-                    foreach (Category c in categories)
-                    {
-                        catList.Add(c.Name);
-                    }
-                    catList.Sort();
-                    //Create Shared parameters if necessary
-                    ParameterUtils.AddSharedParameters(_app, doc, categories);
-                    tx.Commit();
-                }
 
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error! " + ex);
-                    if (tx.HasStarted() == true)
-                    {
-                        tx.RollBack();
-                    }
-                }
-            }
-        }
-        public void TrackChangesCommand()
+        #region External event
+
+        public void GetSnapShot()
         {
-            CreateSharedParameter();
             Document activeDoc = _uiapp.ActiveUIDocument.Document;
-            if (_startState is null)
+            _docRun = _uiapp.ActiveUIDocument.Document;
+            _docId = _docRun.ProjectInformation.UniqueId;
+            //MessageBox.Show("Start Run executed!", "Multi-Threading");
+            //First time run
+            if (MiniComparisonContainer.ProjectId == "")
             {
-                //If command not running we will run it
-                _docRun = activeDoc;
-                _docId = _docRun.ProjectInformation.UniqueId;
-                //Change Icon and text of button
-                AppCommand.btnTrack.ItemText = "Stop\nTrack";
-                AppCommand.btnTrack.ToolTip = "Add-in is running. Clic here to stop it.";
-                AppCommand.btnTrack.LongDescription = $"Project is runninng: {_uiapp.ActiveUIDocument.Document.Title}";
-                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_on_32);
-                AppCommand.btnTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_on_16);
+                //Save project id
+                MiniComparisonContainer.Doc = _docRun;
+                MiniComparisonContainer.ProjectId = _docId;
+                AppCommand.btnTrack.LongDescription = $"Project is runninng: {_docRun.Title}";
 
                 //Retrieve the coresponding list of elements
-                var temp = CategoryDataStorageUtil.GetCategoryPropertiesDataStorage(_docRun);
-                IList<ElementId> cats = temp.Where(x => x.Selected == true).Select(x => x.CategoryId).ToList();
-                IEnumerable<Element> elems = ElementUtils.GetElementsByCategories(_docRun, cats);
-                var com = GetComparision(_docRun, elems);
-                _startState = com.TrackedData;
+                var elems = GetTrackedElement(_docRun);
+                GetCurrentDataComparision(_docRun, elems);
             }
             else
             {
-                AppCommand.btnTrack.ItemText = "Run\nTrack";
-                AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
-                AppCommand.btnTrack.LongDescription = "This command toogles between starting and ending modification tracking";
-                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
-
-                string docId2 = activeDoc.ProjectInformation.UniqueId;
-                if (_docId != docId2)
+                if (MiniComparisonContainer.ProjectId == _docId)
                 {
-                    TaskDialog.Show("Change Document", "Document running is changed!");
+                    AppCommand.btnTrack.LongDescription = $"Project is runninng: {_docRun.Title}";
+                    MiniComparisonContainer.PreviousData.Clear();
+                    MiniComparisonContainer.PreviousData = MiniComparisonContainer.CurrentData.ToDictionary(entry => entry.Key, entry => entry.Value);
+                    var elems = GetTrackedElement(_docRun);
+                    GetCurrentDataComparision(_docRun, elems);
+                    MiniComparisonController.MiniReportDifferences(_docRun, MiniComparisonContainer.PreviousData, MiniComparisonContainer.CurrentData);
                 }
-                //When document change, we need get data comparision of the previous document to compare
-                //This will ensure that we always compare the same project
-                var temp = CategoryDataStorageUtil.GetCategoryPropertiesDataStorage(_docRun);
-                IList<ElementId> cats = temp.Where(x => x.Selected == true).Select(x => x.CategoryId).ToList();
-                IEnumerable<Element> elems = ElementUtils.GetElementsByCategories(_docRun, cats);
-                var com = GetComparision(_docRun, elems);
-                Dictionary<string, MiniComparisionContainer> end_state = com.TrackedData;
+                else //ProjectId != _docId --> Document tracked is changed
+                {
+                    //If Project changed, we need get data from previous doc to compare
+                    MiniComparisonContainer.PreviousData.Clear();
+                    MiniComparisonContainer.PreviousData = MiniComparisonContainer.CurrentData.ToDictionary(entry => entry.Key, entry => entry.Value);
 
-                //Compare 2 data
-                MiniComparisonController.MiniReportDifferences(activeDoc, _startState, end_state);
+                    //Avoid error if MiniCoparisonContainer.Doc null
+                    if(MiniComparisonContainer.Doc != null)
+                    {
+                        var elems1 = GetTrackedElement(MiniComparisonContainer.Doc);
+                        GetCurrentDataComparision(MiniComparisonContainer.Doc, elems1);
+                        MiniComparisonController.MiniReportDifferences(MiniComparisonContainer.Doc, MiniComparisonContainer.PreviousData, MiniComparisonContainer.CurrentData);
+                    }
+                    else
+                    {
+                        //Get document from guid
+                        
+                    }
+                    
+                    //***********************************************//
+                    //Reset Data comparison for new document
+                    //We consider this cas is first time running in new document (as case 1)
 
-                _docRun = activeDoc;
-                _docId = _docRun.ProjectInformation.UniqueId;
-                _startState = null;
+                    MiniComparisonContainer.Doc = _docRun;
+                    MiniComparisonContainer.ProjectId = _docId;
+                    MiniComparisonContainer.PreviousData.Clear();
+                    var elems = GetTrackedElement(_docRun);
+                    GetCurrentDataComparision(_docRun, elems);
+                    AppCommand.btnTrack.LongDescription = $"Project is runninng: {_docRun}";
+                }
             }
+
+            //After run compare, we need check if user turnoff CmdTrackChange
+            if(!CmdAutoTrack.IsRunning)
+            {
+                MiniComparisonContainer.ProjectId = "";
+                MiniComparisonContainer.Doc = null;
+                MiniComparisonContainer.PreviousData.Clear();
+                MiniComparisonContainer.CurrentData.Clear();
+            }
+            //MessageBox.Show("Stop Run executed!", "Multi-Threading");
         }
 
-        private MiniComparison GetComparision(Document doc, IEnumerable<Element> elems)
+        private void GetCurrentDataComparision(Document doc, IEnumerable<Element> elems)
         {
-            MiniComparison com = new MiniComparison();
-            com.projectId = doc.ProjectInformation.UniqueId;
+            MiniComparisonContainer.CurrentData.Clear();
             foreach (var e in elems)
             {
                 Category c = e.Category;
@@ -178,10 +166,15 @@ namespace TrackDirect.UI
                 if (c == null) continue; // we don't want these things?
                 MiniComparisonMaker miniMaker = new MiniComparisonMaker(doc);
                 var miniContainer = miniMaker.GetHashSetDataComparision(e);
-                com.projectId = doc.ProjectInformation.UniqueId;
-                com.TrackedData.Add(e.UniqueId, miniContainer);
+                MiniComparisonContainer.CurrentData.Add(e.UniqueId, miniContainer);
             }
-            return com;
+        }
+       
+        private IEnumerable<Element> GetTrackedElement(Document doc)
+        {
+            var tmp = CategoryDataStorageUtil.GetCategoryPropertiesDataStorage(doc);
+            IList<ElementId> cats1 = tmp.Where(x => x.Selected == true).Select(x => x.CategoryId).ToList();
+            return ElementUtils.GetElementsByCategories(doc, cats1);
         }
 
         #endregion //External events

@@ -111,8 +111,8 @@
     <Compile Include="Windows\TrackManager\ComponentOptionConverter.cs" />
     <Compile Include="Windows\TrackManager\TreeViewModel.cs" />
     <Compile Include="Utilities\IFilenameHint.cs" />
-    <Compile Include="TrackDirect\MiniComparision.cs" />
-    <Compile Include="TrackDirect\MiniComparisionContainer.cs" />
+    <Compile Include="TrackDirect\MiniComparisonContainer.cs" />
+    <Compile Include="TrackDirect\MiniDataComparision.cs" />
     <Compile Include="Models\ChangeSummary.cs" />
     <Compile Include="TrackDirect\MiniComparisonController.cs" />
     <Compile Include="TrackDirect\MiniComparisionMaker.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="Windows\SettingsTrack\ComponentCategoryFilter.cs" />
     <Compile Include="Utilities\GeometricalUtils.cs" />
     <Compile Include="Utilities\SelectionFilters.cs" />
-    <Compile Include="Command\CmdTrackChange.cs" />
+    <Compile Include="Command\CmdAutoTrack.cs" />
     <Compile Include="TrackDirect\ComparisonController.cs" />
     <Compile Include="TrackDirect\ComparisionMaker.cs" />
     <Compile Include="TrackDirect\SnapshotMaker.cs" />

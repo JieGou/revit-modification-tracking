@@ -19,7 +19,7 @@ namespace TrackDirect
         private static string _pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();
         private static string _pUserName = VCFParameters.VCF_User.ToString();
         public static string _dateRecord = DateTime.Now.ToShortDateString();
-        private static string _userRevit = CmdTrackChange.UserRevit;
+        private static string _userRevit = CmdAutoTrack.UserRevit;
 
         public static int nAdded = 0;
         public static int nDeleted = 0;
@@ -39,8 +39,8 @@ namespace TrackDirect
         /// </summary>
         public static void MiniReportDifferences(
           Document doc,
-          Dictionary<string, MiniComparisionContainer> _previousElems,
-          Dictionary<string, MiniComparisionContainer> _currentElems)
+          Dictionary<string, MiniDataComparision> _previousElems,
+          Dictionary<string, MiniDataComparision> _currentElems)
         {
             nAdded = 0;
             nDeleted = 0;

@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TrackDirect.Models
 {
-    public class MiniComparisionContainer
+    public class MiniDataComparision
 
     {
         public int ElementId { get; set; }

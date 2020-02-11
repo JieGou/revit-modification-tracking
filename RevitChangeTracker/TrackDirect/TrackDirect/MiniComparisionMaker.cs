@@ -44,10 +44,10 @@ namespace TrackDirect
         /// <param name="e"></param>
         /// <param name="isTypes"></param>
         /// <returns></returns>
-        public  MiniComparisionContainer GetHashSetDataComparision(Element e)
+        public  MiniDataComparision GetHashSetDataComparision(Element e)
         {
             SHA256 hasher = SHA256Managed.Create();
-            MiniComparisionContainer miniComp = new MiniComparisionContainer();
+            MiniDataComparision miniComp = new MiniDataComparision();
             // seen at least one case where retrieving bounding box threw an internal error
             BoundingBoxXYZ bb = null;
             try
@@ -79,11 +79,10 @@ namespace TrackDirect
                 //Get hashset for long string to simple compare
                 miniComp.ElementDescription = Convert.ToBase64String(
                       hasher.ComputeHash(RevitUtils.GetBytes(RevitUtils.GetElementDescription(e))));
+                miniComp.GeometryInfo = Convert.ToBase64String(
+                     hasher.ComputeHash(RevitUtils.GetBytes(string.Join(";", geometryInfoList))));
                 miniComp.RevitParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(revitParameters)));
                 miniComp.SharedParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(sharedParameters)));
-                miniComp.GeometryInfo = Convert.ToBase64String(
-                      hasher.ComputeHash(RevitUtils.GetBytes(string.Join(";", geometryInfoList))));
-
             }
             return miniComp;
         }
@@ -94,7 +93,7 @@ namespace TrackDirect
 
         #region PrivateMethods
 
-        public static string GetTypeChange(MiniComparisionContainer current, MiniComparisionContainer previous)
+        public static string GetTypeChange(MiniDataComparision current, MiniDataComparision previous)
         {
             string c = string.Empty;
             if (current.ElementDescription != previous.ElementDescription)

@@ -281,7 +281,7 @@ namespace TrackDirect
                 Category = current.Category,
                 ChangeType = ChangedElement.ChangeTypeEnum.NewElement,
                 CreatedDate = ComparisonController._dateRecord,
-                User = CmdTrackChange.UserRevit,
+                User = CmdAutoTrack.UserRevit,
                 Level = (current.Level != null) ? current.Level : ""
             };
             c.BoundingBoxDescription = Utilities.RevitUtils.SerializeBoundingBox(current.BoundingBox);
@@ -347,7 +347,7 @@ namespace TrackDirect
                     ChangeType = ChangedElement.ChangeTypeEnum.ParameterChange,
                     ChangeDescription = description.ToString(),
                     ModifiedDate = ComparisonController._dateRecord,
-                    User = CmdTrackChange.UserRevit,
+                    User = CmdAutoTrack.UserRevit,
                     Level = (current.Level != null) ? current.Level : ""
                 };
                 c.BoundingBoxDescription = Utilities.RevitUtils.SerializeBoundingBox(current.BoundingBox);
@@ -387,7 +387,7 @@ namespace TrackDirect
                     Category = (e.Category != null) ? e.Category.Name : "(none)",
                     ChangeType = ChangedElement.ChangeTypeEnum.SharedParameterChange,
                     ModifiedDate = ComparisonController._dateRecord,
-                    User = CmdTrackChange.UserRevit,
+                    User = CmdAutoTrack.UserRevit,
                     ChangeDescription = description.ToString(),
                     Level = (current.Level != null) ? current.Level : ""
                 };
@@ -414,7 +414,7 @@ namespace TrackDirect
                     ElementId = current.ElementId,
                     UniqueId = current.UniqueId,
                     ModifiedDate = ComparisonController._dateRecord,
-                    User = CmdTrackChange.UserRevit,
+                    User = CmdAutoTrack.UserRevit,
                     Level = (current.Level != null) ? current.Level : "",
                     ChangeDescription = "Type Element Change",
                 };
@@ -468,7 +468,7 @@ namespace TrackDirect
                     UniqueId = current.UniqueId,
                     Level = (current.Level != null) ? current.Level : "",
                     ModifiedDate = ComparisonController._dateRecord,
-                    User = CmdTrackChange.UserRevit,
+                    User = CmdAutoTrack.UserRevit,
                     ChangeDescription = "Geometry or Location Change",
                 };
                 if (current.BoundingBox != null) c.BoundingBoxDescription = Utilities.RevitUtils.SerializeBoundingBox(current.BoundingBox);

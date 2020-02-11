@@ -27,17 +27,16 @@ namespace TrackDirect
 {
     class AppCommand : IExternalApplication
     {
-
-
-
+        #region Declare properties
         private static Thread _thread = null;
         private static ExternalEvent _exEvent = null;
+        private static TrackDirectHandler _trackHandler = null;
         private static int _nSnapshots = 0;
         private static int _timeOutMinutes = 1;
         private static int _timeout = 1000 * 60 * _timeOutMinutes;
 
         public static FooRequestHandler FooHandler { get; set; }
-        public static TrackDirectHandler TrackHandler { get; set; }
+        public static TrackDirectHandler TrackHandler { get { return _trackHandler; } set { _trackHandler = value; } }
         public static ExternalEvent ExEvent { get { return _exEvent; } set { _exEvent = value; } }
 
 
@@ -72,6 +71,8 @@ namespace TrackDirect
         private static bool canAutoRun { get; set; } = false;
 
         internal static string assemblyPath = typeof(AppCommand).Assembly.Location;
+        #endregion
+
 
 
         /// <summary>
@@ -106,12 +107,9 @@ namespace TrackDirect
                 //Event
                 a.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
                 a.ControlledApplication.DocumentOpened += OnDocumentOpened;
-                a.ControlledApplication.DocumentCreated += OnDocumentCreated;
                 a.ControlledApplication.DocumentSaving += OnDocumentSaving;
-                //a.ControlledApplication.DocumentSaved += OnDocumentSaved;
                 a.ControlledApplication.DocumentSavingAs += OnDocumentSavingAs;
                 a.ControlledApplication.DocumentSynchronizingWithCentral += OnDocumentSynchronizing;
-                a.ControlledApplication.DocumentSynchronizedWithCentral += OnDocumentSynchronized;
                 a.ViewActivated += new EventHandler<ViewActivatedEventArgs>(OnViewActivated);
 
 
@@ -132,10 +130,8 @@ namespace TrackDirect
         {
             a.ControlledApplication.DocumentOpened -= OnDocumentOpened;
             a.ControlledApplication.DocumentSaving -= OnDocumentSaving;
-            //a.ControlledApplication.DocumentSaved -= OnDocumentSaved;
             a.ControlledApplication.DocumentSavingAs -= OnDocumentSavingAs;
             a.ControlledApplication.DocumentSynchronizingWithCentral -= OnDocumentSynchronizing;
-            a.ControlledApplication.DocumentSynchronizedWithCentral -= OnDocumentSynchronized;
 
             //Close auto modeless form if it is still opening
             //if (_trackView != null && _trackView.IsVisible)
@@ -158,11 +154,11 @@ namespace TrackDirect
             #region Panel TrackChange direct solution
             var plTrack = CreatePanel(uiApp, _tabName, "TRACK-DIRECT");
             // Create buttons of trackchanges panel
-            var dataTrack = new PushButtonData("btnSnapshot", "Run\nTrack", assemblyPath, typeof(CmdTrackChange).FullName);
+            var dataTrack = new PushButtonData("btnSnapshot", "Start\nTrack", assemblyPath, typeof(CmdAutoTrack).FullName);
             dataTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
             dataTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_off_16);
             dataTrack.ToolTip = "Track data changes in the model Revit.";
-            dataTrack.LongDescription = "This command toogles between starting and ending modification tracking";
+            dataTrack.LongDescription = "This command toogles between start or stop record modification tracking";
             //btnTrack = plTrack.AddItem(dataTrack) as PushButton;
 
             var setting1 = new PushButtonData("btnSetting1", "Settings", assemblyPath, typeof(CmdTrackSettings).FullName);
@@ -270,14 +266,24 @@ namespace TrackDirect
             }
             catch { }
         }
+
+        private static void OnApplicationInitialized(object sender, ApplicationInitializedEventArgs args)
+        {
+            _trackHandler = new TrackDirectHandler();
+            _exEvent = ExternalEvent.Create(_trackHandler);
+        }
         private void OnDocumentClosed(object sender, DocumentClosedEventArgs args)
         {
 
         }
         private static void OnDocumentClosing(object source, DocumentClosingEventArgs args)
         {
-            if (TrackDirectHandler._startState != null)
+            if (CmdAutoTrack.IsRunning)
+            {
+                CmdAutoTrack.IsRunning = false;
                 runTrack(source);
+            }
+               
         }
         private static void OnDocumentOpened(object source, DocumentOpenedEventArgs args)
         {
@@ -285,71 +291,48 @@ namespace TrackDirect
                 return;
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventDocumentOpen && canAutoRun && TrackDirectHandler._startState == null)
-                runTrack(source);
+            if (isAutoTrackEventDocumentOpen && canAutoRun)
+            {
+                CmdAutoTrack cmdTrackChange = new CmdAutoTrack();
+                if (source is UIApplication)
+                    cmdTrackChange.Execute(source as UIApplication);
+                else
+                    cmdTrackChange.Execute(new UIApplication(source as Autodesk.Revit.ApplicationServices.Application));
+            }
         }
         private static void OnDocumentCreated(object sender, DocumentCreatedEventArgs args)
         {
 
             if (args.Status != RevitAPIEventStatus.Succeeded)
                 return;
-            Document doc = args.Document;
-            CollectAutoTrackSetting(doc);
-
-
         }
         private static void OnDocumentSaving(object sender, DocumentSavingEventArgs args)
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
+            if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
             {
-                var newThread = new Thread(runTrack);
-                _thread.Start();
-                Thread.Sleep(_timeout);
-                while (newThread.IsAlive)
-                {
-                    Thread.Sleep(_timeout/2);
-                }
-                newThread = new Thread(runTrack);
-                _thread.Start();
-                Thread.Sleep(_timeout);
-
+                runTrack(sender);
             }
        
         }
-        //private static void OnDocumentSaved(object sender, DocumentSavedEventArgs args)
-        //{
-        //    if (isAutoTrackEventSave && canAutoRun && _isRunningSaving) runTrack(sender);
-
-        //}
+       
         private static void OnDocumentSavingAs(object sender, DocumentSavingAsEventArgs args)
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
+            if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
                 runTrack(sender);
-            runTrack(sender);
         }
         private static void OnDocumentSynchronizing(object sender, DocumentSynchronizingWithCentralEventArgs args)
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSynchronize && canAutoRun && TrackDirectHandler._startState != null)
+            if (isAutoTrackEventSynchronize && canAutoRun && CmdAutoTrack.IsRunning)
             {
                 runTrack(sender);
-                _isRunningSynchronizing = true;
             }
-            else
-            {
-                _isRunningSynchronizing = false;
-            }
-
-        }
-        private static void OnDocumentSynchronized(object sender, DocumentSynchronizedWithCentralEventArgs args)
-        {
-            if (isAutoTrackEventSynchronize && canAutoRun && _isRunningSynchronizing)
-                runTrack(sender);
+          
         }
 
         #region Event switch project by change active view
@@ -377,22 +360,11 @@ namespace TrackDirect
             {
                 CollectAutoTrackSetting(docPrevious);
                 if (isAutoTrackEventViewActive && canAutoRun) runTrack(sender);
-                //Restart method
-                runTrack(sender);
             }
         }
 
         #endregion
 
-        //Run plugin track 
-        //private static void runTrack(object sender)
-        //{
-        //    CmdTrackChange cmdTrackChange = new CmdTrackChange();
-        //    if (sender is UIApplication)
-        //        cmdTrackChange.Execute(sender as UIApplication);
-        //    else
-        //        cmdTrackChange.Execute(new UIApplication(sender as Autodesk.Revit.ApplicationServices.Application));
-        //}
         private static void runTrack(object sender)
         {
             AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
@@ -462,14 +434,12 @@ namespace TrackDirect
         }
         #endregion //end utilities
 
-
         #region Triggering External Event Execute by Setting Focus
         //Thanks for solution:
         //https://thebuildingcoder.typepad.com/blog/2013/12/triggering-immediate-external-event-execute.html
         //https://github.com/jeremytammik/RoomEditorApp/tree/master/RoomEditorApp
         //https://thebuildingcoder.typepad.com/blog/2016/03/implementing-the-trackchangescloud-external-event.html#5
 
-        #region  Set focus to revit
         /// <summary>
         /// The GetForegroundWindow function returns a 
         /// handle to the foreground window.
@@ -496,47 +466,8 @@ namespace TrackDirect
                 SetForegroundWindow(hBefore);
             }
         }
+       
         #endregion
-
-        private void OnApplicationInitialized( object sender,ApplicationInitializedEventArgs e)
-        {
-            // Create our custom external event.
-            //External Event
-            TrackHandler = new TrackDirectHandler();
-            _exEvent = ExternalEvent.Create(TrackHandler);
-
-            // Start a thread to raise it regularly.
-            //_thread = new Thread(TriggerTrackDirectHandler);
-            //_thread.Start();
-        }
-        /// <summary>
-        /// Trigger a modification tracker snapshot at 
-        /// regular intervals. Relinquish control and wait 
-        /// for the specified timeout period between each 
-        /// snapshot. This method runs in a separate thread.
-        /// </summary>
-        private static void TriggerTrackDirectHandler()
-        {
-            while (true)
-            {
-                ++_nSnapshots;
-                AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
-                _exEvent.Raise();
-
-                // Set focus to Revit for a moment.
-                // Without this, Revit will not forward the 
-                // event Raise to the external event handler 
-                // Execute method until the Revit window is
-                // activated. This causes the screen to flash.
-
-                SetFocusToRevit();
-                // Wait and relinquish control 
-                // before next snapshot.
-                Thread.Sleep(_timeout);
-            }
-        }
-        #endregion //External event
-
 
     }
 }
