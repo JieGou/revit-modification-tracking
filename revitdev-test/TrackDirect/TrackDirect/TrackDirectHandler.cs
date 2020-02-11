@@ -48,11 +48,7 @@ namespace TrackDirect.UI
                             TrackChangesCommand();
                             break;
                         }
-                    case RequestId.ReStartTrackChangesCommand:
-                        {
-                            ReStartTrackChangesCommand();
-                            break;
-                        }
+                  
                 }
             }
             catch (Exception e)
@@ -79,12 +75,9 @@ namespace TrackDirect.UI
         public enum RequestId
         {
             None,
-            TrackChangesCommand,
-            ReStartTrackChangesCommand
+            TrackChangesCommand
         }
-
-
-
+        
         #region External event
         private void CreateSharedParameter()
         {
@@ -145,7 +138,7 @@ namespace TrackDirect.UI
             {
                 AppCommand.btnTrack.ItemText = "Run\nTrack";
                 AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
-                AppCommand.btnTrack.LongDescription = "Nothing";
+                AppCommand.btnTrack.LongDescription = "This command toogles between starting and ending modification tracking";
                 AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
 
                 string docId2 = activeDoc.ProjectInformation.UniqueId;
@@ -169,10 +162,7 @@ namespace TrackDirect.UI
                 _startState = null;
             }
         }
-        public void ReStartTrackChangesCommand()
-        {
-            TrackChangesCommand();
-        }
+
         private MiniComparison GetComparision(Document doc, IEnumerable<Element> elems)
         {
             MiniComparison com = new MiniComparison();

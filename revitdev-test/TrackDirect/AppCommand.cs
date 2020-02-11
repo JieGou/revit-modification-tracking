@@ -13,10 +13,12 @@ using TrackDirect.UI;
 using System.Reflection;
 using Autodesk.Revit.UI.Events;
 using System.IO;
-using System.Linq;
 using static TrackDirect.UI.AutoTrackDataStorageUtil;
-using System.Collections.ObjectModel;
 using System.Threading;
+using System.Runtime.InteropServices;
+using Autodesk.Windows;
+using TaskDialog = Autodesk.Revit.UI.TaskDialog;
+using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
 
 #endregion
@@ -27,12 +29,17 @@ namespace TrackDirect
     {
 
 
+
+        private static Thread _thread = null;
+        public static ExternalEvent _exEvent = null;
+        private static int _nSnapshots = 0;
+        private static int _timeOutMinutes = 0;
+        private static int _timeout = 1000 * 60 * _timeOutMinutes;
+
         public static FooRequestHandler FooHandler { get; set; }
         public static TrackDirectHandler TrackHandler { get; set; }
-        public static ExternalEvent ExEvent { get; set; }
-        private SettingTrackView _trackView = null;
+        public static ExternalEvent ExEvent { get { return _exEvent; } set { _exEvent = value; } }
 
-     
 
         private readonly string _tabName = "DRTO-VCF";
 
@@ -96,13 +103,8 @@ namespace TrackDirect
                 //Buil all ribbon item
                 BuildUI(a);
 
-                //External Event
-                TrackHandler = new TrackDirectHandler();
-                ExEvent = ExternalEvent.Create(TrackHandler);
-
-
-
                 //Event
+                a.ControlledApplication.ApplicationInitialized+= OnApplicationInitialized;
                 a.ControlledApplication.DocumentOpened += OnDocumentOpened;
                 a.ControlledApplication.DocumentCreated += OnDocumentCreated;
                 a.ControlledApplication.DocumentSaving += OnDocumentSaving;
@@ -136,10 +138,14 @@ namespace TrackDirect
             a.ControlledApplication.DocumentSynchronizedWithCentral -= OnDocumentSynchronized;
 
             //Close auto modeless form if it is still opening
-            if (_trackView != null && _trackView.IsVisible)
-            {
-                _trackView.Close();
-            }
+            //if (_trackView != null && _trackView.IsVisible)
+            //{
+            //    _trackView.Close();
+            //}
+            _thread.Abort();
+            _thread = null;
+            _exEvent.Dispose();
+
 
             return Result.Succeeded;
         }
@@ -155,7 +161,8 @@ namespace TrackDirect
             var dataTrack = new PushButtonData("btnSnapshot", "Run\nTrack", assemblyPath, typeof(CmdTrackChange).FullName);
             dataTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
             dataTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_off_16);
-            dataTrack.ToolTip = "Track the change in the model Revit.";
+            dataTrack.ToolTip = "Track data changes in the model Revit.";
+            dataTrack.LongDescription = "This command toogles between starting and ending modification tracking";
             //btnTrack = plTrack.AddItem(dataTrack) as PushButton;
 
             var setting1 = new PushButtonData("btnSetting1", "Settings", assemblyPath, typeof(CmdTrackSettings).FullName);
@@ -169,7 +176,7 @@ namespace TrackDirect
             splTrack = plTrack.AddItem(splDataTrack) as SplitButton;
             btnTrack = splTrack.AddPushButton(dataTrack) as PushButton;
             btnTrackSettings = splTrack.AddPushButton(setting1) as PushButton;
-            
+
 
             var dataTrackManager = new PushButtonData("btnTrackManager", "UI Track\nManager", assemblyPath, typeof(CmdTrackManager).FullName);
             dataTrackManager.LargeImage = ImageUtils.ConvertFromBitmap(Resources.check_book_32);
@@ -193,7 +200,7 @@ namespace TrackDirect
             dataSnapshot.Image = ImageUtils.ConvertFromBitmap(Resources.database_export_16);
             dataSnapshot.ToolTip = "Take a snapshot of a model";
             dataSnapshot.LongDescription = "Take a snapshot of a model that can be used for later comparison of this version of the model.";
-            btnSnapshot =  plDatabase.AddItem(dataSnapshot) as PushButton;
+            btnSnapshot = plDatabase.AddItem(dataSnapshot) as PushButton;
             btnSnapshot.Enabled = false;
 
 
@@ -208,10 +215,10 @@ namespace TrackDirect
             plDatabase.AddSlideOut();
             var setDB = new PushButtonData("btnSettings", "Settings", assemblyPath, typeof(CmdSnapshot).FullName);
             setDB.ToolTip = "Settings for application TrackDirect.";
-            setDB.LongDescription = "Clear any Analysis Visualization Framework graphic primitives (faces, boxes, vectors) from the active view.";
+            setDB.LongDescription = "DB.";
             setDB.Image = ImageUtils.ConvertFromBitmap(Resources.settings_16);
             setDB.LargeImage = ImageUtils.ConvertFromBitmap(Resources.settings_32);
-            btnSettingsDB =  plDatabase.AddItem(setDB) as PushButton;
+            btnSettingsDB = plDatabase.AddItem(setDB) as PushButton;
             btnSettingsDB.Enabled = false;
 
             var dataCTestTreeView = new PushButtonData("btnTest", "Test App", assemblyPath, typeof(CmdTestTreeView).FullName);
@@ -248,7 +255,7 @@ namespace TrackDirect
             try
             {
                 toolSettings = AutoTrackDataStorageUtil.GetAutoTrackCreatorSettings(doc);
-               
+
                 canAutoRun = toolSettings.CanAutoRun;
                 if (canAutoRun)
                 {
@@ -265,7 +272,7 @@ namespace TrackDirect
                     isAutoTrackEventDocumentOpen = false;
                 }
             }
-            catch  {}
+            catch { }
         }
         private void OnDocumentClosed(object sender, DocumentClosedEventArgs args)
         {
@@ -282,12 +289,12 @@ namespace TrackDirect
                 return;
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventDocumentOpen && canAutoRun  && TrackDirectHandler._startState == null)
-                runTrack( source);
+            if (isAutoTrackEventDocumentOpen && canAutoRun && TrackDirectHandler._startState == null)
+                runTrack(source);
         }
         private static void OnDocumentCreated(object sender, DocumentCreatedEventArgs args)
         {
-            
+
             if (args.Status != RevitAPIEventStatus.Succeeded)
                 return;
             Document doc = args.Document;
@@ -351,7 +358,7 @@ namespace TrackDirect
           ViewActivatedEventArgs e)
         {
             Autodesk.Revit.DB.View vPrevious = e.PreviousActiveView;
-            
+
             View vCurrent = e.CurrentActiveView;
             Document docPrevious = vPrevious.Document;
             string idDocPrevious = string.Empty;
@@ -365,7 +372,7 @@ namespace TrackDirect
             {
                 idDocCurrent = vCurrent.Document.ProjectInformation.UniqueId;
             }
-            if(!string.IsNullOrEmpty(idDocPrevious) && !string.IsNullOrEmpty(idDocCurrent) && idDocPrevious != idDocCurrent)
+            if (!string.IsNullOrEmpty(idDocPrevious) && !string.IsNullOrEmpty(idDocCurrent) && idDocPrevious != idDocCurrent)
             {
                 CollectAutoTrackSetting(docPrevious);
                 if (isAutoTrackEventViewActive && canAutoRun) runTrack(sender);
@@ -449,25 +456,77 @@ namespace TrackDirect
         #endregion //end utilities
 
 
-        #region External event
+        #region Triggering External Event Execute by Setting Focus
+        //Thanks for solution:
+        //https://thebuildingcoder.typepad.com/blog/2013/12/triggering-immediate-external-event-execute.html
+        //https://github.com/jeremytammik/RoomEditorApp/tree/master/RoomEditorApp
+        //https://thebuildingcoder.typepad.com/blog/2016/03/implementing-the-trackchangescloud-external-event.html#5
+
+        #region  Set focus to revit
+        /// <summary>
+        /// The GetForegroundWindow function returns a 
+        /// handle to the foreground window.
+        /// </summary>
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         /// <summary>
-        /// Open Modeless Dialog
+        /// Move the window associated with the passed 
+        /// handle to the front.
         /// </summary>
-        /// <param name="uiapp"></param>
-        public void ShowWindow(UIApplication uiapp)
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(
+          IntPtr hWnd);
+
+        private static void SetFocusToRevit()
         {
-            //if (_trackView == null)
-            //{
-            //    BCFHandler handler = new BCFHandler(uiapp);
-            //    ExternalEvent exEvent = ExternalEvent.Create(handler);
+            IntPtr hRevit = ComponentManager.ApplicationWindow;
+            IntPtr hBefore = GetForegroundWindow();
 
-            //    _trackView = new _trackView(exEvent, handler);
-            //    _trackView.Closed += WindowClosed;
-            //    _trackView.Show();
-            //}
+            if (hBefore != hRevit)
+            {
+                SetForegroundWindow(hRevit);
+                SetForegroundWindow(hBefore);
+            }
         }
+        #endregion
 
+        private void OnApplicationInitialized( object sender,ApplicationInitializedEventArgs e)
+        {
+            // Create our custom external event.
+            //External Event
+            TrackHandler = new TrackDirectHandler();
+            _exEvent = ExternalEvent.Create(TrackHandler);
+
+            // Start a thread to raise it regularly.
+            _thread = new Thread(TriggerTrackDirectHandler);
+            _thread.Start();
+        }
+        /// <summary>
+        /// Trigger a modification tracker snapshot at 
+        /// regular intervals. Relinquish control and wait 
+        /// for the specified timeout period between each 
+        /// snapshot. This method runs in a separate thread.
+        /// </summary>
+        private static void TriggerTrackDirectHandler()
+        {
+            while (true)
+            {
+                ++_nSnapshots;
+                _exEvent.Raise();
+
+                // Set focus to Revit for a moment.
+                // Without this, Revit will not forward the 
+                // event Raise to the external event handler 
+                // Execute method until the Revit window is
+                // activated. This causes the screen to flash.
+
+                SetFocusToRevit();
+                // Wait and relinquish control 
+                // before next snapshot.
+                Thread.Sleep(_timeout);
+            }
+        }
         #endregion //External event
 
 

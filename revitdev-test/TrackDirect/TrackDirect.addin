@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Application">
-    <Name>Application DRTO-Addin</Name>
+    <Name>Application RevitChangeTracker</Name>
     <Assembly>DRTO-Addin.bundle\RevitChangeTracker\TrackDirect\TrackDirect.dll</Assembly>
     <FullClassName>TrackDirect.AppCommand</FullClassName>
     <Description>Add-In Revit Develop by TD</Description>
