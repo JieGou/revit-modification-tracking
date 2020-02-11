@@ -65,7 +65,7 @@ namespace TrackDirect
                 == isAutoTrackEventSynchronize 
                 == isAutoTrackEventViewActive 
                 == isAutoTrackByTime == false) ? true : false;
-            if (!canAutoRun || isNoneCheck)
+            if ((!canAutoRun || isNoneCheck) && !isRunning)//this uses only when Command AutoTrack is not running
             {
                 MessageBox.Show($"Nothing happened!\n\nYou need check case 'Can AuTo Run' in the settings. This will help you record automatically data changes in your model.","Auto Run Mode",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 return Result.Cancelled;

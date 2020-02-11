@@ -126,6 +126,12 @@ namespace TrackDirect.UI
                 {
                     if (AutoTrackDataStorageUtil.StoreAutoTrackCreatorSettings(_doc, toolSettings)) { };//Save settings
                     if (CategoryDataStorageUtil.StoreCategoryProperties(_doc, categories)) { };
+                    if(!canRunAutoTrack && CmdAutoTrack.IsRunning) //If in Wpf set DoNotRun Auto, but CmdAutoTrack is running, we need stop it
+                    {
+                        CmdAutoTrack cmdAutoTrack = new CmdAutoTrack();
+                        if(_uiapp != null)
+                            cmdAutoTrack.Execute(_uiapp);
+                    }
                 }
             }
             catch (Exception ex)
