@@ -31,7 +31,7 @@ namespace TrackDirect
 
 
         private static Thread _thread = null;
-        public static ExternalEvent _exEvent = null;
+        private static ExternalEvent _exEvent = null;
         private static int _nSnapshots = 0;
         private static int _timeOutMinutes = 1;
         private static int _timeout = 1000 * 60 * _timeOutMinutes;
@@ -235,16 +235,12 @@ namespace TrackDirect
 
             //instruction file to open by F1 key
             string instructionFile = @"https://github.com/TienDuyNGUYEN";
-            if (File.Exists(instructionFile))
-            {
                 ContextualHelp contextualHelp = new ContextualHelp(ContextualHelpType.Url, instructionFile);
                 btnTrack.SetContextualHelp(contextualHelp);
                 btnTrackSettings.SetContextualHelp(contextualHelp);
                 btnSnapshot.SetContextualHelp(contextualHelp);
                 btnCompare.SetContextualHelp(contextualHelp);
                 btnSettingsDB.SetContextualHelp(contextualHelp);
-            }
-
         }
 
         #endregion //Create all ribbon item: tab, panel, button
