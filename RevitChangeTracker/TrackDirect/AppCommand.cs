@@ -285,13 +285,7 @@ namespace TrackDirect
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventDocumentOpen && canAutoRun)
-            {
-                CmdAutoTrack cmdTrackChange = new CmdAutoTrack();
-                if (source is UIApplication)
-                    cmdTrackChange.Execute(source as UIApplication);
-                else
-                    cmdTrackChange.Execute(new UIApplication(source as Autodesk.Revit.ApplicationServices.Application));
-            }
+                runTrackEvent(source);
         }
         private static void OnDocumentCreated(object sender, DocumentCreatedEventArgs args)
         {
@@ -303,10 +297,8 @@ namespace TrackDirect
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
-            {
+            if (isAutoTrackEventSave && canAutoRun)
                 runTrackEvent(sender);
-            }
 
         }
 
@@ -314,17 +306,15 @@ namespace TrackDirect
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSave && canAutoRun && CmdAutoTrack.IsRunning)
+            if (isAutoTrackEventSave && canAutoRun)
                 runTrackEvent(sender);
         }
         private static void OnDocumentSynchronizing(object sender, DocumentSynchronizingWithCentralEventArgs args)
         {
             Document doc = args.Document;
             CollectAutoTrackSetting(doc);
-            if (isAutoTrackEventSynchronize && canAutoRun && CmdAutoTrack.IsRunning)
-            {
+            if (isAutoTrackEventSynchronize && canAutoRun)
                 runTrackEvent(sender);
-            }
 
         }
 
