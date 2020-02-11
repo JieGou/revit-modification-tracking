@@ -48,6 +48,11 @@ namespace TrackDirect.UI
                             TrackChangesCommand();
                             break;
                         }
+                    case RequestId.ReStartTrackChangesCommand:
+                        {
+                            ReStartTrackChangesCommand();
+                            break;
+                        }
                 }
             }
             catch (Exception e)
@@ -74,7 +79,8 @@ namespace TrackDirect.UI
         public enum RequestId
         {
             None,
-            TrackChangesCommand
+            TrackChangesCommand,
+            ReStartTrackChangesCommand
         }
 
 
@@ -121,6 +127,13 @@ namespace TrackDirect.UI
                 //If command not running we will run it
                 _docRun = activeDoc;
                 _docId = _docRun.ProjectInformation.UniqueId;
+                //Change Icon and text of button
+                AppCommand.btnTrack.ItemText = "Stop\nTrack";
+                AppCommand.btnTrack.ToolTip = "Add-in is running. Clic here to stop it.";
+                AppCommand.btnTrack.LongDescription = $"Project is runninng: {_uiapp.ActiveUIDocument.Document.Title}";
+                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_on_32);
+                AppCommand.btnTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_on_16);
+
                 //Retrieve the coresponding list of elements
                 var temp = CategoryDataStorageUtil.GetCategoryPropertiesDataStorage(_docRun);
                 IList<ElementId> cats = temp.Where(x => x.Selected == true).Select(x => x.CategoryId).ToList();
@@ -130,6 +143,11 @@ namespace TrackDirect.UI
             }
             else
             {
+                AppCommand.btnTrack.ItemText = "Run\nTrack";
+                AppCommand.btnTrack.ToolTip = "Track the change in the model. Clic here to run this add-in.";
+                AppCommand.btnTrack.LongDescription = "Nothing";
+                AppCommand.btnTrack.LargeImage = ImageUtils.ConvertFromBitmap(Resources.toggle_off_32);
+
                 string docId2 = activeDoc.ProjectInformation.UniqueId;
                 if (_docId != docId2)
                 {
@@ -150,6 +168,10 @@ namespace TrackDirect.UI
                 _docId = _docRun.ProjectInformation.UniqueId;
                 _startState = null;
             }
+        }
+        public void ReStartTrackChangesCommand()
+        {
+            TrackChangesCommand();
         }
         private MiniComparison GetComparision(Document doc, IEnumerable<Element> elems)
         {

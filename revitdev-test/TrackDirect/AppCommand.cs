@@ -284,7 +284,6 @@ namespace TrackDirect
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventDocumentOpen && canAutoRun  && TrackDirectHandler._startState == null)
                 runTrack( source);
-
         }
         private static void OnDocumentCreated(object sender, DocumentCreatedEventArgs args)
         {
@@ -322,6 +321,7 @@ namespace TrackDirect
             CollectAutoTrackSetting(doc);
             if (isAutoTrackEventSave && canAutoRun && TrackDirectHandler._startState != null)
                 runTrack(sender);
+            runTrack(sender);
         }
         private static void OnDocumentSynchronizing(object sender, DocumentSynchronizingWithCentralEventArgs args)
         {
