@@ -223,6 +223,7 @@ namespace TrackDirect
             }
             return elements;
         }
+
         public static IList<Element> GetElementsByCategories(Document doc, ElementId catId)
         {
             //Retrive all model elements

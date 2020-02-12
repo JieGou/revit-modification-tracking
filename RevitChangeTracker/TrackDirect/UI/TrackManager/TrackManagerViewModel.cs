@@ -21,10 +21,10 @@ namespace TrackDirect.UI
         public bool IsLoaded = false;
 
         #region Properties binding;
-        private ObservableCollection<TreeViewElementModel> treeElements= new ObservableCollection<TreeViewElementModel>();
+        private ObservableCollection<TreeElementModel> treeElements= new ObservableCollection<TreeElementModel>();
 
 
-        public ObservableCollection<TreeViewElementModel> TreeElements { get { return treeElements; } set { treeElements = value; OnPropertyChanged(); } }
+        public ObservableCollection<TreeElementModel> TreeElements { get { return treeElements; } set { treeElements = value; OnPropertyChanged(); } }
         #endregion //Properties biding
 
 
@@ -47,7 +47,7 @@ namespace TrackDirect.UI
         private void OnTrackManagerWindowLoaded(object param)
         {
             IsLoaded = true;
-            TreeElements = TreeViewElementModel.RenderTreeViewByCategory();
+            TreeElements = TreeElementModel.RenderTreeViewByCategory();
         }
 
 

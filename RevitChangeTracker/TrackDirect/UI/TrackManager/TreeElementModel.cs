@@ -15,11 +15,13 @@ namespace TrackDirect.UI
     {
         None,
         Root,
+        TypeTrack,
+        Date,
         Category,
-        ElementMapping
+        Element
     }
 
-    public class TreeViewElementModel : INotifyPropertyChanged
+    public class TreeElementModel : INotifyPropertyChanged
     {
 
         private bool? isChecked = false;
@@ -27,8 +29,8 @@ namespace TrackDirect.UI
         public string Name { get; private set; }
         public ElementId Tag { get; private set; }
         public bool IsInitiallySelected { get; private set; }
-        public TreeViewElementModel ParentNode { get; private set; }
-        public List<TreeViewElementModel> ChildrenNodes { get; private set; }
+        public TreeElementModel ParentNode { get; private set; }
+        public List<TreeElementModel> ChildrenNodes { get; private set; }
         public TreeViewNodeType NodeType { get; private set; }
         public string ToolTip { get; private set; }
         public Visibility ToolTipVisibility { get; private set; }
@@ -36,11 +38,11 @@ namespace TrackDirect.UI
         public DateTime DateCreated { get; private set; }
         public DateTime DateModifyed { get; private set; }
 
-        public TreeViewElementModel(string nodeName)
+        public TreeElementModel(string nodeName)
         {
             Name = nodeName;
             Tag = null;
-            ChildrenNodes = new List<TreeViewElementModel>();
+            ChildrenNodes = new List<TreeElementModel>();
             ToolTip = "";
         }
 
@@ -89,9 +91,9 @@ namespace TrackDirect.UI
             SetIsChecked(state, false, true);
         }
 
-        public static ObservableCollection<TreeViewElementModel> RenderTreeViewByCategory()
+        public static ObservableCollection<TreeElementModel> RenderTreeViewByCategory()
         {
-            var treeView = new ObservableCollection<TreeViewElementModel>();
+            var treeView = new ObservableCollection<TreeElementModel>();
             var uiapp = CmdTrackManager.Uiapp;
             Document doc = uiapp.ActiveUIDocument.Document;
             try
@@ -99,7 +101,7 @@ namespace TrackDirect.UI
                 List<Category> customCategories = CategoryUtils.ListCategoryDefaut(doc);
                 foreach (var cat in customCategories)
                 {
-                    var categoryNode = new TreeViewElementModel(cat.Name);
+                    var categoryNode = new TreeElementModel(cat.Name);
                     categoryNode.NodeType = TreeViewNodeType.Category;
                     categoryNode.ToolTipVisibility = Visibility.Hidden;
                     treeView.Add(categoryNode);
@@ -107,10 +109,10 @@ namespace TrackDirect.UI
                     var elements = ElementUtils.GetElementsByCategories(doc,cat.Id);
                         foreach (var ele in elements)
                         {
-                        string fullName = GetElementFullName(ele);
-                            var elementNode = new TreeViewElementModel(fullName);
+                        string fullName = "GetElementFullName(ele)";
+                            var elementNode = new TreeElementModel(fullName);
                             elementNode.Tag = ele.Id;
-                            elementNode.NodeType = TreeViewNodeType.ElementMapping;
+                            elementNode.NodeType = TreeViewNodeType.Element;
                             elementNode.ToolTip = "ChangeType";
                             elementNode.ToolTipVisibility = Visibility.Visible;
                             categoryNode.ChildrenNodes.Add(elementNode);
@@ -125,38 +127,6 @@ namespace TrackDirect.UI
             }
             return treeView;
         }
-
-        //Get Category, type, family, id and element name and return it as a chaine of string
-        private static string GetElementFullName(Element e)
-        {
-            if (null == e)
-            {
-                return "<null>";
-            }
-
-            // For a wall, the element name equals the
-            // wall type name, which is equivalent to the
-            // family name ...
-
-            FamilyInstance fi = e as FamilyInstance;
-
-            string typeName = e.GetType().Name;
-
-            string categoryName = (null == e.Category)
-              ? string.Empty
-              : e.Category.Name;
-
-            string familyName = (null == fi)
-              ? string.Empty
-              : fi.Symbol.Family.Name;
-
-            string symbolName = (null == fi
-              || e.Name.Equals(fi.Symbol.Name))
-                ? string.Empty
-                : fi.Symbol.Name;
-            return $"{categoryName} - {e.Id.IntegerValue} - {typeName} {familyName} {symbolName} <{e.Name}>";
-        }
-
 
         #region Event property change
         public event PropertyChangedEventHandler PropertyChanged;

@@ -101,71 +101,75 @@
   <ItemGroup>
     <Compile Include="AppCommand.cs" />
     <Compile Include="Command\CmdTrackManager.cs" />
-    <Compile Include="Command\CmdDBSettings.cs" />
+    <Compile Include="TrackDB\Command\CmdDBSettings.cs" />
     <Compile Include="Command\CmdTrackSettings.cs" />
-    <Compile Include="Command\CmdTestTreeView.cs" />
-    <Compile Include="Command\CmdCompare.cs" />
+    <Compile Include="TrackDB\Command\CmdTestTreeView.cs" />
+    <Compile Include="TrackDB\Command\CmdCompare.cs" />
     <Compile Include="TrackDirect\TrackDirectHandler.cs" />
-    <Compile Include="Windows\BaseViewModel.cs" />
-    <Compile Include="Windows\SettingsTrack\CategoryDataStorageUtil.cs" />
-    <Compile Include="Windows\TrackManager\ComponentOptionConverter.cs" />
-    <Compile Include="Windows\TrackManager\TrackManagerViewModel.cs" />
-    <Compile Include="Windows\TrackManager\TreeViewElementModel.cs" />
+    <Compile Include="UI\BaseViewModel.cs" />
+    <Compile Include="UI\SettingsTrack\CategoryDataStorageUtil.cs" />
+    <Compile Include="UI\TrackManager\ComponentOptionConverter.cs" />
+    <Compile Include="UI\TrackManager\RvtComponent.cs" />
+    <Compile Include="UI\TrackManager\RvtComponentFilter.cs" />
+    <Compile Include="UI\TrackManager\TrackManagerHandler.cs" />
+    <Compile Include="UI\TrackManager\TrackManagerModel.cs" />
+    <Compile Include="UI\TrackManager\TrackManagerViewModel.cs" />
+    <Compile Include="UI\TrackManager\TreeElementModel.cs" />
     <Compile Include="Utilities\IFilenameHint.cs" />
     <Compile Include="TrackDirect\MiniComparisonContainer.cs" />
     <Compile Include="TrackDirect\MiniDataComparision.cs" />
     <Compile Include="Models\ChangeSummary.cs" />
     <Compile Include="TrackDirect\MiniComparisonController.cs" />
     <Compile Include="TrackDirect\MiniComparisionMaker.cs" />
-    <Compile Include="Windows\SettingsTrack\AutoTrackDataStorageUtil.cs" />
-    <Compile Include="Windows\SettingsTrack\SettingsTrackViewModel.cs" />
+    <Compile Include="UI\SettingsTrack\AutoTrackDataStorageUtil.cs" />
+    <Compile Include="UI\SettingsTrack\SettingsTrackViewModel.cs" />
     <Compile Include="Utilities\Availability.cs" />
-    <Compile Include="Windows\SettingsTrack\ComponentCategoryFilter.cs" />
+    <Compile Include="UI\SettingsTrack\ComponentCategoryFilter.cs" />
     <Compile Include="Utilities\GeometricalUtils.cs" />
     <Compile Include="Utilities\SelectionFilters.cs" />
     <Compile Include="Command\CmdAutoTrack.cs" />
-    <Compile Include="TrackDirect\ComparisonController.cs" />
-    <Compile Include="TrackDirect\ComparisionMaker.cs" />
-    <Compile Include="TrackDirect\SnapshotMaker.cs" />
+    <Compile Include="TrackDB\ComparisonController.cs" />
+    <Compile Include="TrackDB\ComparisionMaker.cs" />
+    <Compile Include="TrackDB\SnapshotMaker.cs" />
     <Compile Include="Models\ChangedElement.cs" />
     <Compile Include="Models\Comparision.cs" />
     <Compile Include="Models\RevitElement.cs" />
-    <Compile Include="Command\CmdSnapshot.cs" />
-    <Compile Include="Windows\CompareUI\CompareResultViewModel.cs" />
-    <Compile Include="Windows\CompareUI\CompareResultView.xaml.cs">
+    <Compile Include="TrackDB\Command\CmdSnapshot.cs" />
+    <Compile Include="TrackDB\UI\CompareUI\CompareResultViewModel.cs" />
+    <Compile Include="TrackDB\UI\CompareUI\CompareResultView.xaml.cs">
       <DependentUpon>CompareResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\CompareUI\frmPreCompare.xaml.cs">
+    <Compile Include="TrackDB\UI\CompareUI\frmPreCompare.xaml.cs">
       <DependentUpon>frmPreCompare.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\RevitTreeItem.cs" />
-    <Compile Include="Windows\VirtualToggleButton.cs" />
-    <Compile Include="Windows\SettingsDB\SettingsDBApp.xaml.cs">
+    <Compile Include="UI\VirtualToggleButton.cs" />
+    <Compile Include="TrackDB\UI\SettingsDB\SettingsDBApp.xaml.cs">
       <DependentUpon>SettingsDBApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SettingsTrack\SettingTrackView.xaml.cs">
+    <Compile Include="UI\SettingsTrack\SettingTrackView.xaml.cs">
       <DependentUpon>SettingTrackView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SnapshotUI\frmSnapshot.xaml.cs">
+    <Compile Include="TrackDB\UI\SnapshotUI\frmSnapshot.xaml.cs">
       <DependentUpon>frmSnapshot.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\TestTreeView\FooModel.cs" />
-    <Compile Include="Windows\TestTreeView\FooViewModel.cs" />
-    <Compile Include="Windows\TestTreeView\FooRequestHandler.cs" />
-    <Compile Include="Windows\TestTreeView\Window1.xaml.cs">
+    <Compile Include="TrackDB\UI\TestTreeView\FooModel.cs" />
+    <Compile Include="TrackDB\UI\TestTreeView\FooViewModel.cs" />
+    <Compile Include="TrackDB\UI\TestTreeView\FooRequestHandler.cs" />
+    <Compile Include="TrackDB\UI\TestTreeView\Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\TrackManager\TrackManagerWindow.xaml.cs">
+    <Compile Include="UI\TrackManager\TrackManagerWindow.xaml.cs">
       <DependentUpon>TrackManagerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SettingsTrack\CategoryProperties.cs" />
-    <Compile Include="Utilities\Settings.cs" />
-    <Compile Include="Utilities\DataUtility.cs" />
+    <Compile Include="UI\SettingsTrack\CategoryProperties.cs" />
+    <Compile Include="TrackDB\Settings.cs" />
+    <Compile Include="TrackDB\DataUtility.cs" />
     <Compile Include="Utilities\FileUtils.cs" />
     <Compile Include="Utilities\JtWindowHandle.cs" />
     <Compile Include="Utilities\RevitUtils.cs" />
-    <Compile Include="Utilities\ChangeSettings.cs" />
-    <Compile Include="Utilities\CategoryUtils.cs" />
+    <Compile Include="TrackDB\ChangeSettings.cs" />
+    <Compile Include="TrackDB\CategoryUtils.cs" />
     <Compile Include="Utilities\ElementUtils.cs" />
     <Compile Include="Utilities\ParameterUtils.cs" />
     <Compile Include="Utilities\ImageUtils.cs" />
@@ -205,31 +209,31 @@
     <EmbeddedResource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Windows\CompareUI\CompareResultView.xaml">
+    <Page Include="TrackDB\UI\CompareUI\CompareResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\CompareUI\frmPreCompare.xaml">
+    <Page Include="TrackDB\UI\CompareUI\frmPreCompare.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\SettingsDB\SettingsDBApp.xaml">
+    <Page Include="TrackDB\UI\SettingsDB\SettingsDBApp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\SettingsTrack\SettingTrackView.xaml">
+    <Page Include="UI\SettingsTrack\SettingTrackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\SnapshotUI\frmSnapshot.xaml">
+    <Page Include="TrackDB\UI\SnapshotUI\frmSnapshot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\TestTreeView\Window1.xaml">
+    <Page Include="TrackDB\UI\TestTreeView\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\TrackManager\TrackManagerWindow.xaml">
+    <Page Include="UI\TrackManager\TrackManagerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -262,7 +266,7 @@
     <EmbeddedResource Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DBScript\UpgradeToV1.txt" />
+    <EmbeddedResource Include="TrackDB\DBScript\UpgradeToV1.txt" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -302,8 +306,8 @@
     </Resource>
     <None Include="Resources\compare-16.png" />
     <None Include="Resources\compare-32.png" />
-    <Content Include="Utilities\SQLite\x64\SQLite.Interop.dll" />
-    <Content Include="Utilities\SQLite\x84\SQLite.Interop.dll" />
+    <Content Include="TrackDB\SQLite\x64\SQLite.Interop.dll" />
+    <Content Include="TrackDB\SQLite\x84\SQLite.Interop.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

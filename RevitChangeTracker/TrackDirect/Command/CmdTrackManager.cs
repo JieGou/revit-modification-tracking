@@ -17,8 +17,10 @@ namespace TrackDirect
             Uiapp = commandData.Application;
             try
             {
+                
+                var vm = new TrackManagerViewModel(Uiapp);
                 TrackManagerWindow wd = new TrackManagerWindow();
-                wd.DataContext = new TrackManagerViewModel(Uiapp);
+                wd.DataContext = vm;
                 wd.Show();
 
                 return Result.Succeeded;

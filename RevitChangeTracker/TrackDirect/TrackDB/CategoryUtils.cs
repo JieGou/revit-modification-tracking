@@ -69,7 +69,7 @@ namespace TrackDirect
         }
 
         /// <summary>
-        /// REtrieve list category give by developper
+        /// Retrieve list category give by developper
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
@@ -154,7 +154,6 @@ namespace TrackDirect
                 catch {}
                
             }
-            
             return categories.OrderBy(x => x.Name).ToList();
         }
        

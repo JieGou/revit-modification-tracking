@@ -322,7 +322,7 @@
                         <DockPanel Margin="5">
                             <TreeView x:Name="tree"
                                       ItemContainerStyle="{StaticResource TreeViewItemStyle}"
-                                      ItemsSource="{Binding TreeElements, Mode=OneTime}"
+                                      ItemsSource="{Binding TreeElements, Mode=TwoWay}"
                                       ItemTemplate="{StaticResource CheckBoxItemTemplate}" />
                         </DockPanel>
                     </Grid>

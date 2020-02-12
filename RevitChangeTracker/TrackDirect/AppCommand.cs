@@ -27,12 +27,11 @@ namespace TrackDirect
 {
     class AppCommand : IExternalApplication
     {
-        #region Declare properties
-        private static ExternalEvent _exEvent = null;
-        private static TrackDirectHandler _trackHandler = null;
 
-        public static TrackDirectHandler TrackHandler { get { return _trackHandler; } set { _trackHandler = value; } }
-        public static ExternalEvent ExEvent { get { return _exEvent; } set { _exEvent = value; } }
+        public static TrackDirectHandler TrackHandler { get; set; } = null;
+        public static TrackManagerHandler ManageHandler { get; set; } = null;
+        public static ExternalEvent ExEvent { get; set; } = null;
+        public static ExternalEvent ManageExEvent{get;set;} = null;
 
 
         private readonly string _tabName = "DRTO-VCF";
@@ -68,7 +67,6 @@ namespace TrackDirect
         private static int timeOut { get; set; } = 10;
 
         internal static string assemblyPath = typeof(AppCommand).Assembly.Location;
-        #endregion
 
 
 
@@ -130,7 +128,7 @@ namespace TrackDirect
             a.ControlledApplication.DocumentSavingAs -= OnDocumentSavingAs;
             a.ControlledApplication.DocumentSynchronizingWithCentral -= OnDocumentSynchronizing;
 
-            _exEvent.Dispose();
+            ExEvent.Dispose();
 
 
             return Result.Succeeded;
@@ -262,8 +260,11 @@ namespace TrackDirect
 
         private static void OnApplicationInitialized(object sender, ApplicationInitializedEventArgs args)
         {
-            _trackHandler = new TrackDirectHandler();
-            _exEvent = ExternalEvent.Create(_trackHandler);
+            TrackHandler = new TrackDirectHandler();
+            ManageHandler = new TrackManagerHandler();
+            ExEvent = ExternalEvent.Create(TrackHandler);
+            ManageExEvent = ExternalEvent.Create(ManageHandler);
+
         }
         private void OnDocumentClosed(object sender, DocumentClosedEventArgs args)
         {
@@ -354,7 +355,7 @@ namespace TrackDirect
             if (CmdAutoTrack.IsRunning)
             {
                 AppCommand.TrackHandler.Request.Make(TrackDirectHandler.RequestId.TrackChangesCommand);
-                _exEvent.Raise();
+                ExEvent.Raise();
                 SetFocusToRevit();
             }
             else
