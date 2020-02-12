@@ -12,7 +12,7 @@ namespace TrackDirect.Models
             NewElement,
             DeletedElement,
             SharedParameterChange,
-            ParameterChange,
+            RevitParameterChange,
             FamilyTypeChange
         }
 

@@ -278,7 +278,7 @@ namespace TrackDirect.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to display tools settings.\n" + ex.Message, "Elevation Creator: DisplaySettings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Failed to display tools settings.\n" + ex.Message, "AutoTrack: DisplaySettings", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return result;
         }
@@ -323,7 +323,7 @@ namespace TrackDirect.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to get AutoTrack Creator settings.\n" + ex.Message, "AutoTrack Creator: GetToolSettings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Failed to get AutoTrack settings.\n" + ex.Message, "AutoTrack: GetToolSettings", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

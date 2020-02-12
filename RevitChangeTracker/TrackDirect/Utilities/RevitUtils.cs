@@ -22,7 +22,7 @@ namespace TrackDirect.Utilities
             if (pt == null) return String.Empty;
             return pt.X.ToString(CultureInfo.InvariantCulture) + "," + pt.Y.ToString(CultureInfo.InvariantCulture) + "," + pt.Z.ToString(CultureInfo.InvariantCulture);
         }
-        
+
 
         /// <summary>
         /// The SerializeLocation 
@@ -336,13 +336,19 @@ namespace TrackDirect.Utilities
             IList<Parameter> paraList = e.GetOrderedParameters();
 
             //List shared parameter info data tracking
-            var TrackSharedParameters = new[] 
-            { "VCF_CreateAt",
-                "VCF_ModifyAt",
-                "VCF_User",
-                "VCF_ChangeType"
+            string pCreatedDateName = VCFParameters.VCF_CreateAt.ToString();
+            string pModifiedDateName = VCFParameters.VCF_ModifyAt.ToString();
+            string pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();
+            string pUserName = VCFParameters.VCF_User.ToString();
+
+            var TrackSharedParameters = new[]
+                {
+                pCreatedDateName,
+                pModifiedDateName,
+                pUserName,
+                pChangeTypeName
             };
-            
+
 
             foreach (Parameter para in e.GetOrderedParameters())
             {
@@ -600,7 +606,7 @@ namespace TrackDirect.Utilities
             }
             return level;
         }
-        
+
         #region String formatting
         /// <summary>
         /// Convert a string to a byte array.
@@ -642,7 +648,7 @@ namespace TrackDirect.Utilities
             {
                 return $"{PointString(bb.Min)},{PointString(bb.Max)}";
             }
-            catch {}
+            catch { }
             return string.Empty;
         }
 
@@ -763,8 +769,8 @@ namespace TrackDirect.Utilities
                     }
                 }
             }
-            catch {}
-           
+            catch { }
+
         }
 
         /// <summary>

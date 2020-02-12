@@ -13,7 +13,7 @@ namespace TrackDirect
 {
     public class MiniComparisonController
     {
-       
+
         private static string _pCreatedDateName = VCFParameters.VCF_CreateAt.ToString();
         private static string _pModifiedDateName = VCFParameters.VCF_ModifyAt.ToString();
         private static string _pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();
@@ -47,7 +47,7 @@ namespace TrackDirect
             nModified = 0;
             nIdentical = 0;
             List<string> newElements = new List<string>();
-            Dictionary<string,string> changedElements = new Dictionary<string, string>();
+            Dictionary<string, string> changedElements = new Dictionary<string, string>();
 
             foreach (var currentPair in _currentElems)
             {
@@ -68,7 +68,7 @@ namespace TrackDirect
                         ++nModified;
                         changedElements.Add(current.UniqueId, changeType);
                     }
-                    
+
                 }
                 else
                 {
@@ -92,13 +92,13 @@ namespace TrackDirect
                 trans.Start();
                 try
                 {
-                    foreach(var guid in newElements)
+                    foreach (var guid in newElements)
                     {
                         MiniSetParameterNewElement(doc, guid);
                     }
                     foreach (var keypair in changedElements)
                     {
-                        MiniSetParameterModifiedElement(doc, keypair.Key,keypair.Value);
+                        MiniSetParameterModifiedElement(doc, keypair.Key, keypair.Value);
                     }
                 }
                 catch
@@ -107,7 +107,7 @@ namespace TrackDirect
                 }
                 trans.Commit();
             }
-            
+
             //string msg = $"Stopped tracking changes now.\r\n"
             //  + $"{nDeleted} deleted, {nAdded} added, {nModified} modified, "
             //  + $"{nIdentical} identical elements:";
@@ -126,21 +126,24 @@ namespace TrackDirect
 
             if (e is null) return; //Ignore if we cant not get element by UniqueId
             IList<Parameter> paramCreatedDate = e.GetParameters(_pCreatedDateName);
+            IList<Parameter> paramModifiedDate = e.GetParameters(_pModifiedDateName);
             IList<Parameter> paramChangeType = e.GetParameters(_pChangeTypeName);
             IList<Parameter> paramUser = e.GetParameters(_pUserName);
 
             //Set parameter
-                try
-                {
-                    if (paramCreatedDate.Count > 0)
-                        paramCreatedDate.FirstOrDefault().Set(_dateRecord);
-                    if (paramChangeType.Count > 0)
-                        paramChangeType.FirstOrDefault().Set(ChangedElement.ChangeTypeEnum.NewElement.ToString());
-                    if (paramUser.Count > 0)
-                        paramUser.FirstOrDefault().Set(_userRevit);
-                }
-                catch {}
-            
+            try
+            {
+                if (paramCreatedDate.Count > 0)
+                    paramCreatedDate.FirstOrDefault().Set(_dateRecord);
+                if (paramModifiedDate.Count > 0)
+                    paramModifiedDate.FirstOrDefault().Set("");
+                if (paramChangeType.Count > 0)
+                    paramChangeType.FirstOrDefault().Set(ChangedElement.ChangeTypeEnum.NewElement.ToString());
+                if (paramUser.Count > 0)
+                    paramUser.FirstOrDefault().Set(_userRevit);
+            }
+            catch { }
+
         }
 
         //Set value parameter for modified Elements
@@ -154,18 +157,18 @@ namespace TrackDirect
             IList<Parameter> paramUser = e.GetParameters(_pUserName);
 
             //Set parameter
-                try
-                {
-                    if (paramModifiedDate.Count > 0)
-                        paramModifiedDate.FirstOrDefault().Set(_dateRecord);
-                    if (paramChangeType.Count > 0)
-                        paramChangeType.FirstOrDefault().Set(ChangeType);
-                    if (paramUser.Count > 0)
-                        paramUser.FirstOrDefault().Set(_userRevit);
-                }
-                catch{}
+            try
+            {
+                if (paramModifiedDate.Count > 0)
+                    paramModifiedDate.FirstOrDefault().Set(_dateRecord);
+                if (paramChangeType.Count > 0)
+                    paramChangeType.FirstOrDefault().Set(ChangeType);
+                if (paramUser.Count > 0)
+                    paramUser.FirstOrDefault().Set(_userRevit);
+            }
+            catch { }
 
-            
+
         }
     }
 }

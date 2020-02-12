@@ -10,9 +10,7 @@ namespace TrackDirect.Utilities
 
         public JtWindowHandle(IntPtr h)
         {
-            //Debug.Assert(IntPtr.Zero != h,
-            //  "expected non-null window handle");
-
+            
             _hwnd = h;
         }
 

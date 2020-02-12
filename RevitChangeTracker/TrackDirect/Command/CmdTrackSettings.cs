@@ -22,18 +22,18 @@ namespace TrackDirect
         {
             try
             {
-                //IWin32Window revit_window = new JtWindowHandle( ComponentManager.ApplicationWindow);
+                
                 Uiapp = commandData.Application;
-                RevitWindow = Uiapp.MainWindowHandle; //Revit 2019
 
-                //_revit_window
-                //  = new JtWindowHandle(
-                //    ComponentManager.ApplicationWindow ); // 2018
-
+#if REVIT2018
+                RevitWindow = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle; // 2018
+#else
+                RevitWindow = Uiapp.MainWindowHandle; //Revit 2019 and above
+#endif
+                
                 //Get window of Revit form Revit handle
                 HwndSource hwndSource = HwndSource.FromHwnd(RevitWindow);
                 var WindowRevitOpen = hwndSource.RootVisual as Window;
-
                 var vm = new SettingsTrackViewModel(Uiapp);
                 SettingTrackView trackView = new SettingTrackView();
                 trackView.DataContext = vm;

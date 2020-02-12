@@ -344,7 +344,7 @@ namespace TrackDirect
                     ElementId = current.ElementId,
                     UniqueId = e.UniqueId,
                     Category = (e.Category != null) ? e.Category.Name : "(none)",
-                    ChangeType = ChangedElement.ChangeTypeEnum.ParameterChange,
+                    ChangeType = ChangedElement.ChangeTypeEnum.RevitParameterChange,
                     ChangeDescription = description.ToString(),
                     ModifiedDate = ComparisonController._dateRecord,
                     User = CmdAutoTrack.UserRevit,

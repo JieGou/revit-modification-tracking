@@ -18,11 +18,11 @@ namespace TrackDirect
         public static List<ChangedElement> DeletedElementList = new List<ChangedElement>();
         public static List<ChangedElement> ChangedElementList = new List<ChangedElement>();
 
-        private static string _pCreatedDateName = VCFParameters.VCF_CreateAt.ToString();
-        private static string _pModifiedDateName = VCFParameters.VCF_ModifyAt.ToString();
-        private static string _pDesctiptionName = VCFParameters.VCF_ChangeDescription.ToString();
-        private static string _pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();
-        private static string _pUserName = VCFParameters.VCF_User.ToString();
+        private static readonly string _pCreatedDateName = VCFParameters.VCF_CreateAt.ToString();
+        private static readonly string _pModifiedDateName = VCFParameters.VCF_ModifyAt.ToString();
+        private static readonly string _pDesctiptionName = VCFParameters.VCF_ChangeDescription.ToString();
+        private static readonly string _pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();
+        private static readonly string _pUserName = VCFParameters.VCF_User.ToString();
         public static string _dateRecord = DateTime.Now.ToShortDateString();
         private static string _userRevit = CmdAutoTrack.UserRevit;
 

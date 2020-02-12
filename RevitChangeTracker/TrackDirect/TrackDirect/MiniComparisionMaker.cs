@@ -97,13 +97,13 @@ namespace TrackDirect
         {
             string c = string.Empty;
             if (current.ElementDescription != previous.ElementDescription)
-                return "TypeElement Change";
+                return ChangedElement.ChangeTypeEnum.FamilyTypeChange.ToString();
             if (current.GeometryInfo != previous.GeometryInfo)
-                return "GeometryOrLocation Change";
+                return ChangedElement.ChangeTypeEnum.GeometryOrLocationChange.ToString();
             if (current.RevitParameter!= previous.RevitParameter)
-                return "RevitParameter Change";
+                return ChangedElement.ChangeTypeEnum.RevitParameterChange.ToString();
             if (current.SharedParameter != previous.SharedParameter)
-                return "SharedParameter Change";
+                return ChangedElement.ChangeTypeEnum.SharedParameterChange.ToString();
             return c;
         }
 

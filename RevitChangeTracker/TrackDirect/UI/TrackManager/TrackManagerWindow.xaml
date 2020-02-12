@@ -33,7 +33,7 @@
             <Style x:Key="TreeViewItemStyle"
                    TargetType="TreeViewItem">
                 <Setter Property="IsExpanded"
-                        Value="True" />
+                        Value="{Binding IsExpanded}" />
                 <Setter Property="IsSelected"
                         Value="{Binding IsInitiallySelected, Mode=OneTime}" />
                 <Setter Property="KeyboardNavigation.AcceptsReturn"

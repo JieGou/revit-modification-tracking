@@ -36,7 +36,22 @@ namespace TrackDirect.UI
                         {
                             return;
                         }
-                    case RequestId.TrackChangesCommand:
+                    case RequestId.HighLighElement:
+                        {
+                            GetSnapShot();
+                            break;
+                        }
+                    case RequestId.ColorElement:
+                        {
+                            GetSnapShot();
+                            break;
+                        }
+                    case RequestId.IsolateElement:
+                        {
+                            GetSnapShot();
+                            break;
+                        }
+                    case RequestId.RemoveColor:
                         {
                             GetSnapShot();
                             break;
@@ -68,7 +83,11 @@ namespace TrackDirect.UI
         public enum RequestId
         {
             None,
-            TrackChangesCommand
+           HighLighElement,
+           ColorElement,
+           IsolateElement,
+            RemoveColor
+
         }
 
         #region External event

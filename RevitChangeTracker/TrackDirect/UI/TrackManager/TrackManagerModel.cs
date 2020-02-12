@@ -9,10 +9,26 @@ namespace TrackDirect.UI
     public class TrackManagerModel
     {
         public TrackManagerModel() { }
-        public void GetInstanceItems()
+        public void HighLighElement()
         {
-            //AppCommand.FooHandler.Request.Make(FooRequestHandler.RequestId.GetElementItems);
-            //AppCommand.ExEvent.Raise();
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.HighLighElement);
+            AppCommand.ManageExEvent.Raise();
+        }
+
+        public void ColorElement()
+        {
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.ColorElement);
+            AppCommand.ManageExEvent.Raise();
+        }
+        public void RemoveColor()
+        {
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.RemoveColor);
+            AppCommand.ManageExEvent.Raise();
+        }
+        public void IsolateElement()
+        {
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.IsolateElement);
+            AppCommand.ManageExEvent.Raise();
         }
     }
 }
