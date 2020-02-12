@@ -223,10 +223,32 @@ namespace TrackDirect
             }
             return elements;
         }
+        public static IList<Element> GetElementsByCategories(Document doc, ElementId catId)
+        {
+            //Retrive all model elements
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            var categoryFilters = new List<ElementFilter>()
+            {
+                new ElementCategoryFilter(catId)
+            };
+             
+            ElementFilter filter = new LogicalOrFilter(categoryFilters);
+            Options opt = new Options();
+            collector.WherePasses(filter)
+                .WhereElementIsNotElementType()
+                    .WhereElementIsViewIndependent()
+                    .Where<Element>(e =>
+                   (null != e.get_BoundingBox(null))
+                   && (null != e.get_Geometry(opt)))
+                  ;
+            return collector.ToElements();
+
+            
+        }
         #endregion //Get all model elements inv iew acives
 
 
-      
+
         /// <summary>
         /// Get pre-selected elements
         /// </summary>

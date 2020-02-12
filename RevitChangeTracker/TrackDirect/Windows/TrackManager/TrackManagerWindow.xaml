@@ -14,11 +14,11 @@
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding WindowLoaded}"
+            <i:InvokeCommandAction Command="{Binding TrackManagerWindowLoaded}"
                                    CommandParameter="{Binding ElementName=Win}" />
         </i:EventTrigger>
-        <i:EventTrigger EventName="Closed">
-            <i:InvokeCommandAction Command="{Binding WindowClosed}"
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding TrackManagerWindowClosing}"
                                    CommandParameter="{Binding ElementName=Win}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
@@ -182,10 +182,7 @@
        
 
     </Window.Resources>
-    <Window.DataContext>
-        <ObjectDataProvider MethodName="CreateFoos"
-                            ObjectType="{x:Type local:FooViewModel}" />
-    </Window.DataContext>
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -325,7 +322,7 @@
                         <DockPanel Margin="5">
                             <TreeView x:Name="tree"
                                       ItemContainerStyle="{StaticResource TreeViewItemStyle}"
-                                      ItemsSource="{Binding Mode=OneTime}"
+                                      ItemsSource="{Binding TreeElements, Mode=OneTime}"
                                       ItemTemplate="{StaticResource CheckBoxItemTemplate}" />
                         </DockPanel>
                     </Grid>

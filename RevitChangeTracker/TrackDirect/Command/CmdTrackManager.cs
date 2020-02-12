@@ -11,14 +11,15 @@ namespace TrackDirect
     [Transaction(TransactionMode.Manual)]
     public class CmdTrackManager: IExternalCommand
     {
-        public static TrackManagerWindow _trackManagerView { get; set; }
+        public static UIApplication Uiapp = null;
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            Uiapp = commandData.Application;
             try
             {
                 TrackManagerWindow wd = new TrackManagerWindow();
-                _trackManagerView = wd;
-                wd.ShowDialog();
+                wd.DataContext = new TrackManagerViewModel(Uiapp);
+                wd.Show();
 
                 return Result.Succeeded;
             }

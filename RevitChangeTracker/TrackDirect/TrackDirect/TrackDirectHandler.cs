@@ -102,6 +102,7 @@ namespace TrackDirect.UI
             {
                 if (MiniComparisonContainer.ProjectId == _docId)
                 {
+                    MiniComparisonContainer.Doc = _docRun; //To Avoid Doc null
                     AppCommand.btnTrack.LongDescription = $"Project is runninng: {_docRun.Title}";
                     MiniComparisonContainer.PreviousData.Clear();
                     MiniComparisonContainer.PreviousData = MiniComparisonContainer.CurrentData.ToDictionary(entry => entry.Key, entry => entry.Value);

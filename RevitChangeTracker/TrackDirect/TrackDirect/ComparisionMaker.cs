@@ -212,7 +212,7 @@ namespace TrackDirect
                 {
                     try
                     {
-                        string val = ParameterUtils.ParameterToString(p);
+                        string val = RevitUtils.ParameterToString(p);
                         revitElem.SharedParameters[p.Definition.Name] = val;
                     }
                     catch (Exception ex)

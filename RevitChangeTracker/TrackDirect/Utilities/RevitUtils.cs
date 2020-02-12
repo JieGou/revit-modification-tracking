@@ -352,7 +352,7 @@ namespace TrackDirect.Utilities
                     SharedParameterElement sharedParameter = doc.GetElement(para.Id) as SharedParameterElement;
                     if (sharedParameter.GetDefinition().Visible == true && !TrackSharedParameters.Contains(para.Definition.Name))
                     {
-                        parameters += string.Format("{0}:{1}={2}", para.Id, para.Definition.Name, ParameterUtils.ParameterToString(para)) + ";";
+                        parameters += string.Format("{0}:{1}={2}", para.Id, para.Definition.Name, RevitUtils.ParameterToString(para)) + ";";
                     }
 
                 }
@@ -521,19 +521,6 @@ namespace TrackDirect.Utilities
 
         internal static void GetExtents(Autodesk.Revit.UI.UIApplication uiApp, out int x, out int y)
         {
-
-#if REVIT2016 || REVIT2015
-            try
-            {
-                x = uiApp.DrawingAreaExtents.Left;
-                y = uiApp.DrawingAreaExtents.Top;
-            }
-            catch
-            {
-                x = 10;
-                y = 10;
-            }
-#else
             //2017+
             try
             {
@@ -545,7 +532,6 @@ namespace TrackDirect.Utilities
                 x = 10;
                 y = 10;
             }
-#endif
         }
 
         // <summary>
@@ -612,120 +598,9 @@ namespace TrackDirect.Utilities
                         level = lv.Name;
                 }
             }
-
             return level;
         }
-
-
-        /// <summary>
-        /// The GetAllSolidVolume
-        /// </summary>
-        /// <param name="e">The e<see cref="Element"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        public static double GetAllSolidVolume(Element e)
-        {
-            double volume = 0;
-            volume = GetVolumeSolidCase1(e);
-            if (volume == 0) volume = GetVolumeSolidCase2(e);
-            return volume;
-        }
-
-
-        /// <summary>
-        /// The GetVolumeSolidCase1
-        /// </summary>
-        /// <param name="e">The e<see cref="Element"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        private static double GetVolumeSolidCase1(Element e)
-        {
-            Options opt = new Options();
-            opt.ComputeReferences = true;
-            List<Solid> solids = new List<Solid>();
-            double volume = 0;
-
-            // Get geometry element of the selected element
-            GeometryElement geoElement = e.get_Geometry(opt);
-            // Get geometry object
-            foreach (GeometryObject geoObject in geoElement)
-            {
-                GeometryInstance instance = geoObject as GeometryInstance;
-                if (null != instance)
-                {
-                    foreach (GeometryObject instObj in instance.SymbolGeometry)
-                    {
-                        Solid solid = instObj as Solid;
-                        solids.Add(solid);
-                    }
-                }
-            }
-            //Remove solide n'a pas de centroid
-            for (int i = 0; i < solids.Count; i++)
-            {
-                if (solids[i] == null)
-                {
-                    solids.RemoveAt(i);
-                }
-            }
-            //Calcul volume
-            foreach (Solid s in solids)
-            {
-                try
-                {
-                    volume += s.Volume;
-                }
-                catch
-                {
-                    volume = 0;
-                }
-            }
-            return volume;
-        }
-
-        /// <summary>
-        /// The GetVolumeSolidCase2
-        /// </summary>
-        /// <param name="e">The e<see cref="Element"/></param>
-        /// <returns>The <see cref="double"/></returns>
-        private static double GetVolumeSolidCase2(Element e)
-        {
-            Options opt = new Options();
-            opt.ComputeReferences = true;
-            List<Solid> solids = new List<Solid>();
-            double volume = 0;
-
-            // Get geometry element of the selected element
-            GeometryElement geoElement = e.get_Geometry(opt);
-            // Get geometry object
-            foreach (GeometryObject geoObject in geoElement)
-            {
-                Solid solid = geoObject as Solid;
-                solids.Add(solid);
-            }
-            //Remove solide n'a pas de centroid
-            for (int i = 0; i < solids.Count; i++)
-            {
-                if (solids[i] == null)
-                {
-                    solids.RemoveAt(i);
-                }
-            }
-            //Calcul volume
-            foreach (Solid s in solids)
-            {
-                try
-                {
-                    volume += s.Volume;
-                }
-                catch
-                {
-                    volume = 0;
-                }
-            }
-            return volume;
-        }
-
-       
-
+        
         #region String formatting
         /// <summary>
         /// Convert a string to a byte array.
@@ -736,22 +611,6 @@ namespace TrackDirect.Utilities
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
-
-        #region OBSOLETE
-        /// <summary>
-        /// Define a project identifier for the 
-        /// given Revit document.
-        /// </summary>
-        public static string GetProjectIdentifier(
-          Document doc)
-        {
-            SHA256 hasher = SHA256Managed.Create();
-            string key = System.Environment.MachineName + ":" + doc.PathName;
-            byte[] hashValue = hasher.ComputeHash(GetBytes(key));
-            string hashb64 = Convert.ToBase64String(hashValue);
-            return hashb64.Replace('/', '_');
-        }
-        #endregion // OBSOLETE
 
         /// <summary>
         /// Return a string for a real number

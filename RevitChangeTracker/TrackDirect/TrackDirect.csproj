@@ -109,7 +109,8 @@
     <Compile Include="Windows\BaseViewModel.cs" />
     <Compile Include="Windows\SettingsTrack\CategoryDataStorageUtil.cs" />
     <Compile Include="Windows\TrackManager\ComponentOptionConverter.cs" />
-    <Compile Include="Windows\TrackManager\TreeViewModel.cs" />
+    <Compile Include="Windows\TrackManager\TrackManagerViewModel.cs" />
+    <Compile Include="Windows\TrackManager\TreeViewElementModel.cs" />
     <Compile Include="Utilities\IFilenameHint.cs" />
     <Compile Include="TrackDirect\MiniComparisonContainer.cs" />
     <Compile Include="TrackDirect\MiniDataComparision.cs" />

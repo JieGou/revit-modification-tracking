@@ -149,6 +149,7 @@ namespace TrackDirect
                     var c = Category.GetCategory(doc, bic);
                     if(c!= null)
                     categories.Add(c);
+                    
                 }
                 catch {}
                
