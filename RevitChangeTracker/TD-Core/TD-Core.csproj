@@ -68,7 +68,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\Revit\Addins\2019"
-if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(ProgramData)\Autodesk\Revit\Addins\2019\DRTO-Addin.bundle\TD-Core"</PostBuildEvent>
+if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(ProgramData)\Autodesk\Revit\Addins\2019\DRTO-Addin.bundle\\RevitChangeTracker\TD-Core"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

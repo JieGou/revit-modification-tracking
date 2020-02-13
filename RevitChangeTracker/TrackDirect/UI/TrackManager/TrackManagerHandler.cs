@@ -5,7 +5,10 @@ using System.Linq;
 using System.Threading;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
+using System.Drawing;
 using TrackDirect.Models;
+using System.Windows.Media;
+using TrackDirect.Utilities;
 
 #endregion
 
@@ -56,7 +59,7 @@ namespace TrackDirect.UI
                             GetSnapShot();
                             break;
                         }
-
+                    
                 }
             }
             catch (Exception e)
@@ -87,17 +90,17 @@ namespace TrackDirect.UI
            ColorElement,
            IsolateElement,
             RemoveColor
-
+            
         }
 
         #region External event
 
-        public void GetSnapShot()
+        private void GetSnapShot()
         {
            
         }
-
-
+        
+       
         #endregion //External events
 
     }

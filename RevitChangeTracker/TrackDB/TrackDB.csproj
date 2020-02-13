@@ -109,6 +109,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\Revit\Addins\2019"
-if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(ProgramData)\Autodesk\Revit\Addins\2019\DRTO-Addin.bundle\TrackDB"</PostBuildEvent>
+if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(ProgramData)\Autodesk\Revit\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDB"</PostBuildEvent>
   </PropertyGroup>
 </Project>

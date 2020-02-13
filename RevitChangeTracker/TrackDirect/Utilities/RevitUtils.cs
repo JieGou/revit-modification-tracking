@@ -6,7 +6,8 @@ using System.Globalization;
 using Autodesk.Revit.UI;
 using System.Security.Cryptography;
 using System.Diagnostics;
-
+using System.Windows.Media;
+using Transform = Autodesk.Revit.DB.Transform;
 
 namespace TrackDirect.Utilities
 {
@@ -853,6 +854,17 @@ namespace TrackDirect.Utilities
             return new List<XYZ>();
         }
         #endregion // Retrieve solid vertices
+        public static System.Windows.Media.Brush ConvertColorRevitToWPF(Autodesk.Revit.DB.Color colorRevit)
+        {
+            System.Windows.Media.Brush colorWPF = System.Windows.Media.Brushes.Red;
+            try
+            {
+                System.Drawing.Color colorSystem = System.Drawing.Color.FromArgb(colorRevit.Red, colorRevit.Green, colorRevit.Blue);
+                colorWPF = new SolidColorBrush(System.Windows.Media.Color.FromArgb(colorSystem.A, colorSystem.R, colorSystem.G, colorSystem.B));
+            }
+            catch { }
+            return colorWPF;
+        }
     }
 }
 

@@ -30,5 +30,6 @@ namespace TrackDirect.UI
             AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.IsolateElement);
             AppCommand.ManageExEvent.Raise();
         }
+        
     }
 }

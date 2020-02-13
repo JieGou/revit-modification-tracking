@@ -1,17 +1,7 @@
 ﻿using Autodesk.Revit.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Interop;
 
 namespace TrackDirect.UI
 {
@@ -20,15 +10,40 @@ namespace TrackDirect.UI
     /// </summary>
     public partial class TrackManagerWindow : Window
     {
-        public TrackManagerWindow()
+        public static TrackManagerWindow Instance { get; set; } = null;
+        public TrackManagerWindow(TrackManagerViewModel vm)
         {
-            InitializeComponent();
+            if (!TrackManagerViewModel.IsOpen) //Enforce single window
+            {
+                InitializeComponent();
+                Instance = this;
+                var uiapp = TrackManagerViewModel.Uiapp;
+                IntPtr revitWindow;
+
+#if REVIT2018
+                revitWindow = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle; // 2018
+#else
+                revitWindow = uiapp.MainWindowHandle; //Revit 2019 and above
+#endif
+
+                //Get window of Revit form Revit handle
+                HwndSource hwndSource = HwndSource.FromHwnd(revitWindow);
+                var windowRevitOpen = hwndSource.RootVisual as Window;
+
+                this.Owner = windowRevitOpen; //Open when click Revit
+                this.DataContext = vm;
+
+                if (vm.DisplayUI())
+                {
+                    this.Show();
+                }
+
+            }
+            if (Instance?.WindowState == WindowState.Minimized)
+                Instance.WindowState = WindowState.Normal;
+
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
-            colorSelectionDialog.Show();
-        }
+
     }
 }

@@ -7,18 +7,19 @@
         xmlns:local="clr-namespace:TrackDirect.UI"
         xmlns:dw="clr-namespace:DrWPF.Windows.Controls"
         FontSize="12"
-        Title="TreeView in Revit"
-        Width="520"
-        Height="600"
-        WindowStartupLocation="CenterScreen">
+        Title="Data changes Manager"
+        Width="600"
+        Height="900"
+        WindowStartupLocation="Manual"
+        ResizeMode="CanResizeWithGrip">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding TrackManagerWindowLoaded}"
                                    CommandParameter="{Binding ElementName=Win}" />
         </i:EventTrigger>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding TrackManagerWindowClosing}"
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding TrackManagerWindowClosed}"
                                    CommandParameter="{Binding ElementName=Win}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
@@ -217,66 +218,119 @@
                                            HorizontalAlignment="Left"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Top" />
-                                <Button HorizontalAlignment="Left"
-                                        Margin="150,0,10,0"
+                                <Button x:Name="colorPickerNewElement"
+                                    HorizontalAlignment="Left"
+                                        Margin="180,0,10,0"
                                         VerticalAlignment="Top"
                                         Width="16"
                                         Height="16"
-                                        Style="{StaticResource btnTemplate}">
-
+                                        Style="{StaticResource btnTemplate}"
+                                        Command="{Binding ColorSettingsNewElement}"
+                                        CommandParameter="{Binding ElementName=colorPickerNewElement}"
+                                        Background="{Binding BackgroundNewElement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderBrush="{Binding BackgroundNewElement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        >
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Click me to change color
+                                        </ToolTip>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                             <Grid Grid.Row="2">
-                                <TextBlock Text="Family Type"
+                                <TextBlock Text="Family Type Change"
                                            HorizontalAlignment="Left"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Top" />
-                                <Button HorizontalAlignment="Left"
-                                        Margin="150,0,10,0"
+                                <Button x:Name="colorPickerFamilyChange"
+                                    HorizontalAlignment="Left"
+                                        Margin="180,0,10,0"
                                         VerticalAlignment="Top"
                                         Width="16"
                                         Height="16"
-                                        Style="{StaticResource btnTemplate}">
+                                        Style="{StaticResource btnTemplate}"
+                                        Command="{Binding ColorSettingsChangeFamilyType}"
+                                        CommandParameter="{Binding ElementName=colorPickerFamilyChange}"
+                                        Background="{Binding BackgroundFamilyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderBrush="{Binding BackgroundFamilyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        >
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Click me to change color
+                                        </ToolTip>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                             <Grid Grid.Row="3">
-                                <TextBlock Text="Geometry Or Location"
+                                <TextBlock Text="Geometry Or Location Change"
                                            HorizontalAlignment="Left"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Top" />
-                                <Button HorizontalAlignment="Left"
-                                        Margin="150,0,10,0"
+                                <Button x:Name="colorPickerGeo"
+                                    HorizontalAlignment="Left"
+                                        Margin="180,0,10,0"
                                         VerticalAlignment="Top"
                                         Width="16"
                                         Height="16"
-                                        Style="{StaticResource btnTemplate}">
+                                        Style="{StaticResource btnTemplate}"
+                                        Command="{Binding ColorSettingsChangeGeometry}"
+                                        CommandParameter="{Binding ElementName=colorPickerGeo}"
+                                        Background="{Binding BackgroundGeometry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderBrush="{Binding BackgroundGeometry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Click me to change color
+                                        </ToolTip>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                             <Grid Grid.Row="4">
-                                <TextBlock Text="Revit Parameters"
+                                <TextBlock Text="Revit Parameters Change"
                                            HorizontalAlignment="Left"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Top" />
-                                <Button HorizontalAlignment="Left"
-                                        Margin="150,0,10,0"
+                                <Button x:Name="colorPickerRvtPChange"
+                                    HorizontalAlignment="Left"
+                                        Margin="180,0,10,0"
                                         VerticalAlignment="Top"
                                         Width="16"
                                         Height="16"
-                                        Style="{StaticResource btnTemplate}">
+                                        Style="{StaticResource btnTemplate}"
+                                        Command="{Binding ColorSettingsChangeRevitParameters}"
+                                        CommandParameter="{Binding ElementName=colorPickerRvtPChange}"
+                                        Background="{Binding BackgroundRevitParameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderBrush="{Binding BackgroundRevitParameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        >
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Click me to change color
+                                        </ToolTip>
+                                    </Button.ToolTip>
                                 </Button>
                             </Grid>
                             <Grid Grid.Row="5">
-                                <TextBlock Text="Shared Parameter"
+                                <TextBlock Text="Shared Parameters Change"
                                            HorizontalAlignment="Left"
                                            Margin="10,0,0,0"
                                            VerticalAlignment="Top" />
-                                <Button HorizontalAlignment="Left"
-                                        Margin="150,0,10,0"
+                                <Button x:Name="colorPickerSPChange"
+                                    HorizontalAlignment="Left"
+                                        Margin="180,0,10,0"
                                         VerticalAlignment="Top"
                                         Width="16"
                                         Height="16"
-                                        Style="{StaticResource btnTemplate}">
+                                        Style="{StaticResource btnTemplate}"
+                                        Command="{Binding ColorSettingsChangeSharedParameters}"
+                                        CommandParameter="{Binding ElementName=colorPickerSPChange}"
+                                        Background="{Binding BackgroundSharedParameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        BorderBrush="{Binding BackgroundSharedParameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            Click me to change color
+                                        </ToolTip>
+                                    </Button.ToolTip>
                                 </Button>
+                                
                             </Grid>
                         </Grid>
                     </Expander>
@@ -322,7 +376,7 @@
                         <DockPanel Margin="5">
                             <TreeView x:Name="tree"
                                       ItemContainerStyle="{StaticResource TreeViewItemStyle}"
-                                      ItemsSource="{Binding TreeElements, Mode=TwoWay}"
+                                      ItemsSource="{Binding TreeElementsActive,Mode=TwoWay}"
                                       ItemTemplate="{StaticResource CheckBoxItemTemplate}" />
                         </DockPanel>
                     </Grid>

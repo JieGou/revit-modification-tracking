@@ -5,6 +5,9 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
 using System.Windows.Forms;
 using TrackDirect.UI;
+using System.Windows.Interop;
+using System.Windows;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace TrackDirect
 {
@@ -12,20 +15,15 @@ namespace TrackDirect
     public class CmdTrackManager: IExternalCommand
     {
         public static UIApplication Uiapp = null;
+        public static IntPtr RevitWindow;
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Uiapp = commandData.Application;
+
             try
             {
-                
-                var vm = new TrackManagerViewModel(Uiapp);
-                TrackManagerWindow wd = new TrackManagerWindow();
-                wd.DataContext = vm;
-                if (vm.DisplayUI())
-                {
-                    wd.Show();
-                }
-               
+
+                TrackManagerWindow wd = new TrackManagerWindow(new TrackManagerViewModel(Uiapp));
 
                 return Result.Succeeded;
             }
