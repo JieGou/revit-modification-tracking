@@ -46,10 +46,10 @@
             </Style>
             <!-- Checkbox template-->
             <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate"
-                                      ItemsSource="{Binding Children, Mode=OneTime}">
+                                      ItemsSource="{Binding ChildrenNodes, Mode=OneTime}">
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Focusable="False"
-                              IsChecked="{Binding IsChecked}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsEnabled}"
                               VerticalAlignment="Center" />
                     <TextBlock Text="{Binding Name, Mode=OneTime}"
@@ -352,7 +352,9 @@
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"
                                          IsThreeState="False"
-                                         GroupName="GroupElement" />
+                                         GroupName="GroupElement"
+                                         Command="{Binding Path=radBtnByCategory_Checked}"
+                                         CommandParameter="{Binding ElementName=radBtnByCategory, Path=IsChecked}" />
                             <RadioButton x:Name="radBtnByTime"
                                          IsEnabled="True"
                                          Content="By Time"
@@ -360,7 +362,9 @@
                                          VerticalAlignment="Center"
                                          IsThreeState="False"
                                          GroupName="GroupElement"
-                                         Grid.Column="1" />
+                                         Grid.Column="1"
+                                         Command="{Binding Path=radBtnByTime_Checked}"
+                                         CommandParameter="{Binding ElementName=radBtnByTime, Path=IsChecked}" />
                             <RadioButton x:Name="radBtnByTypeChange"
                                          IsEnabled="True"
                                          Content="By Type Change"
@@ -368,7 +372,9 @@
                                          VerticalAlignment="Center"
                                          IsThreeState="False"
                                          GroupName="GroupElement"
-                                         Grid.Column="2" />
+                                         Grid.Column="2"
+                                         Command="{Binding Path=radBtnByTypeChange_Checked}"
+                                         CommandParameter="{Binding ElementName=radBtnByTypeChange, Path=IsChecked}" />
                         </Grid>
                     </GroupBox>
                     <Grid Grid.Row="2"
@@ -376,7 +382,7 @@
                         <DockPanel Margin="5">
                             <TreeView x:Name="tree"
                                       ItemContainerStyle="{StaticResource TreeViewItemStyle}"
-                                      ItemsSource="{Binding TreeElementsActive,Mode=TwoWay}"
+                                      ItemsSource="{Binding TreeElementsActive,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       ItemTemplate="{StaticResource CheckBoxItemTemplate}" />
                         </DockPanel>
                     </Grid>

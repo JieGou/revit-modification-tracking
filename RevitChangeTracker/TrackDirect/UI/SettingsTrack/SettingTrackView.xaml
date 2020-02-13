@@ -224,6 +224,7 @@
                                  HorizontalAlignment="Left"
                                  Margin="2,10,0,0"
                                  VerticalAlignment="Top"
+                                 IsThreeState="False"
                                  IsChecked="{Binding CanRunAutoTrack, Mode=TwoWay}"
                                  Command="{Binding Path=RadioBtnCanRun_Checked}"
                                  CommandParameter="{Binding ElementName=radioBtnCanRun, Path=IsChecked}">
@@ -234,8 +235,9 @@
                                  HorizontalAlignment="Left"
                                  Margin="2,27,0,0"
                                  VerticalAlignment="Top"
+                                 IsThreeState="False"
                                  IsChecked="{Binding DoNotRunAutoTrack, Mode=TwoWay}"
-                                 Command="{Binding Path=RadioBtnDoNotRun_Checked}"
+                                 Command="{Binding Path=RBtnDoNotRun_Checked}"
                                  CommandParameter="{Binding ElementName=radioBtnDoNotRun, Path=IsChecked}">
                     </RadioButton>
                 </Grid>
