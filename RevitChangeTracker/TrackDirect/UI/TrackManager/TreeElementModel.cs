@@ -43,6 +43,7 @@ namespace TrackDirect.UI
         public TreeElementModel(string nodeName)
         {
             Name = nodeName;
+            Tag = null;
             ChildrenNodes = new ObservableCollection<TreeElementModel>();
         }
 
@@ -132,10 +133,10 @@ namespace TrackDirect.UI
                             itemDateNode.ChildrenNodes.Add(elementNode);
                         }
                     }
-                    catNode.Initialize();
-
+                    
+                    rootNewElements.Initialize();
                 }
-                rootNewElements.Initialize();
+               
 
 
                 var rootModifiedElements = new TreeElementModel($"Modified Elements ({ChangeComponentFilter.ModifiedElements.Count })");
@@ -171,10 +172,10 @@ namespace TrackDirect.UI
                             itemDateNode.ChildrenNodes.Add(elementNode);
                         }
                     }
-                    catNode.Initialize();
+                    rootModifiedElements.Initialize();
                 }
 
-                rootModifiedElements.Initialize();
+                
 
                 var rootUnClassifiedElement = new TreeElementModel($"Unclassified Elements ({ChangeComponentFilter.UnClassifiedElements.Count })");
                 rootUnClassifiedElement.IsInitiallySelected = true;
@@ -199,9 +200,9 @@ namespace TrackDirect.UI
 
                         catNode.ChildrenNodes.Add(elementNode);
                     }
-                    catNode.Initialize();
+                    rootUnClassifiedElement.Initialize();
                 }
-                rootUnClassifiedElement.Initialize();
+               
             }
             catch (Exception ex)
             {
