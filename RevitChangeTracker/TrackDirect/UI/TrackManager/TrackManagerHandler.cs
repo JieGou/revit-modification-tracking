@@ -23,7 +23,7 @@ namespace TrackDirect.UI
 
         public string GetName()
         {
-            return "Task External Event";
+            return "Task External Event1";
         }
 
         public void Execute(UIApplication uiapp)
