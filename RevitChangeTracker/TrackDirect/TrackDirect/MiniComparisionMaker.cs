@@ -70,10 +70,12 @@ namespace TrackDirect
                 miniComp.GeometryInfo = Convert.ToBase64String(
                      hasher.ComputeHash(RevitUtils.GetBytes(string.Join(";", geometryInfoList))));
 
-                
+                string geoParameters = RevitUtils.SerializeGeoParameters(e);
+                miniComp.GeoParameters  = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(geoParameters)));
+
                 //string revitParameters = RevitUtils.SerializeRevitParameters(e);//Get only Revit Parameters
                 //string sharedParameters = RevitUtils.SerializeSharedParameters(e, _doc);//Get only Shred Parameters
-                
+
                 //miniComp.RevitParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(revitParameters)));
                 //miniComp.SharedParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(sharedParameters)));
                 miniComp.DicRvtParams = GetRvtParams(e);
@@ -87,9 +89,11 @@ namespace TrackDirect
         {
             string c = string.Empty;
             if (current.ElementDescription != previous.ElementDescription)
-                return ChangedElement.ChangeTypeEnum.FamilyTypeChange.ToString();
+                return ChangedElement.ChangeTypeEnum.FamilyOrTypeChange.ToString();
+            if (current.GeoParameters != previous.GeoParameters)
+                return ChangedElement.ChangeTypeEnum.GeometryChange.ToString();
             if (current.GeometryInfo != previous.GeometryInfo)
-                return ChangedElement.ChangeTypeEnum.GeometryOrLocationChange.ToString();
+                return ChangedElement.ChangeTypeEnum.VolumeOrLocationChange.ToString();
             if (!MiniCompareRevitParameters(previous,current))
                 return ChangedElement.ChangeTypeEnum.RevitParameterChange.ToString();
             if (!MiniCompareSharedParameters(previous,current))

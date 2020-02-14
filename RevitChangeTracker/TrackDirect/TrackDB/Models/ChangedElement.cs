@@ -8,12 +8,14 @@ namespace TrackDirect.Models
 
     {
         public enum ChangeTypeEnum
-        {   GeometryOrLocationChange,
+        {
+            GeometryChange,
+            VolumeOrLocationChange,
             NewElement,
             DeletedElement,
             SharedParameterChange,
             RevitParameterChange,
-            FamilyTypeChange
+            FamilyOrTypeChange
         }
 
         #region Properties

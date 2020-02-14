@@ -409,7 +409,7 @@ namespace TrackDirect
             {
                 ChangedElement c = new ChangedElement()
                 {
-                    ChangeType = ChangedElement.ChangeTypeEnum.FamilyTypeChange,
+                    ChangeType = ChangedElement.ChangeTypeEnum.FamilyOrTypeChange,
                     Category = current.Category,
                     ElementId = current.ElementId,
                     UniqueId = current.UniqueId,
@@ -462,7 +462,7 @@ namespace TrackDirect
             {
                 ChangedElement c = new ChangedElement()
                 {
-                    ChangeType = ChangedElement.ChangeTypeEnum.GeometryOrLocationChange,
+                    ChangeType = ChangedElement.ChangeTypeEnum.VolumeOrLocationChange,
                     Category = current.Category,
                     ElementId = current.ElementId,
                     UniqueId = current.UniqueId,

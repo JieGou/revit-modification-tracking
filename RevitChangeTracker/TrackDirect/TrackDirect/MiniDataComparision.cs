@@ -14,7 +14,7 @@ namespace TrackDirect.Models
 
         public string GeometryInfo { get; set; }
 
-       
+        public string GeoParameters { get; set; }
 
         public string ElementDescription { get; set; }
 
