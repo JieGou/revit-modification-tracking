@@ -86,6 +86,10 @@ namespace TrackDirect.UI
             _docRun = _uiapp.ActiveUIDocument.Document;
             _docId = _docRun.ProjectInformation.UniqueId;
             //MessageBox.Show("Start Run executed!", "Multi-Threading");
+            //check and create shared parameters
+            CreateSharedParameter();
+
+
             //First time run
             if (MiniComparisonContainer.ProjectId == "")
             {
@@ -177,7 +181,38 @@ namespace TrackDirect.UI
             IList<ElementId> cats1 = tmp.Where(x => x.Selected == true).Select(x => x.CategoryId).ToList();
             return ElementUtils.GetElementsByCategories(doc, cats1);
         }
+        private void CreateSharedParameter()
+        {
+            Document doc = _activeDoc;
+            using (Transaction tx = new Transaction(doc))
+            {
+                //Check and add shared parameter to project
+                try
+                {
+                    tx.Start("Add shared parameter");
+                    //Create a list of category
+                    CategorySet categories = CategoryUtils.GetModelCategories(doc, _app);
+                    List<string> catList = new List<string>();
+                    foreach (Category c in categories)
+                    {
+                        catList.Add(c.Name);
+                    }
+                    catList.Sort();
+                    //Create Shared parameters if necessary
+                    ParameterUtils.AddSharedParameters(_app, doc, categories);
+                    tx.Commit();
+                }
 
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error! " + ex);
+                    if (tx.HasStarted() == true)
+                    {
+                        tx.RollBack();
+                    }
+                }
+            }
+        }
         #endregion //External events
 
     }

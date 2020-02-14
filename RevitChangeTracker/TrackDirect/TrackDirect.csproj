@@ -317,10 +317,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\VCF_AddinSharedParameters.txt" />
     <Resource Include="Images\checkbox_no.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\checkbox_yes.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <None Include="Resources\compare-16.png" />
     <None Include="Resources\compare-32.png" />

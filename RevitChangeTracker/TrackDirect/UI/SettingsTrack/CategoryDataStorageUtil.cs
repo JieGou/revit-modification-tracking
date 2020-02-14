@@ -50,7 +50,7 @@ namespace TrackDirect.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to get room elevation properties from data storage.\n" + ex.Message, "Elevation Creator : GetRoomElevationProperties", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Failed to get room elevation properties from data storage.\n" + ex.Message, "Elevation Creator : GetCategoryPropertiesDataStorage", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return catProps; 
         }
