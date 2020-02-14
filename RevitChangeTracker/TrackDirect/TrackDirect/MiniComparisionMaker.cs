@@ -14,17 +14,10 @@ namespace TrackDirect
 {
     public class MiniComparisonMaker
     {
-        #region Declarations
+
         private static Document _doc;
-        private Dictionary<string, int> _categoryCount = new Dictionary<string, int>();
-        private HashSet<string> _requestedCategoryNames = new HashSet<string>();
-
-        #endregion
-
-        #region Accessors
-        public bool AllCategories { get; set; } = true;
-        public IList<Category> RequestedCategories { get; set; }
-        #endregion
+        
+       
 
         #region Constructor
         public MiniComparisonMaker(Document doc)
@@ -58,12 +51,7 @@ namespace TrackDirect
 
             if (bb != null)
             {
-                //Get only Revit Parameters
-                string revitParameters =RevitUtils.SerializeRevitParameters(e);
-               
-                //Get only Shred Parameters
-                string sharedParameters = RevitUtils.SerializeSharedParameters(e,_doc);
-
+                
                 List<string> geometryInfoList = new List<string>();
                 //Add location
                 geometryInfoList.Add(RevitUtils.LocationString(e.Location));
@@ -81,32 +69,134 @@ namespace TrackDirect
                       hasher.ComputeHash(RevitUtils.GetBytes(RevitUtils.GetElementDescription(e))));
                 miniComp.GeometryInfo = Convert.ToBase64String(
                      hasher.ComputeHash(RevitUtils.GetBytes(string.Join(";", geometryInfoList))));
-                miniComp.RevitParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(revitParameters)));
-                miniComp.SharedParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(sharedParameters)));
+
+                
+                //string revitParameters = RevitUtils.SerializeRevitParameters(e);//Get only Revit Parameters
+                //string sharedParameters = RevitUtils.SerializeSharedParameters(e, _doc);//Get only Shred Parameters
+                
+                //miniComp.RevitParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(revitParameters)));
+                //miniComp.SharedParameter = Convert.ToBase64String(hasher.ComputeHash(RevitUtils.GetBytes(sharedParameters)));
+                miniComp.DicRvtParams = GetRvtParams(e);
+                miniComp.DicSharedParams = GetRvtParams(e);
             }
             return miniComp;
         }
         #endregion // Store element state
 
-
-        #endregion //Public methods
-
-        #region PrivateMethods
-
-        public static string GetTypeChange(MiniDataComparision current, MiniDataComparision previous)
+        public static string GetTypeChange(MiniDataComparision previous, MiniDataComparision current)
         {
             string c = string.Empty;
             if (current.ElementDescription != previous.ElementDescription)
                 return ChangedElement.ChangeTypeEnum.FamilyTypeChange.ToString();
             if (current.GeometryInfo != previous.GeometryInfo)
                 return ChangedElement.ChangeTypeEnum.GeometryOrLocationChange.ToString();
-            if (current.RevitParameter!= previous.RevitParameter)
+            if (!MiniCompareRevitParameters(previous,current))
                 return ChangedElement.ChangeTypeEnum.RevitParameterChange.ToString();
-            if (current.SharedParameter != previous.SharedParameter)
+            if (!MiniCompareSharedParameters(previous,current))
                 return ChangedElement.ChangeTypeEnum.SharedParameterChange.ToString();
             return c;
         }
+        #endregion //Public methods
 
+        #region PrivateMethods
+        private static bool MiniCompareRevitParameters(MiniDataComparision previous, MiniDataComparision current)
+        {
+            //StringBuilder description = null;
+            bool isEqual = true;
+            //int numParmsChanged = 0;
+            foreach (var pair in current.DicRvtParams)
+            {
+                if (previous.DicRvtParams.ContainsKey(pair.Key))
+                {
+                    // test if they match
+                    if (current.DicRvtParams[pair.Key] != previous.DicRvtParams[pair.Key])
+                    {
+                        isEqual = false;
+                        return isEqual;
+                        //if (description == null) description = new StringBuilder();
+                        //numParmsChanged++;
+                        //if (numParmsChanged > 1) description.Append(", ");
+                        //description.Append(pair.Key + " From: " + previous.DicRvtParams[pair.Key] + " to " + current.DicRvtParams[pair.Key]);
+                    }
+
+                }
+            }
+            return isEqual;
+        }
+
+        //Compare shared parameter between 2 data comparison
+        private static bool MiniCompareSharedParameters(MiniDataComparision previous, MiniDataComparision current)
+        {
+            bool isEqual = true;
+            foreach (var pair in current.DicSharedParams)
+            {
+                if (previous.DicSharedParams.ContainsKey(pair.Key)) //Only compare with same shared parameters
+                {
+                    if (current.DicSharedParams[pair.Key] != previous.DicSharedParams[pair.Key])
+                    {
+                        isEqual = false;
+                        return isEqual;
+                    }
+
+                }
+            }
+            return isEqual;
+        }
+        
+        private static Dictionary<string, string> GetRvtParams(Element e)
+        {
+            //Get only Revit Parameters
+            var dicRvtParams = new Dictionary<string, string>();
+            var rvtParameters = RevitUtils.GetRevitParametersExcludeGeometryParam(e);
+            foreach (var p in rvtParameters)
+            {
+                try
+                {
+                    if (p.Definition == null) continue; // we don't want this!
+                    string definition = p.Definition.Name;
+                    string val = null;
+                    switch (p.StorageType)
+                    {
+                        case StorageType.String:
+                            val = p.AsString();
+                            break;
+
+                        default:
+                            val = p.AsValueString();
+                            break;
+                    }
+
+                    if (val == null) val = "(n/a)";
+
+                    dicRvtParams[p.Definition.Name] = val;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Weird database: " + ex);
+                }
+            }
+            return dicRvtParams;
+
+        }
+        private static Dictionary<string, string> GetSharedParams(Element e)
+        {
+            var dicSharedParams = new Dictionary<string, string>();
+            var sharedParameters = RevitUtils.GetSharedParameters(e, _doc);
+            foreach (var p in sharedParameters)
+            {
+                try
+                {
+                    string val = RevitUtils.ParameterToString(p);
+                    dicSharedParams[p.Definition.Name] = val;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Weird database: " + ex);
+                }
+
+            }
+            return dicSharedParams;
+        }
 
         #endregion //private method
     }

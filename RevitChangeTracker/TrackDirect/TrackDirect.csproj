@@ -136,7 +136,7 @@
     <Compile Include="Utilities\IFilenameHint.cs" />
     <Compile Include="TrackDirect\MiniComparisonContainer.cs" />
     <Compile Include="TrackDirect\MiniDataComparision.cs" />
-    <Compile Include="Models\ChangeSummary.cs" />
+    <Compile Include="TrackDB\Models\ChangeSummary.cs" />
     <Compile Include="TrackDirect\MiniComparisonController.cs" />
     <Compile Include="TrackDirect\MiniComparisionMaker.cs" />
     <Compile Include="UI\SettingsTrack\AutoTrackDataStorageUtil.cs" />
@@ -149,9 +149,9 @@
     <Compile Include="TrackDB\ComparisonController.cs" />
     <Compile Include="TrackDB\ComparisionMaker.cs" />
     <Compile Include="TrackDB\SnapshotMaker.cs" />
-    <Compile Include="Models\ChangedElement.cs" />
-    <Compile Include="Models\Comparision.cs" />
-    <Compile Include="Models\RevitElement.cs" />
+    <Compile Include="TrackDB\Models\ChangedElement.cs" />
+    <Compile Include="TrackDB\Models\Comparision.cs" />
+    <Compile Include="TrackDB\Models\RevitElement.cs" />
     <Compile Include="TrackDB\Command\CmdSnapshot.cs" />
     <Compile Include="TrackDB\UI\CompareUI\CompareResultViewModel.cs" />
     <Compile Include="TrackDB\UI\CompareUI\CompareResultView.xaml.cs">
@@ -160,7 +160,7 @@
     <Compile Include="TrackDB\UI\CompareUI\frmPreCompare.xaml.cs">
       <DependentUpon>frmPreCompare.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\RevitTreeItem.cs" />
+    <Compile Include="TrackDB\Models\RevitTreeItem.cs" />
     <Compile Include="UI\VirtualToggleButton.cs" />
     <Compile Include="TrackDB\UI\SettingsDB\SettingsDBApp.xaml.cs">
       <DependentUpon>SettingsDBApp.xaml</DependentUpon>
