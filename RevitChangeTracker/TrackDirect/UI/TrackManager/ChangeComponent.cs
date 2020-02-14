@@ -44,10 +44,10 @@ namespace TrackDirect.UI
         {
             try
             {
-                Name= GetElementFullName(e);
-                Id = e.Id;
-                UniqueId = e.UniqueId;
-                CategoryName = e.Category.Name;
+                name= GetElementFullName(e);
+                id = e.Id;
+                uniqueId = e.UniqueId;
+                categoryName = e.Category.Name;
 
                 var elemFound = ChangeComponentFilter.AllElements.Where(x => x.id == e.Id);
                 if (elemFound.Count() > 0)
@@ -83,8 +83,7 @@ namespace TrackDirect.UI
 
             FamilyInstance fi = e as FamilyInstance;
 
-            string typeName = e.GetType().Name;
-
+         
             string categoryName = (null == e.Category)
               ? string.Empty
               : e.Category.Name;
@@ -97,7 +96,7 @@ namespace TrackDirect.UI
               || e.Name.Equals(fi.Symbol.Name))
                 ? string.Empty
                 : fi.Symbol.Name;
-            return $"{categoryName} - {e.Id.IntegerValue} - {typeName} {familyName} {symbolName} <{e.Name}>";
+            return $"{categoryName} - {e.Id.IntegerValue} - {familyName} {symbolName} <{e.Name}>";
         }
 
 

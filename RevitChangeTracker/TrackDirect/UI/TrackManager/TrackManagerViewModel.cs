@@ -8,6 +8,7 @@ using TrackDirect.Models;
 using System.Drawing;
 using TrackDirect.Utilities;
 using System.Windows.Media;
+using Visibility = System.Windows.Visibility;
 
 namespace TrackDirect.UI
 {
@@ -21,6 +22,10 @@ namespace TrackDirect.UI
         public RelayCommand ColorSettingsChangeGeometry { get; set; }
         public RelayCommand ColorSettingsChangeRevitParameters { get; set; }
         public RelayCommand ColorSettingsChangeSharedParameters { get; set; }
+        public RelayCommand radBtnByCategory_Checked { get; set; }
+        public RelayCommand radBtnByTime_Checked { get; set; }
+        public RelayCommand radBtnByTypeChange_Checked { get; set; }
+
 
         #endregion //Relay command
 
@@ -82,6 +87,9 @@ namespace TrackDirect.UI
                 ColorSettingsChangeGeometry = new RelayCommand(param => this.OnColorSettingsChangeGeometry(param));
                 ColorSettingsChangeRevitParameters = new RelayCommand(param => this.OnColorSettingsChangeRevitParameters(param));
                 ColorSettingsChangeSharedParameters = new RelayCommand(param => this.OnColorSettingsChangeSharedParameters(param));
+                radBtnByCategory_Checked = new RelayCommand(param => this.OnradBtnByCategory_Checked(param));
+                radBtnByTime_Checked = new RelayCommand(param => this.OnradBtnByTime_Checked(param));
+                radBtnByTypeChange_Checked = new RelayCommand(param => this.OnradBtnByTypeChange_Checked(param));
 
             }
             catch (Exception ex)
@@ -173,6 +181,19 @@ namespace TrackDirect.UI
             RvtColorChangeSharedParameters = colorSelectionDialog.SelectedColor;
             BackgroundSharedParameters = RevitUtils.ConvertColorRevitToWPF(RvtColorChangeSharedParameters);
         }
+
+        private void OnradBtnByCategory_Checked(object param)
+        {
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByCategory);
+        }
+        private void OnradBtnByTime_Checked(object param)
+        {
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByDate);
+        }
+        private void OnradBtnByTypeChange_Checked(object param)
+        {
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByTypeChange);
+        }
         #endregion //Command
 
         #region Public methods
@@ -230,8 +251,10 @@ namespace TrackDirect.UI
                         }
                     }
                 }
-                treeElementsActive = TreeElementModel.RenderByCategory();
-
+                treeElementsByCategory = TreeElementModel.RenderByCategory();
+                treeElementsByDate = TreeElementModel.RenderByDate();
+                treeElementsByTypeChange = TreeElementModel.RenderByTypeChange();
+                treeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByCategory);
             }
             catch (Exception ex)
             {
@@ -241,6 +264,8 @@ namespace TrackDirect.UI
 
         #endregion
 
-
+        #region Rendre TreeView
+        
+        #endregion
     }
 }
