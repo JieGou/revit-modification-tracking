@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug2018|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '2018|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -29,25 +29,19 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(ProgramW6432)\Autodesk\Revit 2019\Revit.exe</StartProgram>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2019|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '2019|AnyCPU' ">
     <OutputPath>bin\Debug2019\</OutputPath>
     <DefineConstants>REVIT2019</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == '2020|AnyCPU' ">
     <OutputPath>bin\Debug2020\</OutputPath>
     <DefineConstants>REVIT2020</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2018|AnyCPU'">
-    <OutputPath>bin\Release2018\</OutputPath>
-    <DefineConstants>REVIT2018</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2019|AnyCPU'">
-    <OutputPath>bin\Release2019\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>REVIT2019</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
-    <OutputPath>bin\Release2020\</OutputPath>
-    <DefineConstants>REVIT2020</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RevitAPI">

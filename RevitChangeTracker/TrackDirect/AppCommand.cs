@@ -147,20 +147,7 @@ namespace TrackDirect
             dataTrack.Image = ImageUtils.ConvertFromBitmap(Resources.toggle_off_16);
             dataTrack.ToolTip = "Track data changes in the model Revit.";
             dataTrack.LongDescription = "This command toogles between start or stop record modification tracking";
-            //btnTrack = plTrack.AddItem(dataTrack) as PushButton;
-
-            var setting1 = new PushButtonData("btnSetting1", "Settings", assemblyPath, typeof(CmdTrackSettings).FullName);
-            setting1.ToolTip = "Settings list category and autorun.";
-            setting1.Image = ImageUtils.ConvertFromBitmap(Resources.settings_16);
-            setting1.LargeImage = ImageUtils.ConvertFromBitmap(Resources.settings_32);
-            //IList<RibbonItem> stackedButtons = plTrack.AddStackedItems(setting1, null, null);
-            //btnTrackSettings = plTrack.AddItem(setting1) as PushButton;
-
-            SplitButtonData splDataTrack = new SplitButtonData("splTrack", "Direct Track");
-            splTrack = plTrack.AddItem(splDataTrack) as SplitButton;
-            btnTrack = splTrack.AddPushButton(dataTrack) as PushButton;
-            btnTrackSettings = splTrack.AddPushButton(setting1) as PushButton;
-
+            btnTrack = plTrack.AddItem(dataTrack) as PushButton;
 
             var dataTrackManager = new PushButtonData("btnTrackManager", "UI Track\nManager", assemblyPath, typeof(CmdTrackManager).FullName);
             dataTrackManager.LargeImage = ImageUtils.ConvertFromBitmap(Resources.check_book_32);
@@ -168,6 +155,15 @@ namespace TrackDirect
             dataTrackManager.ToolTip = "UI to watch the modification.";
             dataTrackManager.LongDescription = "";
             btnTrackManager = plTrack.AddItem(dataTrackManager) as PushButton;
+
+            plTrack.AddSlideOut();
+            var setting1 = new PushButtonData("btnSetting1", "Settings", assemblyPath, typeof(CmdTrackSettings).FullName);
+            setting1.ToolTip = "Settings list category and autorun.";
+            setting1.Image = ImageUtils.ConvertFromBitmap(Resources.settings_16);
+            setting1.LargeImage = ImageUtils.ConvertFromBitmap(Resources.settings_32);
+            btnTrackSettings = plTrack.AddItem(setting1) as PushButton;
+
+            
             //btnTrackManager.AvailabilityClassName = "TrackChange.Utilities.Availability";
 
             #endregion //Panel Trackchange direct solution

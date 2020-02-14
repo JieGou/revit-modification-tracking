@@ -42,8 +42,7 @@ namespace TrackDirect
                     trackView.Owner = WindowRevitOpen;//This will make flash this window WPF for modal mode
                     trackView.ShowDialog();
                 }
-                //Reset top button for split button
-                AppCommand.GetInstance.SetTopButtonCurrent();
+              
                 return Result.Succeeded;
             }
             catch (ApplicationException aex)
