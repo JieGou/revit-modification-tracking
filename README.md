@@ -28,12 +28,12 @@ This solution is created to adapt the demand of my company.
     - [x] How change the button image when running or not running
     - [x] Check if shared parameter exist (CreateDate, ModifiedDate), if not create them
     - [x] Run the add with the frequency by 1 minute/5 minutes/10 minutes...
-- [ ] Solution Dynamic model update
+- [x] Solution Dynamic model update
     - [x] Update automatic to element
     - [x] Check and create parameter as the solution Track change
     - [x] Compare 2 solutions to adapt the addin manager future
     - [x] Create CustomPushButton
-- [ ] Addin modification manager
+- [x] Addin modification manager
     - [x] Create GUI With WPF
     - [x] Get list of element changes, and take them iamges or id
     - [x] Possibility of select them by addin
