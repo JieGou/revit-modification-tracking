@@ -39,7 +39,7 @@ This solution is created to adapt the demand of my company.
     - [x] Possibility of select them by addin
     - [x] Change color automatique with the changed elements
     - [x] How to get the list modification xml, txt...?
-    - [x] Thinking more
+    - [x] Thinking more ...
     
 
 
