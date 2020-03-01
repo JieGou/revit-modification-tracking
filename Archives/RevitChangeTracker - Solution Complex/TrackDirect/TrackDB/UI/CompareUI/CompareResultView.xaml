@@ -1,0 +1,96 @@
+﻿<Window x:Class="TrackDirect.UI.CompareResultView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:local="clr-namespace:TrackDirect.UI"
+        xmlns:dw="clr-namespace:DrWPF.Windows.Controls"
+        mc:Ignorable="d"
+        FontSize="12"
+        Title="Compare" Height="600" Width="450"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding MyICommandThatShouldHandleLoaded}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- Load this specific theme because the Aero theme for CheckBox has issues. -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PresentationFramework.Royale;V3.0.0.0;31bf3856ad364e35;component\themes\royale.normalcolor.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="TreeViewItemStyle"
+                   TargetType="TreeViewItem">
+                <Setter Property="IsExpanded"
+                        Value="{Binding TreeViewItem_Expanded, Mode=TwoWay}" />
+                <Setter Property="IsSelected"
+                        Value="{Binding IsInitiallySelected, Mode=OneTime}" />
+                <Setter Property="KeyboardNavigation.AcceptsReturn"
+                        Value="True" />
+                <Setter Property="dw:VirtualToggleButton.IsVirtualToggleButton"
+                        Value="True" />
+                <Setter Property="dw:VirtualToggleButton.IsChecked"
+                        Value="{Binding IsChecked}" />
+            </Style>
+
+            <HierarchicalDataTemplate x:Key="CheckBoxItemTemplate"
+                                      ItemsSource="{Binding Children, Mode=OneTime}">
+                <StackPanel Orientation="Horizontal">
+                    <!-- These elements are bound to a FooViewModel object. -->
+                    <CheckBox Focusable="False"
+                              IsChecked="{Binding IsChecked}"
+                              VerticalAlignment="Center" />
+                    <ContentPresenter Content="{Binding Name, Mode=OneTime}"
+                                      Margin="2,0" />
+                </StackPanel>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:CompareResultViewModel></local:CompareResultViewModel>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel Margin='10,10,10,0'
+                        Orientation='Horizontal'
+                        Height='25'
+                        VerticalAlignment='Top'>
+                <Label Content='Project:'
+                       Margin='0'
+                       FontSize='10' 
+/>
+                <Label Content="{Binding ProjectName}"
+                       Margin='0'
+                       FontSize='10' />
+                <Label Content='Element Count:'
+                       Margin='0'
+                       FontSize='10' />
+                <Label Content="{Binding CollTupCount}"
+                       Margin='0'
+                       FontSize='10' />
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="3">
+            <DockPanel>
+                <TreeView x:Name="treeComapreResult"
+                          ItemContainerStyle="{StaticResource TreeViewItemStyle}"
+                          ItemsSource="{Binding Mode=OneTime}"
+                          ItemTemplate="{StaticResource CheckBoxItemTemplate}"
+                          />
+                <TextBlock Text="Désolé. Cette application est encours de développement"></TextBlock>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>
