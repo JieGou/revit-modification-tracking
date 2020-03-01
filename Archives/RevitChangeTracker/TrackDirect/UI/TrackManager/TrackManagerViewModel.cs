@@ -9,6 +9,8 @@ using System.Drawing;
 using TrackDirect.Utilities;
 using System.Windows.Media;
 using Visibility = System.Windows.Visibility;
+using System.IO;
+using System.Collections.Generic;
 
 namespace TrackDirect.UI
 {
@@ -18,13 +20,13 @@ namespace TrackDirect.UI
         public RelayCommand TrackManagerWindowLoaded { get; set; }
         public RelayCommand TrackManagerWindowClosed { get; set; }
         public RelayCommand ColorSettingsNewElement { get; set; }
-        public RelayCommand ColorSettingsChangeFamilyType { get; set; }
-        public RelayCommand ColorSettingsChangeGeometry { get; set; }
-        public RelayCommand ColorSettingsChangeRevitParameters { get; set; }
-        public RelayCommand ColorSettingsChangeSharedParameters { get; set; }
-        public RelayCommand radBtnByCategory_Checked { get; set; }
-        public RelayCommand radBtnByTime_Checked { get; set; }
-        public RelayCommand radBtnByTypeChange_Checked { get; set; }
+        public RelayCommand ColorSettingsChangeVolume { get; set; }
+        public RelayCommand ColorSettingsChangeCentroid { get; set; }
+        public RelayCommand RadBtnByCategory_Checked { get; set; }
+        public RelayCommand RadBtnByTime_Checked { get; set; }
+        public RelayCommand RadBtnByTypeChange_Checked { get; set; }
+        public RelayCommand ApplyCommand { get; set; }
+        public RelayCommand CancelCommand { get; set; }
 
 
         #endregion //Relay command
@@ -33,25 +35,29 @@ namespace TrackDirect.UI
         private static UIApplication _uiapp = null;
         private Document _doc = null;
         private bool isLoaded = false;
-        private System.Windows.Media.Brush backgroundNewElement = System.Windows.Media.Brushes.Red;
-        private System.Windows.Media.Brush backgroundFamilyType = System.Windows.Media.Brushes.Blue;
-        private System.Windows.Media.Brush backgroundGeometry = System.Windows.Media.Brushes.Aqua;
-        private System.Windows.Media.Brush backgroundRevitParameters = System.Windows.Media.Brushes.Orange;
-        private System.Windows.Media.Brush backgroundSharedParameters = System.Windows.Media.Brushes.Violet;
-        public static Autodesk.Revit.DB.Color RvtColorNewElement { get; set; }
-        public static Autodesk.Revit.DB.Color RvtColorChangeFamilyType { get; set; }
-        public static Autodesk.Revit.DB.Color RvtColorChangeGeometry { get; set; }
-        public static Autodesk.Revit.DB.Color RvtColorChangeRevitParameters { get; set; }
-        public static Autodesk.Revit.DB.Color RvtColorChangeSharedParameters { get; set; }
+        private Autodesk.Revit.DB.Color rvtColorNewElement;
+        private Autodesk.Revit.DB.Color rvtColorChangeVolume;
+        private Autodesk.Revit.DB.Color rvtColorChangeCentroid;
+        private bool isHigLight = true;
+        private bool isColorElement = true;
+        private bool isIsolate = false;
+        private ComponentOption selectOption = ComponentOption.OnlyVisible;
+        private int tabSelectIndex = 0;
+        private TrackManagerHandler _handler = null;
 
         public Document Doc { get { return _doc; } set { _doc = value; } }
         public static UIApplication Uiapp { get { return _uiapp; } set { _uiapp = value; } }
-        public System.Windows.Media.Brush BackgroundNewElement { get { return backgroundNewElement; } set { backgroundNewElement = value; OnPropertyChanged("BackgroundNewElement"); } }
-        public System.Windows.Media.Brush BackgroundFamilyType { get { return backgroundFamilyType; } set { backgroundFamilyType = value; OnPropertyChanged("BackgroundFamilyType"); } }
-        public System.Windows.Media.Brush BackgroundGeometry { get { return backgroundGeometry; } set { backgroundGeometry = value; OnPropertyChanged("BackgroundGeometry"); } }
-        public System.Windows.Media.Brush BackgroundRevitParameters { get { return backgroundRevitParameters; } set { backgroundRevitParameters = value; OnPropertyChanged("BackgroundRevitParameters"); } }
-        public System.Windows.Media.Brush BackgroundSharedParameters { get { return backgroundSharedParameters; } set { backgroundSharedParameters = value; OnPropertyChanged("BackgroundSharedParameters"); } }
+        public Autodesk.Revit.DB.Color RvtColorNewElement { get { return rvtColorNewElement; } set { rvtColorNewElement = value; OnPropertyChanged(); } }
+        public Autodesk.Revit.DB.Color RvtColorChangeVolume { get { return rvtColorChangeVolume; } set { rvtColorChangeVolume = value; OnPropertyChanged(); } }
+        public Autodesk.Revit.DB.Color RvtColorChangeCentroid { get { return rvtColorChangeCentroid; } set { rvtColorChangeCentroid = value; OnPropertyChanged(); } }
 
+        public bool IsHighLight { get { return isHigLight; } set { isHigLight = value; OnPropertyChanged(); } }
+        public bool IsColorElement { get { return isColorElement; } set { isColorElement = value; OnPropertyChanged(); } }
+        public bool IsIsolate { get { return isIsolate; } set { isIsolate = value; OnPropertyChanged(); } }
+        public ComponentOption SelectOption { get { return selectOption; } set { selectOption = value; OnPropertyChanged(); } }
+        public int TabSelectIndex { get { return tabSelectIndex; } set { tabSelectIndex = value; OnPropertyChanged(); } }
+        public static string ColorSettingsFiles = string.Empty;
+        public static ColorSettings _ColorSettings { get; set; }
 
         public bool IsLoaded { get { return isLoaded; } set { isLoaded = value; OnPropertyChanged(); } }
         public static bool IsOpen { get; private set; }
@@ -63,7 +69,6 @@ namespace TrackDirect.UI
         private ObservableCollection<TreeElementModel> treeElementsByTypeChange = new ObservableCollection<TreeElementModel>();
         private ObservableCollection<TreeElementModel> treeElementsActive = new ObservableCollection<TreeElementModel>();
 
-        public TrackManagerModel Model { get; set; }
         public ObservableCollection<TreeElementModel> TreeElementsByCategory { get { return treeElementsByCategory; } set { treeElementsByCategory = value; OnPropertyChanged(); } }
         public ObservableCollection<TreeElementModel> TreeElementsByDate { get { return treeElementsByDate; } set { treeElementsByDate = value; OnPropertyChanged(); } }
         public ObservableCollection<TreeElementModel> TreeElementsByTypeChange { get { return treeElementsByTypeChange; } set { treeElementsByTypeChange = value; OnPropertyChanged(); } }
@@ -73,23 +78,25 @@ namespace TrackDirect.UI
         #endregion //Properties biding
 
 
-        public TrackManagerViewModel(UIApplication uiapp)
+        public TrackManagerViewModel(UIApplication uiapp, TrackManagerHandler handler)
         {
             _uiapp = uiapp;
             _doc = _uiapp.ActiveUIDocument.Document;
-            Model = new TrackManagerModel();
+            _handler = handler;
+
+
             try
             {
-                TrackManagerWindowLoaded = new RelayCommand(param => this.OnTrackManagerWindowLoaded(param));
-                TrackManagerWindowClosed = new RelayCommand(param => this.OnTrackManagerWindowClosed(param));
-                ColorSettingsNewElement = new RelayCommand(param => this.OnColorSettingsNewElement(param));
-                ColorSettingsChangeFamilyType = new RelayCommand(param => this.OnColorSettingsChangeFamilyType(param));
-                ColorSettingsChangeGeometry = new RelayCommand(param => this.OnColorSettingsChangeGeometry(param));
-                ColorSettingsChangeRevitParameters = new RelayCommand(param => this.OnColorSettingsChangeRevitParameters(param));
-                ColorSettingsChangeSharedParameters = new RelayCommand(param => this.OnColorSettingsChangeSharedParameters(param));
-                radBtnByCategory_Checked = new RelayCommand(param => this.OnradBtnByCategory_Checked(param));
-                radBtnByTime_Checked = new RelayCommand(param => this.OnradBtnByTime_Checked(param));
-                radBtnByTypeChange_Checked = new RelayCommand(param => this.OnradBtnByTypeChange_Checked(param));
+                TrackManagerWindowLoaded = new RelayCommand(param => this.WindowLoadedExecuted(param));
+                TrackManagerWindowClosed = new RelayCommand(param => this.WindowClosedExecuted(param));
+                ApplyCommand = new RelayCommand(param => this.ApplyExecuted(param));
+                CancelCommand = new RelayCommand(param => this.CancelExecuted(param));
+                ColorSettingsNewElement = new RelayCommand(param => this.ColorNewElementExecuted(param));
+                ColorSettingsChangeVolume = new RelayCommand(param => this.ColorChangeVolumeExecuted(param));
+                ColorSettingsChangeCentroid = new RelayCommand(param => this.ColorChangeCentroidExecuted(param));
+                RadBtnByCategory_Checked = new RelayCommand(param => this.OnradBtnByCategory_Checked(param));
+                RadBtnByTime_Checked = new RelayCommand(param => this.OnradBtnByTime_Checked(param));
+                RadBtnByTypeChange_Checked = new RelayCommand(param => this.OnradBtnByTypeChange_Checked(param));
 
             }
             catch (Exception ex)
@@ -100,100 +107,90 @@ namespace TrackDirect.UI
         }
 
         #region Methods for relay command
-        private void OnTrackManagerWindowLoaded(object param)
+        private void WindowLoadedExecuted(object param)
         {
             IsLoaded = true;
             IsOpen = true;
 
 
-            //Get Color Revit form color defaut of wpf
-            var cNewElement = ((SolidColorBrush)backgroundNewElement).Color;
-            var cChangeFamily = ((SolidColorBrush)backgroundFamilyType).Color;
-            var cChangeGeo = ((SolidColorBrush)backgroundGeometry).Color;
-            var cChangeRvtPara = ((SolidColorBrush)backgroundRevitParameters).Color;
-            var cChangeSharedPara = ((SolidColorBrush)backgroundSharedParameters).Color;
-            RvtColorNewElement = new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
-            RvtColorChangeFamilyType = new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
-            RvtColorChangeGeometry = new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
-            RvtColorChangeRevitParameters = new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
-            RvtColorChangeSharedParameters = new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
         }
-        private void OnTrackManagerWindowClosed(object param)
+        private void WindowClosedExecuted(object param)
         {
             IsOpen = false;
         }
+        private void ApplyExecuted(object param)
+        {
+            if (tabSelectIndex == 0) //Tab remove color
+            {
+                RaiseApplyView();
+            }
+            if (tabSelectIndex == 1) //Tab remove color
+            {
+                RaiseRemoveColor();
+            }
+        }
+        private void CancelExecuted(object param)
+        {
+            var win = param as Window;
+            win.Close();
+        }
 
-
-        private void OnHighLighElement(object param)
-        {
-            Model.HighLighElement();
-        }
-        private void OnColorElement(object param)
-        {
-            Model.ColorElement();
-        }
-        private void OnRemoveColor(object param)
-        {
-            Model.RemoveColor();
-        }
-        private void OnIsolateElement(object param)
-        {
-            Model.IsolateElement();
-        }
-        private void OnColorSettingsNewElement(object param)
+        private void ColorNewElementExecuted(object param)
         {
             //Model.ColorSettings();
             ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
             colorSelectionDialog.Show();
             RvtColorNewElement = colorSelectionDialog.SelectedColor;
-            BackgroundNewElement = RevitUtils.ConvertColorRevitToWPF(RvtColorNewElement);
+            _ColorSettings.NewElement = RvtColorNewElement;
 
         }
-        private void OnColorSettingsChangeFamilyType(object param)
+
+        private void ColorChangeVolumeExecuted(object param)
         {
             //Model.ColorSettings();
             ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
             colorSelectionDialog.Show();
-            RvtColorChangeFamilyType = colorSelectionDialog.SelectedColor;
-            BackgroundFamilyType = RevitUtils.ConvertColorRevitToWPF(RvtColorChangeFamilyType);
+            RvtColorChangeVolume = colorSelectionDialog.SelectedColor;
+            _ColorSettings.ChangeVolume = RvtColorChangeVolume;
         }
-        private void OnColorSettingsChangeGeometry(object param)
+        private void ColorChangeCentroidExecuted(object param)
         {
             //Model.ColorSettings();
             ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
             colorSelectionDialog.Show();
-            RvtColorChangeGeometry = colorSelectionDialog.SelectedColor;
-            BackgroundGeometry = RevitUtils.ConvertColorRevitToWPF(RvtColorChangeGeometry);
-        }
-        private void OnColorSettingsChangeRevitParameters(object param)
-        {
-            //Model.ColorSettings();
-            ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
-            colorSelectionDialog.Show();
-            RvtColorChangeRevitParameters = colorSelectionDialog.SelectedColor;
-            BackgroundRevitParameters = RevitUtils.ConvertColorRevitToWPF(RvtColorChangeRevitParameters);
-        }
-        private void OnColorSettingsChangeSharedParameters(object param)
-        {
-            //Model.ColorSettings();
-            ColorSelectionDialog colorSelectionDialog = new ColorSelectionDialog();
-            colorSelectionDialog.Show();
-            RvtColorChangeSharedParameters = colorSelectionDialog.SelectedColor;
-            BackgroundSharedParameters = RevitUtils.ConvertColorRevitToWPF(RvtColorChangeSharedParameters);
+            RvtColorChangeCentroid = colorSelectionDialog.SelectedColor;
+            _ColorSettings.ChangeCentroid = RvtColorChangeCentroid;
         }
 
         private void OnradBtnByCategory_Checked(object param)
         {
-            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByCategory);
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(TreeElementsByCategory);
         }
         private void OnradBtnByTime_Checked(object param)
         {
-            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByDate);
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(TreeElementsByDate);
         }
         private void OnradBtnByTypeChange_Checked(object param)
         {
-            TreeElementsActive = new ObservableCollection<TreeElementModel>(treeElementsByTypeChange);
+            TreeElementsActive = new ObservableCollection<TreeElementModel>(TreeElementsByTypeChange);
         }
+
+        public void RaiseApplyView()
+        {
+            _handler.ViewModel = this;
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.ApplyView);
+            AppCommand.ManageExEvent.Raise();
+            AppCommand.SetFocusToRevit();
+        }
+
+        public void RaiseRemoveColor()
+        {
+            _handler.ViewModel = this;
+            AppCommand.ManageHandler.Request.Make(TrackManagerHandler.RequestId.RemoveColor);
+            AppCommand.ManageExEvent.Raise();
+            AppCommand.SetFocusToRevit();
+        }
+
         #endregion //Command
 
         #region Public methods
@@ -202,6 +199,8 @@ namespace TrackDirect.UI
             bool result = false;
             try
             {
+                CollectProperties();
+                CollectSettingsJson();
                 CollectElement();
 
                 result = true;
@@ -215,6 +214,11 @@ namespace TrackDirect.UI
         #endregion //Public methods
 
         #region private methods
+        private void CollectProperties()
+        {
+            //SelectOption = ComponentOption.OnlyVisible;
+        }
+
         private void CollectElement()
         {
             try
@@ -239,10 +243,10 @@ namespace TrackDirect.UI
                             ChangeComponentFilter.NewElements.Add(change);
 
                         }
-                        else if (string.IsNullOrWhiteSpace(change.DateModified) && !string.IsNullOrWhiteSpace(change.ChangeType))
+                        else if (!string.IsNullOrWhiteSpace(change.DateModified) && !string.IsNullOrWhiteSpace(change.ChangeType))
                         {
                             //Modified Elements
-                            if (string.IsNullOrEmpty(change.DateModified)) change.DateModified = "None";
+                            //if (string.IsNullOrEmpty(change.DateModified)) change.DateModified = "None";
                             ChangeComponentFilter.ModifiedElements.Add(change);
                         }
                         else
@@ -264,8 +268,22 @@ namespace TrackDirect.UI
 
         #endregion
 
-        #region Rendre TreeView
-        
+        #region private methods
+
+        private void CollectSettingsJson()
+        {
+            ColorSettingsFiles = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\Settings\\ColorSettings.json";
+            _ColorSettings = JsonUtils.Load<ColorSettings>(ColorSettingsFiles);
+
+            //Get Color Revit form color defaut of wpf
+            var cNewElement = System.Drawing.Color.Red;
+
+            RvtColorNewElement = _ColorSettings.NewElement ?? new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
+            RvtColorChangeVolume = _ColorSettings.ChangeVolume ?? new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
+            RvtColorChangeCentroid = _ColorSettings.ChangeCentroid ?? new Autodesk.Revit.DB.Color(cNewElement.R, cNewElement.G, cNewElement.B);
+
+        }
+
         #endregion
     }
 }

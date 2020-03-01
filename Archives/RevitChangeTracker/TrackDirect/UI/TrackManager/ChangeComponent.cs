@@ -12,6 +12,14 @@ namespace TrackDirect.UI
 {
     public class ChangeComponent : INotifyPropertyChanged
     {
+        public enum ChangeTypeEnum
+        {
+            NewElement,
+            VolumeChange,
+            LocationChange,
+            DeletedElement
+        }
+
         private static readonly string _pCreatedDateName = VCFParameters.VCF_CreateAt.ToString();
         private static readonly string _pModifiedDateName = VCFParameters.VCF_ModifyAt.ToString();
         private static readonly string _pChangeTypeName = VCFParameters.VCF_ChangeType.ToString();

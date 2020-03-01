@@ -32,6 +32,6 @@ namespace TrackDirect.UI
     }
     public enum ComponentOption
     {
-        OnlyVisible, SelectedElements, None
+        OnlyVisible, SelectedElements, None, EntireModel
     }
 }

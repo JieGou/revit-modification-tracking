@@ -156,10 +156,35 @@ namespace TrackDirect
             return elements;
 
         }
+        public static IList<Element> GetElementInstanceInView(Document doc, View view)
+        {
+            IList<Element> elements = new List<Element>();
+            Options opt = new Options();
+            FilteredElementCollector collector = new FilteredElementCollector(doc, view.Id);
+            collector
+                    .WhereElementIsNotElementType()
+                    .WhereElementIsViewIndependent()
+                    .Where<Element>(e =>
+                   (null != e.get_BoundingBox(null))
+                   && (null != e.get_Geometry(opt)));
+
+
+            foreach (Element element in collector)
+            {
+                if (null != element.Category
+                  && 0 < element.Parameters.Size
+                && element.Category.HasMaterialQuantities)
+                {
+                    elements.Add(element);
+                }
+            }
+            return elements;
+
+        }
         #endregion //Get all model elements by category set
 
 
-      
+
         public static IList<Element> GetElementsByCategories(Document doc, CategorySet categories)
         {
             //Retrive all model elements
@@ -232,7 +257,7 @@ namespace TrackDirect
             {
                 new ElementCategoryFilter(catId)
             };
-             
+
             ElementFilter filter = new LogicalOrFilter(categoryFilters);
             Options opt = new Options();
             collector.WherePasses(filter)
@@ -244,7 +269,7 @@ namespace TrackDirect
                   ;
             return collector.ToElements();
 
-            
+
         }
         #endregion //Get all model elements inv iew acives
 
@@ -264,7 +289,7 @@ namespace TrackDirect
                 return sel.GetElementIds().Select(x => doc.GetElement(x)).ToList();
             return new List<Element>();
         }
-       
+
 
         /// <summary>
         /// Detect if in selecting in Revit
@@ -286,7 +311,7 @@ namespace TrackDirect
             }
             return false;
         }
-        
+
 
     }
 }

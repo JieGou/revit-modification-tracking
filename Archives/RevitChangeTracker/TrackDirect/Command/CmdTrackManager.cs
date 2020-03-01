@@ -12,10 +12,9 @@ using MessageBox = System.Windows.Forms.MessageBox;
 namespace TrackDirect
 {
     [Transaction(TransactionMode.Manual)]
-    public class CmdTrackManager: IExternalCommand
+    public class CmdTrackManager : IExternalCommand
     {
         public static UIApplication Uiapp = null;
-        public static IntPtr RevitWindow;
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Uiapp = commandData.Application;
@@ -23,7 +22,7 @@ namespace TrackDirect
             try
             {
 
-                TrackManagerWindow wd = new TrackManagerWindow(new TrackManagerViewModel(Uiapp));
+                TrackManagerWindow wd = new TrackManagerWindow(new TrackManagerViewModel(Uiapp, AppCommand.ManageHandler));
 
                 return Result.Succeeded;
             }
