@@ -1,0 +1,110 @@
+﻿<Window x:Class="TrackDirect.UI.frmSnapshot"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrackDirect.UI"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d"
+        Title="Take Snapshot"
+        Height="350"
+        Width="500"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Loaded="FormSnapshot_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="80"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto" />
+            <RowDefinition ></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock Margin="10"
+                       TextWrapping="Wrap"
+                       Foreground="Blue">
+                This command will export the selected model to an json snapshot file.
+                This can later be used to compare a later version of the model.
+            </TextBlock>
+        </Grid>
+        <Grid Grid.Row="2"
+              Margin="0 0 0 20">
+            <StackPanel>
+                <TextBlock Margin="10 0 10 2">Model:</TextBlock>
+                
+               <!--Combobox list of document project revit-->
+                <ComboBox Margin="10 0 10 0"
+                          Name="cboModel"
+                          ItemsSource="{Binding}"
+                          DisplayMemberPath="Title"
+                          IsSynchronizedWithCurrentItem="True"
+                          SelectionChanged="CboModel_SelectionChanged">
+
+                </ComboBox>
+            </StackPanel>
+
+        </Grid>
+        <Grid Grid.Row="3"
+              Height="auto"
+              Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  Height="auto">
+                <TextBlock Margin="10 0 10 2">Snapshot file:</TextBlock>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    
+                    <!--full name of snapshot file-->
+                    <TextBox Margin="10 0 10 0"
+                             Name="tbxFileName"
+                             MinWidth="350"
+                             ></TextBox>
+                </Grid>
+                <Grid Grid.Column="1">
+                    
+                    <!--Select a destination folder for snapshot file-->
+                    <Button Name="btnBrowse"
+                            Content="_Browse"
+                            HorizontalAlignment="Right"
+                            Margin="0 0 10 0"
+                            Width="60"
+                            Height="20"
+                            Click="BtnBrowse_Click"></Button>
+                </Grid>
+            </Grid>
+
+        </Grid>
+        <Grid Grid.Row="5"
+              VerticalAlignment="Bottom"
+              >
+            <StackPanel HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="10"
+                        Orientation="Horizontal">
+                <!--Export: store data in pc -->
+                <Button Name="btnExport"
+                        Content="_Export"
+                        Width="60"
+                        Margin="10 0 10 0"
+                        Click="BtnExport_Click"></Button>
+                <Button Name="btnCancel"
+                        Content="_Cancel"
+                        Width="60"
+                        Click="BtnCancel_Click"></Button>
+
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</Window>

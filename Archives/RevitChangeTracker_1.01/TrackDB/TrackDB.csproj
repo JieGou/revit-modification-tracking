@@ -105,14 +105,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle"^
-if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\TD.Utilities" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\TD.Utilities"
-if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker"
-if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDirect" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDirect"
-if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDB" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDB"
-if not exist "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TD.Core" mkdir "$(ProgramData)\Autodesk\REVIT\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TD.Core"
-
-if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\Revit\Addins\2019"
+    <PostBuildEvent>if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\Revit\Addins\2019"
 if exist "$(ProgramData)\Autodesk\Revit\Addins\2019" copy "$(ProjectDir)$(OutputPath)*.dll" "$(ProgramData)\Autodesk\Revit\Addins\2019\DRTO-Addin.bundle\RevitChangeTracker\TrackDB"</PostBuildEvent>
   </PropertyGroup>
 </Project>

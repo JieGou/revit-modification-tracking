@@ -1,0 +1,62 @@
+﻿using System;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.Attributes;
+using Autodesk.Windows;
+using System.Windows.Forms;
+using TrackDirect.UI;
+using TrackDirect.Utilities;
+using static TrackDirect.UI.SettingTrackView;
+using System.Windows.Interop;
+using System.Windows;
+
+namespace TrackDirect
+{
+    [Transaction(TransactionMode.Manual)]
+    public class CmdTrackSettings : IExternalCommand
+    {
+        public static UIApplication Uiapp = null;
+        public static IntPtr RevitWindow;
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            try
+            {
+                
+                Uiapp = commandData.Application;
+
+#if REVIT2018
+                RevitWindow = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle; // 2018
+#else
+                RevitWindow = Uiapp.MainWindowHandle; //Revit 2019 and above
+#endif
+                
+                //Get window of Revit form Revit handle
+                HwndSource hwndSource = HwndSource.FromHwnd(RevitWindow);
+                var WindowRevitOpen = hwndSource.RootVisual as Window;
+                var vm = new SettingsTrackViewModel(Uiapp);
+                SettingTrackView trackView = new SettingTrackView();
+                trackView.DataContext = vm;
+                if (vm.DisplayUI())
+                {
+                    trackView.Owner = WindowRevitOpen;//This will make flash this window WPF for modal mode
+                    trackView.ShowDialog();
+                }
+              
+                return Result.Succeeded;
+            }
+            catch (ApplicationException aex)
+            {
+                System.Windows.Forms.MessageBox.Show(aex.Message);
+                return Result.Cancelled;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error! " + ex);
+                return Result.Failed;
+            }
+        }
+
+
+    }
+}
