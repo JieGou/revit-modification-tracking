@@ -5,7 +5,7 @@
 `The original solution is of Jeremy Tamik
 [Track Change](https://github.com/jeremytammik/TrackChanges)
 
-This solution is created to adapt the demand of my company.
+This solution is created to adapt the idea of my collegues.
 
 <a name="My idea"></a>
 
